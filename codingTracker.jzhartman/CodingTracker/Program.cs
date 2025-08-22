@@ -1,4 +1,5 @@
 ﻿using CodingTracker.Console;
+using SQLitePCL;
 using CodingTracker.Data;
 using CodingTracker.Data.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,17 +11,9 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        //var connectionString = ConfigurationManager.AppSettings.Get("connectionString");
-        //var connectionFactory = new SqliteConnectionFactory(connectionString);
-
-        // Create a view and pass in the connection factory?
-        // var view = new CodingSessionView(connectionString);
-        // view.Run();
-
+        Batteries.Init();
         var serviceProvider = Startup.ConfigureServices();
-        var dbInitializer = serviceProvider.GetRequiredService<IDatabaseInitializer>();
-        dbInitializer.Initialize();
-
+        serviceProvider.GetRequiredService<IDatabaseInitializer>().Initialize();
 
     }
 }

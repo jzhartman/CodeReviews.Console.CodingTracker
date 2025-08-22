@@ -7,9 +7,9 @@ namespace CodingTracker.Data.Repositories
     public class CodingSessionRepository : ICodingSessionRepository
     //: ICodingSessionRepository
     {
-        private readonly SqliteConnectionFactory _connectionFactory;
+        private readonly ISqliteConnectionFactory _connectionFactory;
 
-        public CodingSessionRepository(SqliteConnectionFactory connectionFactory)
+        public CodingSessionRepository(ISqliteConnectionFactory connectionFactory)
         {
             _connectionFactory = connectionFactory;
         }

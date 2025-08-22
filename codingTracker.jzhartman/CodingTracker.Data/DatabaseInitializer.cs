@@ -33,7 +33,7 @@ namespace CodingTracker.Data
 	                                    Id integer primary key not null,
 	                                    StartTime text not null,
 	                                    EndTime text not null,
-                                        Duration real not null
+                                        Duration text not null
                                     )";
             command.ExecuteNonQuery();
         }
@@ -44,11 +44,11 @@ namespace CodingTracker.Data
 
             var command = connection.CreateCommand();
             command.CommandText = @"insert into CodingSessions(StartTime, EndTime, Duration)
-                                    Values  ('2025-08-01 21:00:00', '2025-08-01 23:30:00', 150),
-                                            ('2025-08-02 21:15:00', '2025-08-02 23:30:00', 135),
-                                            ('2025-08-03 22:00:00', '2025-08-03 23:45:00', 105),
-                                            ('2025-08-04 21:00:00', '2025-08-04 23:30:00', 150),
-                                            ('2025-08-05 21:00:00', '2025-08-05 23:30:00', 150);
+                                    Values  ('2025-08-01 21:00:00', '2025-08-01 23:30:00', '150'),
+                                            ('2025-08-02 21:15:00', '2025-08-02 23:30:00', '135'),
+                                            ('2025-08-03 22:00:00', '2025-08-03 23:45:00', '105'),
+                                            ('2025-08-04 21:00:00', '2025-08-04 23:30:00', '150'),
+                                            ('2025-08-05 21:00:00', '2025-08-05 23:30:00', '150');
                                     ";
             command.ExecuteNonQuery();
         }

@@ -1,4 +1,4 @@
-﻿using CodingTracker.Core.Models;
+﻿using CodingTracker.Models.Entities;
 
 namespace CodingTracker.Data.Interfaces
 {

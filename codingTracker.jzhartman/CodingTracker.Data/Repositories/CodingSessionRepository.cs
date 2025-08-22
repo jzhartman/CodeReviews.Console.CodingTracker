@@ -1,5 +1,5 @@
-﻿using CodingTracker.Core.Models;
-using CodingTracker.Data.Interfaces;
+﻿using CodingTracker.Data.Interfaces;
+using CodingTracker.Models.Entities;
 using Dapper;
 
 namespace CodingTracker.Data.Repositories
@@ -18,7 +18,7 @@ namespace CodingTracker.Data.Repositories
         public List<CodingSession> GetAll()
         {
             using var connection = _connectionFactory.CreateConnection();
-            List<CodingSession> sessions = connection.Query<CodingSession>("Select * from CodingSessions order by StartDate").ToList();
+            List<CodingSession> sessions = connection.Query<CodingSession>("Select * from CodingSessions").ToList();
             return sessions;
         }
 

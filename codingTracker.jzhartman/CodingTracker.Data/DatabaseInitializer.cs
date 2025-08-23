@@ -20,8 +20,18 @@ namespace CodingTracker.Data
 
         public void Initialize()
         {
-            CreateTable();
-            SeedData();
+            if (TableExists() == false)
+            {
+                CreateTable();
+                SeedData();
+            }
+        }
+
+        private bool TableExists()
+        {
+            using var connection = _connectionFactory.CreateConnection();
+            int count = connection.ExecuteScalar<int>("select count(*) from sqlite_master where type='table' and name='CodingSessions'");
+            return count == 1;
         }
 
         private void CreateTable()

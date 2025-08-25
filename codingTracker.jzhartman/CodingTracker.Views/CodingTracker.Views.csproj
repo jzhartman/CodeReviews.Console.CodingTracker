@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CodingTracker.Services\CodingTracker.Services.csproj" />
+    <ProjectReference Include="..\CodingTracker.Models\CodingTracker.Models.csproj" />
   </ItemGroup>
 
 </Project>

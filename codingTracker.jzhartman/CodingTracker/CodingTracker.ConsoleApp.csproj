@@ -17,7 +17,7 @@
     <ProjectReference Include="..\CodingTracker.Controller\CodingTracker.Controller.csproj" />
     <ProjectReference Include="..\CodingTracker.Data\CodingTracker.Data.csproj" />
     <ProjectReference Include="..\CodingTracker.Models\CodingTracker.Models.csproj" />
-    <ProjectReference Include="..\CodingTracker.Views\CodingTracker.Views.csproj" />
+    <ProjectReference Include="..\CodingTracker.Services\CodingTracker.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,13 +1,8 @@
-﻿using System;
-using CodingTracker.ConsoleApp;
-using SQLitePCL;
-using CodingTracker.Data;
+﻿using CodingTracker.Controller;
+using CodingTracker.Controller.Interfaces;
 using CodingTracker.Data.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Specialized;
-using System.Configuration;
-using CodingTracker.Controller.Interfaces;
-using CodingTracker.Models.Services;
+using SQLitePCL;
 
 namespace CodingTracker.ConsoleApp;
 internal class Program
@@ -18,6 +13,6 @@ internal class Program
         var serviceProvider = Startup.ConfigureServices();
         serviceProvider.GetRequiredService<IDatabaseInitializer>().Initialize();
 
-        serviceProvider.GetRequiredService<MenuController>().Run();
+        serviceProvider.GetRequiredService<IMenuController>().Run();
     }
 }

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CodingTracker.Models\CodingTracker.Models.csproj" />
+    <ProjectReference Include="..\CodingTracker.Services\CodingTracker.Services.csproj" />
     <ProjectReference Include="..\CodingTracker.Views\CodingTracker.Views.csproj" />
   </ItemGroup>
 

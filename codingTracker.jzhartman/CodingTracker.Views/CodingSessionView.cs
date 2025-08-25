@@ -1,21 +1,13 @@
-﻿using CodingTracker.Services.Interfaces;
+﻿using CodingTracker.Models.Entities;
+using CodingTracker.Models.Entities;
 
 
 namespace CodingTracker.Views
 {
-    public class CodingSessionView
+    public static class CodingSessionView
     {
-        private readonly ICodingSessionService _codingSessionService;
-
-        public CodingSessionView(ICodingSessionService codingSessionService)
+        public static void RenderAllCodingSessions(List<CodingSession> sessions)
         {
-            _codingSessionService = codingSessionService;
-        }
-
-        public void RenderAllCodingSessions()
-        {
-            var sessions = _codingSessionService.GetAllCodingSessions();
-
             int count = 1;
             Console.WriteLine("A list of all coding sessions: ");
 

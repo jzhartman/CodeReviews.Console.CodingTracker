@@ -1,15 +1,14 @@
-﻿using CodingTracker.Data;
+﻿using CodingTracker.Controller;
+using CodingTracker.Controller.Interfaces;
+using CodingTracker.Data;
 using CodingTracker.Data.Interfaces;
 using CodingTracker.Data.Repositories;
 using CodingTracker.Data.TypeHandlers;
-using CodingTracker.Models.Services;
 using CodingTracker.Services;
 using CodingTracker.Services.Interfaces;
-using CodingTracker.Views;
 using Dapper;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
-using System.Runtime.Serialization;
 
 namespace CodingTracker.ConsoleApp
 {
@@ -23,12 +22,17 @@ namespace CodingTracker.ConsoleApp
             SqlMapper.AddTypeHandler(new DateTimeHandler(dateTimeFormat));
 
             var services = new ServiceCollection();
+
+            //Register All Controllers
+            services.AddSingleton<IMenuController, MenuController>();
+
+            //Register All Services
+            services.AddSingleton<ICodingSessionService, CodingSessionService>();
+
+
+            services.AddSingleton<ICodingSessionRepository, CodingSessionRepository>();
             services.AddSingleton<ISqliteConnectionFactory>(provider => new SqliteConnectionFactory(connectionString));
             services.AddSingleton<IDatabaseInitializer, DatabaseInitializer>();
-            services.AddSingleton<ICodingSessionRepository, CodingSessionRepository>();
-            services.AddSingleton<ICodingSessionService, CodingSessionService>();
-            services.AddSingleton<CodingSessionView>();
-            services.AddSingleton<MenuController>();
 
             return services.BuildServiceProvider();
         }

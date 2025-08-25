@@ -1,4 +1,6 @@
 ﻿using CodingTracker.Controller.Interfaces;
+using CodingTracker.Services;
+using CodingTracker.Services.Interfaces;
 using CodingTracker.Views;
 using System;
 using System.Collections.Generic;
@@ -6,16 +8,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodingTracker.Models.Services
+namespace CodingTracker.Controller
 {
     public class MenuController : IMenuController
     {
-        private readonly CodingSessionView _view;
+        private readonly ICodingSessionService _service;
 
-        public MenuController(CodingSessionView codingSessionView)
+        public MenuController(ICodingSessionService service)
         {
-            _view = codingSessionView;
+            _service = service;
         }
+
+        // Call services for business/data
+        // Call views to render info
 
         public void Run()
         {
@@ -24,7 +29,8 @@ namespace CodingTracker.Models.Services
             //_service.HandleSelection(selection);
 
             //All Code Below Here Is Basic Testing ONLY -- Not part of actual flow
-            _view.RenderAllCodingSessions();
+            var sessions = _service.GetAllCodingSessions(); 
+            CodingSessionView.RenderAllCodingSessions(sessions);
         }
 
 

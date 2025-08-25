@@ -14,11 +14,36 @@ namespace CodingTracker.Data.Repositories
             _connectionFactory = connectionFactory;
         }
 
-        // Sample method
         public List<CodingSession> GetAll()
         {
+            string sql = "Select * from CodingSessions";
+            return LoadData<CodingSession>(sql);
+        }
+
+
+        //Not Working.....
+        public List<CodingSession> GetByDateRange(DateTime startTime, DateTime endTime)
+        {
+            string sql = @"Select * from CodingSessions";
+            return LoadData<CodingSession>(sql);
+        }
+
+        public CodingSession GetById(int id)
+        {
+            string sql = $"select * from CodingSessions where Id = {id}";
+            return LoadData<CodingSession>(sql).FirstOrDefault();
+        }
+
+        public CodingSession GetLongestDuration()
+        {
+            string sql = $"select * from........... ";
+            return LoadData<CodingSession>(sql).FirstOrDefault();
+        }
+
+        private List<T> LoadData<T>(string sql)
+        {
             using var connection = _connectionFactory.CreateConnection();
-            List<CodingSession> sessions = connection.Query<CodingSession>("Select * from CodingSessions").ToList();
+            List<T> sessions = connection.Query<T>(sql).ToList();
             return sessions;
         }
 
@@ -26,5 +51,6 @@ namespace CodingTracker.Data.Repositories
         // using var connection = connectionFactory.CreateConnection();
         // connection.Open();
         // insert Dapper query here
+
     }
 }

@@ -10,16 +10,21 @@ namespace CodingTracker.Models.Services
 {
     public class MenuController : IMenuController
     {
-        private readonly CodingSessionView _codingSessionView;
+        private readonly CodingSessionView _view;
 
         public MenuController(CodingSessionView codingSessionView)
         {
-            _codingSessionView = codingSessionView;
+            _view = codingSessionView;
         }
 
         public void Run()
         {
-            _codingSessionView.RenderAllCodingSessions();
+            //_view.ShowMainMenu();
+            //var selection = _view.GetUserSelection();
+            //_service.HandleSelection(selection);
+
+            //All Code Below Here Is Basic Testing ONLY -- Not part of actual flow
+            _view.RenderAllCodingSessions();
         }
 
 

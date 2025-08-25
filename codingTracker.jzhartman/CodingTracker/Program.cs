@@ -15,7 +15,6 @@ internal class Program
     static void Main(string[] args)
     {
         Batteries.Init();
-        var timeAndDateFormat = ConfigurationManager.AppSettings.Get("timeAndDateFormat");
         var serviceProvider = Startup.ConfigureServices();
         serviceProvider.GetRequiredService<IDatabaseInitializer>().Initialize();
 

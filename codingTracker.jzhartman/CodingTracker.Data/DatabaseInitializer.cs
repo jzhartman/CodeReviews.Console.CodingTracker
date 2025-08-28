@@ -53,15 +53,34 @@ namespace CodingTracker.Data
             using var connection = _connectionFactory.CreateConnection();
 
             var command = connection.CreateCommand();
-            command.CommandText = @"insert into CodingSessions(StartTime, EndTime, Duration)
-                                    Values  ('2025-08-01 21:00:00', '2025-08-01 23:30:00', 9000000),
-                                            ('2025-08-02 21:15:00', '2025-08-02 23:30:00', 8100000),
-                                            ('2025-08-03 22:00:00', '2025-08-03 23:45:00', 6300000),
-                                            ('2025-08-04 21:00:00', '2025-08-04 23:30:00', 9000000),
-                                            ('2025-08-05 21:00:00', '2025-08-05 23:30:00', 9000000);
-                                    ";
+
+            string sql = CreateSqlString();
+
+            command.CommandText = sql;
             command.ExecuteNonQuery();
         }
 
+        private string CreateSqlString()
+        {
+            string sql = "insert into CodingSessions(StartTime, EndTime, Duration)\nValues\n";
+
+            Random rand = new Random();
+            DateTime startDate = DateTime.Parse("2025-01-01 21:00:00");
+            DateTime endDate = startDate.AddHours(2);
+            TimeSpan duration = endDate - startDate;
+
+            for (int i = 0; i < 50; i++)
+            {
+                if (i != 0) sql += ",\n";
+
+                sql += $"('{startDate.ToString("yyyy-MM-dd HH:mm:ss")}', '{endDate.ToString("yyyy-MM-dd HH:mm:ss")}', {duration.TotalSeconds})";
+                startDate = startDate.AddDays(1);
+                endDate = startDate.AddHours(rand.Next(1, 3)).AddMinutes(rand.Next(0, 60)).AddSeconds(rand.Next(0, 60));
+                duration = endDate - startDate;
+            }
+            sql += ";";
+
+            return sql;
+        }
     }
 }

@@ -34,6 +34,11 @@ namespace CodingTracker.Services
             return _repository.GetById(id);
         }
 
+        public void DeleteById(int id)
+        {
+            _repository.DeleteById(id);
+        }
+
         //Method to run repo.GetAll then pass data up to View
 
 

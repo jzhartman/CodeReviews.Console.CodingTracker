@@ -33,6 +33,14 @@ namespace CodingTracker.Controller
             CodingSessionView.RenderCodingSessions(sessions);
 
             Console.WriteLine();
+            int id = (int)sessions[5].Id;
+            Console.WriteLine($"Deleting record {id}");
+            _service.DeleteById(id);
+            sessions = _service.GetAllCodingSessions();
+            CodingSessionView.RenderCodingSessions(sessions);
+
+
+            Console.WriteLine();
             var startTime = DateTime.Parse("2025-01-07 00:00:00");
             var endTime = DateTime.Parse("2025-02-01 23:59:59");
             sessions = _service.GetByDateRange(startTime, endTime);
@@ -41,6 +49,7 @@ namespace CodingTracker.Controller
             Console.WriteLine();
             var session = _service.GetById(2);
             CodingSessionView.RenderCodingSession(session);
+
 
 
         }

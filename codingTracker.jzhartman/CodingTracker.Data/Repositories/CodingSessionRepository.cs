@@ -26,17 +26,23 @@ namespace CodingTracker.Data.Repositories
             return LoadData<CodingSession, DateRangeQuery>(sql, dateRange);
         }
 
-        //Not Working.....
         public CodingSession GetById(int id)
         {
             string sql = $"select * from CodingSessions where Id = {id}";
             return LoadData<CodingSession>(sql).FirstOrDefault();
         }
 
-        public CodingSession GetLongestDuration()
+        public void DeleteById(int id)
         {
-            string sql = $"select * from........... ";
-            return LoadData<CodingSession>(sql).FirstOrDefault();
+            string sql = $"delete from CodingSessions where Id = {id}";
+            SaveData(sql);
+        }
+
+        //Not Working.....
+        public List<CodingSession> GetLongestDuration()
+        {
+            string sql = $"select * from CodingSessions where ";
+            return LoadData<CodingSession>(sql);
         }
 
         private List<T> LoadData<T>(string sql)
@@ -51,6 +57,13 @@ namespace CodingTracker.Data.Repositories
             List<T> sessions = connection.Query<T>(sql, parameters).ToList();
             return sessions;
         }
+
+        private void SaveData(string sql)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+            connection.Execute(sql);
+        }
+
 
         // Method here using the following snippet
         // using var connection = connectionFactory.CreateConnection();

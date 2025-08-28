@@ -20,5 +20,7 @@ namespace CodingTracker.Views
         {
             Console.WriteLine($"{session.Id}:\t{session.StartTime} to {session.EndTime} for a duration of {session.Duration}");
         }
+
+
     }
 }

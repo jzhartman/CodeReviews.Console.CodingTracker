@@ -15,5 +15,10 @@ namespace CodingTracker.Views
                 count++;
             }
         }
+
+        public static void RenderCodingSession(CodingSession session)
+        {
+            Console.WriteLine($"{session.Id}:\t{session.StartTime} to {session.EndTime} for a duration of {session.Duration}");
+        }
     }
 }

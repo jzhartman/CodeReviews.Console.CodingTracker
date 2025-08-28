@@ -6,5 +6,6 @@ namespace CodingTracker.Services.Interfaces
     {
         List<CodingSession> GetAllCodingSessions();
         List<CodingSession> GetByDateRange(DateTime startTime, DateTime endTime);
+        CodingSession GetById(int id);
     }
 }

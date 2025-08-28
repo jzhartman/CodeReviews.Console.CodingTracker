@@ -38,6 +38,10 @@ namespace CodingTracker.Controller
             sessions = _service.GetByDateRange(startTime, endTime);
             CodingSessionView.RenderCodingSessions(sessions);
 
+            Console.WriteLine();
+            var session = _service.GetById(2);
+            CodingSessionView.RenderCodingSession(session);
+
 
         }
 

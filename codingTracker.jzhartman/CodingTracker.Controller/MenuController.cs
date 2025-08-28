@@ -30,7 +30,15 @@ namespace CodingTracker.Controller
 
             //All Code Below Here Is Basic Testing ONLY -- Not part of actual flow
             var sessions = _service.GetAllCodingSessions(); 
-            CodingSessionView.RenderAllCodingSessions(sessions);
+            CodingSessionView.RenderCodingSessions(sessions);
+
+            Console.WriteLine();
+            var startTime = DateTime.Parse("2025-01-07 00:00:00");
+            var endTime = DateTime.Parse("2025-02-01 23:59:59");
+            sessions = _service.GetByDateRange(startTime, endTime);
+            CodingSessionView.RenderCodingSessions(sessions);
+
+
         }
 
 

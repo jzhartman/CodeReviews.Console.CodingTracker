@@ -1,5 +1,4 @@
-﻿using CodingTracker.Controller;
-using CodingTracker.Controller.Interfaces;
+﻿using CodingTracker.Controller.Interfaces;
 using CodingTracker.Data.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using SQLitePCL;

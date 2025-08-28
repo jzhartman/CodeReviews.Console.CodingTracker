@@ -23,6 +23,12 @@ namespace CodingTracker.Services
         {
             return _repository.GetAll();
         }
+
+        public List<CodingSession> GetByDateRange(DateTime startTime, DateTime endTime)
+        {
+            return _repository.GetByDateRange(startTime, endTime);
+        }
+
         //Method to run repo.GetAll then pass data up to View
 
 

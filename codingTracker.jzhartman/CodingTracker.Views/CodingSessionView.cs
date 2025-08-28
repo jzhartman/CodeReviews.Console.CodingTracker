@@ -1,15 +1,13 @@
 ﻿using CodingTracker.Models.Entities;
-using CodingTracker.Models.Entities;
-
 
 namespace CodingTracker.Views
 {
     public static class CodingSessionView
     {
-        public static void RenderAllCodingSessions(List<CodingSession> sessions)
+        public static void RenderCodingSessions(List<CodingSession> sessions)
         {
             int count = 1;
-            Console.WriteLine("A list of all coding sessions: ");
+            Console.WriteLine("A list of coding sessions: ");
 
             foreach (var session in sessions)
             {

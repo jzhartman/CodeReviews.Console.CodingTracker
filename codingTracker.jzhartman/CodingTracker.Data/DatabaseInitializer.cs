@@ -65,6 +65,7 @@ namespace CodingTracker.Data
             string sql = "insert into CodingSessions(StartTime, EndTime, Duration)\nValues\n";
 
             Random rand = new Random();
+
             DateTime startDate = DateTime.Parse("2025-01-01 21:00:00");
             DateTime endDate = startDate.AddHours(2);
             TimeSpan duration = endDate - startDate;

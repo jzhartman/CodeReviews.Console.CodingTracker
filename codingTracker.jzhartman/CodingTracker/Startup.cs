@@ -19,6 +19,8 @@ namespace CodingTracker.ConsoleApp
             var connectionString = ConfigurationManager.AppSettings.Get("connectionString");
             
             var dateTimeFormat = ConfigurationManager.AppSettings.Get("timeAndDateFormat");
+            SqlMapper.RemoveTypeMap(typeof(DateTime));
+            SqlMapper.RemoveTypeMap(typeof(DateTime?));
             SqlMapper.AddTypeHandler(new DateTimeHandler(dateTimeFormat));
 
             var services = new ServiceCollection();

@@ -19,11 +19,24 @@ namespace CodingTracker.Data.TypeHandlers
 
         public override DateTime Parse(object value)
         {
-            return DateTime.ParseExact(value.ToString(), _format, null);
+            if (value is string s
+                && DateTime.TryParseExact
+                    (
+                        s,
+                        _format,
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        System.Globalization.DateTimeStyles.AssumeLocal,
+                        out var dt))
+            {
+                return dt;
+            }
+
+            return Convert.ToDateTime(value);
         }
 
         public override void SetValue(IDbDataParameter parameter, DateTime value)
         {
+            parameter.DbType = DbType.String;
             parameter.Value = value.ToString(_format);
         }
     }

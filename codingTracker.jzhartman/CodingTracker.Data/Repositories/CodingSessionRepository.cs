@@ -38,7 +38,20 @@ namespace CodingTracker.Data.Repositories
             SaveData(sql);
         }
 
+
+
+
+
         //Not Working.....
+
+        public void UpdateStartTimeById(int id, DateTime startTime)
+        {
+            var parameters = new StartTimeUpdate {Id = id, StartTime = startTime };
+            string sql = "update CodingSessions Set StartTime = @StartTime where Id = @Id";
+            SaveData(sql, parameters);
+        }
+
+
         public List<CodingSession> GetLongestDuration()
         {
             string sql = $"select * from CodingSessions where ";
@@ -62,6 +75,12 @@ namespace CodingTracker.Data.Repositories
         {
             using var connection = _connectionFactory.CreateConnection();
             connection.Execute(sql);
+        }
+
+        private void SaveData<T>(string sql, T parameters)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+            connection.Execute(sql, parameters);
         }
 
 

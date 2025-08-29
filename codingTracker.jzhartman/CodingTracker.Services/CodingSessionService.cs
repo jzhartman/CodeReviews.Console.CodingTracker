@@ -39,6 +39,11 @@ namespace CodingTracker.Services
             _repository.DeleteById(id);
         }
 
+        public void UpdateStartDateById(int id, DateTime startTime)
+        {
+            _repository.UpdateStartTimeById(id, startTime);
+        }
+
         //Method to run repo.GetAll then pass data up to View
 
 

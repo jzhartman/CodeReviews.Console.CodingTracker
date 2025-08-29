@@ -8,6 +8,7 @@ namespace CodingTracker.Data.Interfaces
         List<CodingSession> GetAll();
         List<CodingSession> GetByDateRange(DateTime startTime, DateTime endTime);
         CodingSession GetById(int id);
+        void UpdateEndTimeById(int id, DateTime endTime);
         void UpdateStartTimeById(int id, DateTime startTime);
     }
 }

@@ -48,9 +48,11 @@ namespace CodingTracker.Controller
             var sessions = _service.GetByDateRange(startTime, endTime);
             CodingSessionView.RenderCodingSessions(sessions);
 
-            _service.UpdateStartDateById((int)sessions[9].Id, DateTime.Now);
+            _service.UpdateStartTimeById((int)sessions[9].Id, DateTime.Now);
+            _service.UpdateEndTimeById((int)sessions[15].Id, DateTime.Now);
 
-            sessions = _service.GetByDateRange(startTime, endTime);
+
+            sessions = _service.GetAllCodingSessions();
             CodingSessionView.RenderCodingSessions(sessions);
 
             //Console.WriteLine();

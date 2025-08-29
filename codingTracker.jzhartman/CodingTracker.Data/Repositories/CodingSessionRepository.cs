@@ -38,18 +38,25 @@ namespace CodingTracker.Data.Repositories
             SaveData(sql);
         }
 
+        public void UpdateStartTimeById(int id, DateTime startTime)
+        {
+            var parameters = new StartTimeUpdate { Id = id, StartTime = startTime };
+            string sql = "update CodingSessions Set StartTime = @StartTime where Id = @Id";
+            SaveData(sql, parameters);
+        }
 
+        public void UpdateEndTimeById(int id, DateTime endTime)
+        {
+            var parameters = new EndTimeUpdate { Id = id, EndTime = endTime };
+            string sql = "update CodingSessions Set EndTime = @EndTime where Id = @Id";
+            SaveData(sql, parameters);
+        }
 
 
 
         //Not Working.....
 
-        public void UpdateStartTimeById(int id, DateTime startTime)
-        {
-            var parameters = new StartTimeUpdate {Id = id, StartTime = startTime };
-            string sql = "update CodingSessions Set StartTime = @StartTime where Id = @Id";
-            SaveData(sql, parameters);
-        }
+
 
 
         public List<CodingSession> GetLongestDuration()

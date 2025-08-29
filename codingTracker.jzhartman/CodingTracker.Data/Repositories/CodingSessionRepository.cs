@@ -15,14 +15,14 @@ namespace CodingTracker.Data.Repositories
         }
         public List<CodingSession> GetAll()
         {
-            string sql = "Select * from CodingSessions";
+            string sql = "Select * from CodingSessions order by StartTime";
             return LoadData<CodingSession>(sql);
         }
 
         public List<CodingSession> GetByDateRange(DateTime begin, DateTime finish)
         {
             var dateRange = new DateRangeQuery { StartTime = begin, EndTime = finish };
-            string sql = @"Select * from CodingSessions where (StartTime >= @StartTime) AND (endTime <= @EndTime)";
+            string sql = @"Select * from CodingSessions where (StartTime >= @StartTime) AND (endTime <= @EndTime) order by StartTime";
             return LoadData<CodingSession, DateRangeQuery>(sql, dateRange);
         }
 

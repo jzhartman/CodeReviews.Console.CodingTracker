@@ -3,6 +3,7 @@ using CodingTracker.Models.Entities;
 using CodingTracker.Services;
 using CodingTracker.Services.Interfaces;
 using CodingTracker.Views;
+using CodingTracker.Views.Menus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,11 +26,18 @@ namespace CodingTracker.Controller
 
         public void Run()
         {
-            //_view.ShowMainMenu();
-            //var selection = _view.GetUserSelection();
-            //_service.HandleSelection(selection);
+            ViewHelpers.RenderWelcome();
+            var selection = MainMenuView.RenderMainMenuAndGetSelection();
+
+            HandleMainMenuSelection(selection);
+
+
 
             //All Code Below Here Is Basic Testing ONLY -- Not part of actual flow
+
+
+            //
+
 
 
             //var sessions = _service.GetAllCodingSessions(); 
@@ -70,6 +78,18 @@ namespace CodingTracker.Controller
 
         }
 
-
+        private void HandleMainMenuSelection(string selection)
+        {
+            switch (selection)
+            {
+                case "Track Coding":
+                case "Manage Entries":
+                case "View Reports":
+                case "Manage Goal":
+                case "Exit":
+                default:
+                    break;
+            }
+        }
     }
 }

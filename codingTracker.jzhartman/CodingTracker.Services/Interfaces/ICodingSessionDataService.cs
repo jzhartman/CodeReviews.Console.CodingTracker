@@ -2,8 +2,9 @@
 
 namespace CodingTracker.Services.Interfaces
 {
-    public interface ICodingSessionService
+    public interface ICodingSessionDataService
     {
+        void AddSession(CodingSession session);
         void DeleteById(int id);
         List<CodingSession> GetAllCodingSessions();
         List<CodingSession> GetByDateRange(DateTime startTime, DateTime endTime);

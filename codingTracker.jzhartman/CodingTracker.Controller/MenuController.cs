@@ -1,4 +1,5 @@
 ﻿using CodingTracker.Controller.Interfaces;
+using CodingTracker.Models.Entities;
 using CodingTracker.Services;
 using CodingTracker.Services.Interfaces;
 using CodingTracker.Views;
@@ -12,9 +13,9 @@ namespace CodingTracker.Controller
 {
     public class MenuController : IMenuController
     {
-        private readonly ICodingSessionService _service;
+        private readonly ICodingSessionDataService _service;
 
-        public MenuController(ICodingSessionService service)
+        public MenuController(ICodingSessionDataService service)
         {
             _service = service;
         }
@@ -48,9 +49,15 @@ namespace CodingTracker.Controller
             var sessions = _service.GetByDateRange(startTime, endTime);
             CodingSessionView.RenderCodingSessions(sessions);
 
-            _service.UpdateStartTimeById((int)sessions[9].Id, DateTime.Now);
-            _service.UpdateEndTimeById((int)sessions[15].Id, DateTime.Now);
+            //_service.UpdateStartTimeById((int)sessions[9].Id, DateTime.Now);
+            //_service.UpdateEndTimeById((int)sessions[15].Id, DateTime.Now);
 
+            startTime = DateTime.Parse("2025-01-01 20:00:00");
+            endTime = DateTime.Parse("2025-01-01 20:01:15");
+
+            int duration = (int)endTime.Subtract(startTime).TotalSeconds;
+
+            _service.AddSession(new CodingSession{StartTime = startTime, EndTime = endTime, Duration = duration});
 
             sessions = _service.GetAllCodingSessions();
             CodingSessionView.RenderCodingSessions(sessions);

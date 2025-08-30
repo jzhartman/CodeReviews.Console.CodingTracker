@@ -52,6 +52,12 @@ namespace CodingTracker.Data.Repositories
             SaveData(sql, parameters);
         }
 
+        public void AddSession(CodingSession session)
+        {
+            string sql = "insert into CodingSessions (StartTime, EndTime, Duration) values (@StartTime, @EndTime, @Duration)";
+            SaveData(sql, session);
+        }
+
 
 
         //Not Working.....

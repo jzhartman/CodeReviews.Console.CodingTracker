@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace CodingTracker.Services
 {
-    public class CodingSessionService : ICodingSessionService
+    public class CodingSessionDataService : ICodingSessionDataService
     {
         private readonly ICodingSessionRepository _repository;
 
-        public CodingSessionService(ICodingSessionRepository repository)
+        public CodingSessionDataService(ICodingSessionRepository repository)
         {
             _repository = repository;
         }
@@ -47,6 +47,11 @@ namespace CodingTracker.Services
         public void UpdateEndTimeById(int id, DateTime endTime)
         {
             _repository.UpdateEndTimeById(id, endTime);
+        }
+
+        public void AddSession(CodingSession session)
+        {
+            _repository.AddSession(session);
         }
 
         //Method to run repo.GetAll then pass data up to View

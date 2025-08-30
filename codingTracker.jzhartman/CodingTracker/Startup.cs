@@ -29,7 +29,7 @@ namespace CodingTracker.ConsoleApp
             services.AddSingleton<IMenuController, MenuController>();
 
             //Register All Services
-            services.AddSingleton<ICodingSessionService, CodingSessionService>();
+            services.AddSingleton<ICodingSessionDataService, CodingSessionDataService>();
 
 
             services.AddSingleton<ICodingSessionRepository, CodingSessionRepository>();

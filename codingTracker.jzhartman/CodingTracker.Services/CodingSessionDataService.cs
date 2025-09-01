@@ -1,6 +1,7 @@
 ﻿using CodingTracker.Data.Interfaces;
 using CodingTracker.Data.Repositories;
 using CodingTracker.Models.Entities;
+using CodingTracker.Models.Validation;
 using CodingTracker.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,8 @@ namespace CodingTracker.Services
 
         public CodingSession GetById(int id)
         {
+            // Validate that ID exists
+
             return _repository.GetById(id);
         }
 

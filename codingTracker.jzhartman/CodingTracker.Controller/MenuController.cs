@@ -29,7 +29,7 @@ namespace CodingTracker.Controller
             ViewHelpers.RenderWelcome();
             var selection = MainMenuView.RenderMainMenuAndGetSelection();
 
-            HandleMainMenuSelection(selection);
+            HandleSelection(selection);
 
 
 
@@ -52,23 +52,23 @@ namespace CodingTracker.Controller
 
 
             //Console.WriteLine();
-            var startTime = DateTime.Parse("2025-01-07 00:00:00.1234");
-            var endTime = DateTime.Parse("2025-02-01 23:59:59");
-            var sessions = _service.GetByDateRange(startTime, endTime);
-            CodingSessionView.RenderCodingSessions(sessions);
+            //var startTime = DateTime.Parse("2025-01-07 00:00:00.1234");
+            //var endTime = DateTime.Parse("2025-02-01 23:59:59");
+            //var sessions = _service.GetByDateRange(startTime, endTime);
+            //CodingSessionView.RenderCodingSessions(sessions);
 
             //_service.UpdateStartTimeById((int)sessions[9].Id, DateTime.Now);
             //_service.UpdateEndTimeById((int)sessions[15].Id, DateTime.Now);
 
-            startTime = DateTime.Parse("2025-01-01 20:00:00");
-            endTime = DateTime.Parse("2025-01-01 20:01:15");
+            //startTime = DateTime.Parse("2025-01-01 20:00:00");
+            //endTime = DateTime.Parse("2025-01-01 20:01:15");
 
-            int duration = (int)endTime.Subtract(startTime).TotalSeconds;
+            //int duration = (int)endTime.Subtract(startTime).TotalSeconds;
 
-            _service.AddSession(new CodingSession{StartTime = startTime, EndTime = endTime, Duration = duration});
+            //_service.AddSession(new CodingSession{StartTime = startTime, EndTime = endTime, Duration = duration});
 
-            sessions = _service.GetAllCodingSessions();
-            CodingSessionView.RenderCodingSessions(sessions);
+            //sessions = _service.GetAllCodingSessions();
+            //CodingSessionView.RenderCodingSessions(sessions);
 
             //Console.WriteLine();
             //var session = _service.GetById(2);
@@ -78,7 +78,7 @@ namespace CodingTracker.Controller
 
         }
 
-        private void HandleMainMenuSelection(string selection)
+        private void HandleSelection(string selection)
         {
             switch (selection)
             {

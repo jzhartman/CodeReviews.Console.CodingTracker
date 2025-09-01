@@ -76,6 +76,21 @@ namespace CodingTracker.Data.Repositories
         }
 
 
+        // NOT IMPLEMENTED YET!!!!!
+
+
+        public bool ExistsByTimeFrame(DateTime time)
+        {
+            if (true ) // If the current startTime or endTime is already included (i.e. >= StartTime && <= EndTime)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 
 
 

@@ -12,13 +12,15 @@ using System.Threading.Tasks;
 
 namespace CodingTracker.Controller
 {
-    public class MenuController : IMenuController
+    public class MainMenuController : IMainMenuController
     {
         private readonly ICodingSessionDataService _service;
+        private readonly ITrackSessionController _trackController;
 
-        public MenuController(ICodingSessionDataService service)
+        public MainMenuController(ICodingSessionDataService service, ITrackSessionController trackController)
         {
             _service = service;
+            _trackController = trackController;
         }
 
         // Call services for business/data
@@ -26,11 +28,32 @@ namespace CodingTracker.Controller
 
         public void Run()
         {
-            ViewHelpers.RenderWelcome();
-            var selection = MainMenuView.RenderMainMenuAndGetSelection();
+            bool exitApp = false;
 
-            HandleSelection(selection);
+            while (!exitApp)
+            {
 
+                ViewHelpers.RenderWelcome();
+                var selection = MainMenuView.RenderMainMenuAndGetSelection();
+
+                switch (selection)
+                {
+                    case "Track Session":    // Submenu: Enter times/Stopwatch/Return
+                        _trackController.Run();
+                        break;
+                    case "Manage Entries":  // Submenu: View Entries (range or all)/Update/Delete
+                        break;
+                    case "View Reports":    // Enter Range-Period??? --> Print all records for period --> Print report data
+                        break;
+                    case "Manage Goal":     // Print current goal+progress/Give option to change goal
+                        break;
+                    case "Exit":            // Generic goodbye message
+                        exitApp = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
 
 
             //All Code Below Here Is Basic Testing ONLY -- Not part of actual flow
@@ -76,20 +99,6 @@ namespace CodingTracker.Controller
 
 
 
-        }
-
-        private void HandleSelection(string selection)
-        {
-            switch (selection)
-            {
-                case "Track Coding":
-                case "Manage Entries":
-                case "View Reports":
-                case "Manage Goal":
-                case "Exit":
-                default:
-                    break;
-            }
         }
     }
 }

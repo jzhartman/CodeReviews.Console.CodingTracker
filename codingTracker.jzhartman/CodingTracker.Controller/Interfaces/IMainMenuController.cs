@@ -1,6 +1,6 @@
 ﻿namespace CodingTracker.Controller.Interfaces
 {
-    public interface IMenuController
+    public interface IMainMenuController
     {
         void Run();
     }

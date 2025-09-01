@@ -12,6 +12,6 @@ internal class Program
         var serviceProvider = Startup.ConfigureServices();
         serviceProvider.GetRequiredService<IDatabaseInitializer>().Initialize();
 
-        serviceProvider.GetRequiredService<IMenuController>().Run();
+        serviceProvider.GetRequiredService<IMainMenuController>().Run();
     }
 }

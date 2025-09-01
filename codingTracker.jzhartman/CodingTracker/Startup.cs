@@ -26,7 +26,8 @@ namespace CodingTracker.ConsoleApp
             var services = new ServiceCollection();
 
             //Register All Controllers
-            services.AddSingleton<IMenuController, MenuController>();
+            services.AddSingleton<IMainMenuController, MainMenuController>();
+            services.AddSingleton<ITrackSessionController, TrackSessionController>();
 
             //Register All Services
             services.AddSingleton<ICodingSessionDataService, CodingSessionDataService>();

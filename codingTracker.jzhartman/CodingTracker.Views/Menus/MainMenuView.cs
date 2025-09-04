@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CodingTracker.Views.Interfaces;
 using Spectre.Console;
 
 namespace CodingTracker.Views.Menus
 {
-    public static class MainMenuView
+    public class MainMenuView : IMainMenuView
     {
-        public static string RenderMainMenuAndGetSelection()
+        public string RenderMenuAndGetSelection()
         {
             var selection = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
@@ -32,7 +33,7 @@ namespace CodingTracker.Views.Menus
         // Move methods below to a different class soon.... Separate out the menus and their display logic?
 
 
-        public static void RenderMenu()
+        public void RenderMenu()
         {
             var mainMenu = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()

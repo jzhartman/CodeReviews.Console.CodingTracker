@@ -13,6 +13,7 @@ namespace CodingTracker.Data.Repositories
         {
             _connectionFactory = connectionFactory;
         }
+
         private List<T> LoadData<T>(string sql)
         {
             using var connection = _connectionFactory.CreateConnection();
@@ -36,27 +37,41 @@ namespace CodingTracker.Data.Repositories
             connection.Execute(sql, parameters);
         }
 
+
+
+        public List<CodingSessionDataRecord> GetAll()
+        {
+            string sql = "Select * from CodingSessions order by StartTime";
+            return LoadData<CodingSessionDataRecord>(sql);
+        }
+        public List<CodingSessionDataRecord> GetByDateRange(DateTime begin, DateTime finish)
+        {
+            var dateRange = new DateRangeQuery { StartTime = begin, EndTime = finish };
+            string sql = @"Select * from CodingSessions where (StartTime >= @StartTime) AND (endTime <= @EndTime) order by StartTime";
+            return LoadData<CodingSessionDataRecord, DateRangeQuery>(sql, dateRange);
+        }
+        public CodingSessionDataRecord GetById(int id)
+        {
+            string sql = $"select * from CodingSessions where Id = {id}";
+            return LoadData<CodingSessionDataRecord>(sql).FirstOrDefault();
+        }
+
+
+
+
         public void AddSession(CodingSession session)
         {
             string sql = "insert into CodingSessions (StartTime, EndTime, Duration) values (@StartTime, @EndTime, @Duration)";
             SaveData(sql, session);
         }
-        public List<CodingSession> GetAll()
-        {
-            string sql = "Select * from CodingSessions order by StartTime";
-            return LoadData<CodingSession>(sql);
-        }
-        public List<CodingSession> GetByDateRange(DateTime begin, DateTime finish)
-        {
-            var dateRange = new DateRangeQuery { StartTime = begin, EndTime = finish };
-            string sql = @"Select * from CodingSessions where (StartTime >= @StartTime) AND (endTime <= @EndTime) order by StartTime";
-            return LoadData<CodingSession, DateRangeQuery>(sql, dateRange);
-        }
-        public CodingSession GetById(int id)
-        {
-            string sql = $"select * from CodingSessions where Id = {id}";
-            return LoadData<CodingSession>(sql).FirstOrDefault();
-        }
+
+
+
+        //
+        //
+        //  UPDATE METHODS WILL NEED TO ACCOUNT FOR A CHANGE IN DURATION!!!!!!!!!!!!!!
+        //
+        //
         public void UpdateStartTimeById(int id, DateTime startTime)
         {
             var parameters = new StartTimeUpdate { Id = id, StartTime = startTime };
@@ -79,16 +94,18 @@ namespace CodingTracker.Data.Repositories
         // NOT IMPLEMENTED YET!!!!!
 
 
-        public bool ExistsByTimeFrame(DateTime time)
+        public bool ExistsWithinTimeFrame(DateTime time)
         {
-            if (true ) // If the current startTime or endTime is already included (i.e. >= StartTime && <= EndTime)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            var parameter = new DateValue { Time = time};
+            using var connection = _connectionFactory.CreateConnection();
+
+            string sql = @"select count(1) from CodingSessions
+                            where StartTime <= @Time
+                            and EndTime >= @Time";
+
+            int count = connection.ExecuteScalar<int>(sql, parameter);
+
+            return (count > 0);
         }
 
 
@@ -99,10 +116,10 @@ namespace CodingTracker.Data.Repositories
 
 
 
-        public List<CodingSession> GetLongestDuration()
+        public List<CodingSessionDataRecord> GetLongestDuration()
         {
             string sql = $"select * from CodingSessions where ";
-            return LoadData<CodingSession>(sql);
+            return LoadData<CodingSessionDataRecord>(sql);
         }
 
 

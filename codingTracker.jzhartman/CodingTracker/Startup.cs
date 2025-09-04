@@ -6,6 +6,8 @@ using CodingTracker.Data.Repositories;
 using CodingTracker.Data.TypeHandlers;
 using CodingTracker.Services;
 using CodingTracker.Services.Interfaces;
+using CodingTracker.Views.Interfaces;
+using CodingTracker.Views.Menus;
 using Dapper;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
@@ -32,6 +34,9 @@ namespace CodingTracker.ConsoleApp
             //Register All Services
             services.AddSingleton<ICodingSessionDataService, CodingSessionDataService>();
 
+            //Resgister All Views
+            services.AddSingleton<IMainMenuView, MainMenuView>();
+            services.AddSingleton<ITrackSessionView>(new TrackSessionView(dateTimeFormat));
 
             services.AddSingleton<ICodingSessionRepository, CodingSessionRepository>();
             services.AddSingleton<ISqliteConnectionFactory>(provider => new SqliteConnectionFactory(connectionString));

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Collections.Specialized.BitVector32;
 
 namespace CodingTracker.Services
 {
@@ -20,17 +21,17 @@ namespace CodingTracker.Services
             _repository = repository;
         }
 
-        public List<CodingSession> GetAllCodingSessions()
+        public List<CodingSessionDataRecord> GetAllCodingSessions()
         {
             return _repository.GetAll();
         }
 
-        public List<CodingSession> GetByDateRange(DateTime startTime, DateTime endTime)
+        public List<CodingSessionDataRecord> GetByDateRange(DateTime startTime, DateTime endTime)
         {
             return _repository.GetByDateRange(startTime, endTime);
         }
 
-        public CodingSession GetById(int id)
+        public CodingSessionDataRecord GetById(int id)
         {
             // Validate that ID exists
 
@@ -52,18 +53,32 @@ namespace CodingTracker.Services
             _repository.UpdateEndTimeById(id, endTime);
         }
 
-        public void AddSession(CodingSession session)
+        public ValidationResult<CodingSession> AddSession(CodingSession session)
         {
+
+            //if(_repository.ExistsByTimeFrame())//If session.StartTime is within the bounds of an existing
+            //Other validation to add in later....
             _repository.AddSession(session);
+            return ValidationResult<CodingSession>.Success(session);
         }
 
-        //Method to run repo.GetAll then pass data up to View
+        public ValidationResult<DateTime> ValidateStartTime(DateTime input)
+        {
+            if (_repository.ExistsWithinTimeFrame(input))
+                return ValidationResult<DateTime>.Fail("Start Time", "A record already exists for this time");
+            else
+                return ValidationResult<DateTime>.Success(input);
+        }
+        public ValidationResult<DateTime> ValidateEndTime(DateTime input)
+        {
+            if (_repository.ExistsWithinTimeFrame(input))
+                return ValidationResult<DateTime>.Fail("End Time", "A record already exists for this time");
+            else
+                return ValidationResult<DateTime>.Success(input);
+        }
 
-
-
-        // Methods for calling repo methods
-        // Used to handle the data and create lists
-        // Can contain the Console.WriteLine statements -- these will be called in the View later often
-
+        //    if (input.StartTime > session.EndTime)
+        //return ValidationResult<DateTime>.Fail("Start Time",
+        //                                            "ERROR: End Time cannot be earlier than Start Time");
     }
 }

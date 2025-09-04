@@ -3,6 +3,7 @@ using CodingTracker.Models.Entities;
 using CodingTracker.Services;
 using CodingTracker.Services.Interfaces;
 using CodingTracker.Views;
+using CodingTracker.Views.Interfaces;
 using CodingTracker.Views.Menus;
 using System;
 using System.Collections.Generic;
@@ -16,15 +17,14 @@ namespace CodingTracker.Controller
     {
         private readonly ICodingSessionDataService _service;
         private readonly ITrackSessionController _trackController;
+        private readonly IMainMenuView _view;
 
-        public MainMenuController(ICodingSessionDataService service, ITrackSessionController trackController)
+        public MainMenuController(ICodingSessionDataService service, ITrackSessionController trackController, IMainMenuView view)
         {
             _service = service;
             _trackController = trackController;
+            _view = view;
         }
-
-        // Call services for business/data
-        // Call views to render info
 
         public void Run()
         {
@@ -34,7 +34,7 @@ namespace CodingTracker.Controller
             {
 
                 ViewHelpers.RenderWelcome();
-                var selection = MainMenuView.RenderMainMenuAndGetSelection();
+                var selection = _view.RenderMenuAndGetSelection();
 
                 switch (selection)
                 {
@@ -57,10 +57,6 @@ namespace CodingTracker.Controller
 
 
             //All Code Below Here Is Basic Testing ONLY -- Not part of actual flow
-
-
-            //
-
 
 
             //var sessions = _service.GetAllCodingSessions(); 

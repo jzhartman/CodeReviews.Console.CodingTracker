@@ -1,4 +1,5 @@
-﻿using Spectre.Console;
+﻿using CodingTracker.Views.Interfaces;
+using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,15 @@ using System.Threading.Tasks;
 
 namespace CodingTracker.Views.Menus
 {
-    public class TrackSessionView
+    public class TrackSessionView : ITrackSessionView
     {
-        public static string RenderTrackSessionMenuAndGetSelection()
+        private readonly string _dateFormat;
+        public TrackSessionView(string dateFormat)
+        {
+            _dateFormat = dateFormat;
+        }
+
+        public string RenderMenuAndGetSelection()
         {
             var selection = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
@@ -23,6 +30,50 @@ namespace CodingTracker.Views.Menus
                 );
 
             return selection;
+        }
+
+        public DateTime GetStartTimeFromUser()
+        {
+            var date = AnsiConsole.Prompt(
+                new TextPrompt<DateTime>("Please enter a start time using the format [yellow]'yyyy-MM-dd HH:mm:ss'[/]:")
+                );
+
+            //Add custom validation for time format
+
+            return date;
+        }
+
+        public DateTime GetEndTimeFromUser()
+        {
+            var date = AnsiConsole.Prompt(
+                new TextPrompt<DateTime>("Please enter an end time using the format [yellow]'yyyy-MM-dd HH:mm:ss'[/]:")
+                );
+
+            //Add custom validation for time format
+
+            return date;
+        }
+
+        public void ErrorMessage(string parameter, string message)
+        {
+            AddNewLines(1);
+            AnsiConsole.MarkupInterpolated($"[bold red]ERROR:[/] The value for {parameter} encountered the error: [yellow]{message}[/]");
+            AddNewLines(2);
+        }
+
+        public void ConfirmationMessage(string valueText)
+        {
+            AddNewLines(1);
+            AnsiConsole.MarkupInterpolated($"[bold green]ACCEPTED[/]: Value set to {valueText}");
+            AddNewLines(2);
+        }
+
+        private void AddNewLines(int lines)
+        {
+            for (int i = 0; i < lines; i++)
+            {
+                AnsiConsole.WriteLine();
+            }
         }
     }
 }

@@ -1,8 +1,10 @@
-﻿namespace CodingTracker.Controller.Interfaces
+﻿
+namespace CodingTracker.Controller.Interfaces
 {
     public interface ITrackSessionController
     {
-        void GetStartAndEndTimes();
+        DateTime GetEndTime(DateTime startTime);
+        DateTime GetStartTime();
         void GetTimesWithStopwatch();
         void Run();
     }

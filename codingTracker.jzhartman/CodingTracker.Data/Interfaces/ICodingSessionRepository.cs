@@ -5,12 +5,12 @@ namespace CodingTracker.Data.Interfaces
     public interface ICodingSessionRepository
     {
         void AddSession(CodingSession session);
-        List<CodingSession> GetAll();
-        List<CodingSession> GetByDateRange(DateTime startTime, DateTime endTime);
-        CodingSession GetById(int id);
+        List<CodingSessionDataRecord> GetAll();
+        List<CodingSessionDataRecord> GetByDateRange(DateTime startTime, DateTime endTime);
+        CodingSessionDataRecord GetById(int id);
         void UpdateEndTimeById(int id, DateTime endTime);
         void UpdateStartTimeById(int id, DateTime startTime);
         void DeleteById(int id);
-
+        bool ExistsWithinTimeFrame(DateTime time);
     }
 }

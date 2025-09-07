@@ -1,4 +1,5 @@
 ﻿using CodingTracker.Controller.Interfaces;
+using CodingTracker.Models.Entities;
 using CodingTracker.Services.Interfaces;
 using CodingTracker.Views;
 using CodingTracker.Views.Interfaces;
@@ -14,12 +15,14 @@ namespace CodingTracker.Controller
     public class TrackSessionController : ITrackSessionController
     {
         private readonly ICodingSessionDataService _service;
-        private readonly ITrackSessionView _view;
+        private readonly IMenuView _menuView;
+        private readonly IUserInput _inputView;
 
-        public TrackSessionController(ICodingSessionDataService service, ITrackSessionView view)
+        public TrackSessionController(ICodingSessionDataService service, IMenuView menuView, IUserInput inputView)
         {
             _service = service;
-            _view = view;
+            _menuView = menuView;
+            _inputView = inputView;
         }
 
         public void Run()
@@ -29,16 +32,15 @@ namespace CodingTracker.Controller
             while (!returnToMainMenu)
             {
 
-                ViewHelpers.RenderWelcome();
-                var selection = _view.RenderMenuAndGetSelection();
+                Messages.RenderWelcome();
+                var selection = _menuView.RenderTrackingMenuAndGetSelection();
 
                 switch (selection)
                 {
                     case "Enter Start and End Times":
                         var startTime = GetStartTime();
                         var endTime = GetEndTime(startTime);
-
-
+                        AddSession(new CodingSession(startTime, endTime));
                         break;
                     case "Begin Timer":
                         GetTimesWithStopwatch();
@@ -52,14 +54,14 @@ namespace CodingTracker.Controller
             }
         }
 
-        public DateTime GetStartTime()
+        private DateTime GetStartTime()
         {
             var output = new DateTime();
             bool startTimeValid = false;
             
             while (startTimeValid == false)
             {
-                output = _view.GetStartTimeFromUser();
+                output = _inputView.GetStartTimeFromUser();
                 
                 var result = _service.ValidateStartTime(output);
 
@@ -67,30 +69,29 @@ namespace CodingTracker.Controller
                 {
                     startTimeValid = true;
                     output = result.Value;
-                    _view.ConfirmationMessage(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
+                    Messages.ConfirmationMessage(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
                 }
                 else
                 {
-                    _view.ErrorMessage(result.Parameter, result.Message);
+                    Messages.ErrorMessage(result.Parameter, result.Message);
                 }
             }
             return output;
         }
-
-        public DateTime GetEndTime(DateTime startTime)
+        private DateTime GetEndTime(DateTime startTime)
         {
             var output = new DateTime();
             bool endTimeValid = false;
 
             while (endTimeValid == false)
             {
-                output = _view.GetEndTimeFromUser();
+                output = _inputView.GetEndTimeFromUser();
 
                 if (output <= startTime)
                 {
                     var parameter = "End Time";
                     var message = $"The end time must be later than {startTime.ToString("yyyy-MM-dd HH:mm:ss")}";
-                    _view.ErrorMessage(parameter, message);
+                    Messages.ErrorMessage(parameter, message);
                 }
                 else
                 {
@@ -100,25 +101,25 @@ namespace CodingTracker.Controller
                     {
                         endTimeValid = true;
                         output = result.Value;
-                        _view.ConfirmationMessage(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
+                        Messages.ConfirmationMessage(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
                     }
                     else
                     {
-                        _view.ErrorMessage(result.Parameter, result.Message);
+                        Messages.ErrorMessage(result.Parameter, result.Message);
                     } 
                 }
             }
             return output;
         }
-
-        public void GetTimesWithStopwatch()
+        private void AddSession(CodingSession session)
         {
-            // Code here
+            _service.AddSession(session);
+            Messages.ActionCompleteMessage(true, "Success", "Coding session successfully added!");
         }
 
-        public void AddRecord()
+        private void GetTimesWithStopwatch()
         {
-
+            // Code here
         }
     }
 }

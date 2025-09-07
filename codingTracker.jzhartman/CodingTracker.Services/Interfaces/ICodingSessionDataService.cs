@@ -5,7 +5,7 @@ namespace CodingTracker.Services.Interfaces
 {
     public interface ICodingSessionDataService
     {
-        ValidationResult<CodingSession> AddSession(CodingSession session);
+        void AddSession(CodingSession session);
         void DeleteById(int id);
         List<CodingSessionDataRecord> GetAllCodingSessions();
         List<CodingSessionDataRecord> GetByDateRange(DateTime startTime, DateTime endTime);

@@ -68,6 +68,20 @@ namespace CodingTracker.Views.Menus
             AddNewLines(2);
         }
 
+        public void ActionCompleteMessage(bool isSuccess, string state, string message)
+        {
+            AddNewLines(1);
+            if (isSuccess)
+            {
+                AnsiConsole.MarkupInterpolated($"[bold green]{state.ToUpper()}![/] {message}");
+            }
+            else
+            {
+                AnsiConsole.MarkupInterpolated($"[bold red]{state.ToUpper()}![/] {message}");
+            }
+            AddNewLines(2);
+        }
+
         private void AddNewLines(int lines)
         {
             for (int i = 0; i < lines; i++)

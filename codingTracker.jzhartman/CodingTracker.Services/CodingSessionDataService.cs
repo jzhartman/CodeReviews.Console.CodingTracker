@@ -53,13 +53,9 @@ namespace CodingTracker.Services
             _repository.UpdateEndTimeById(id, endTime);
         }
 
-        public ValidationResult<CodingSession> AddSession(CodingSession session)
+        public void AddSession(CodingSession session)
         {
-
-            //if(_repository.ExistsByTimeFrame())//If session.StartTime is within the bounds of an existing
-            //Other validation to add in later....
             _repository.AddSession(session);
-            return ValidationResult<CodingSession>.Success(session);
         }
 
         public ValidationResult<DateTime> ValidateStartTime(DateTime input)

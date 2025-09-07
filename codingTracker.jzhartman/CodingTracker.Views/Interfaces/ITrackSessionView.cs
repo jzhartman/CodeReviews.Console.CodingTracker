@@ -2,6 +2,7 @@
 {
     public interface ITrackSessionView
     {
+        void ActionCompleteMessage(bool isSuccess, string state, string message);
         void ConfirmationMessage(string valueText);
         void ErrorMessage(string parameter, string message);
         DateTime GetEndTimeFromUser();

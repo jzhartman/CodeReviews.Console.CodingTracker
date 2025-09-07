@@ -55,7 +55,11 @@ namespace CodingTracker.Data.Repositories
             string sql = $"select * from CodingSessions where Id = {id}";
             return LoadData<CodingSessionDataRecord>(sql).FirstOrDefault();
         }
-
+        public int GetRecordCount()
+        {
+            string sql = "select count(*) from CodingSessions";
+            return LoadData<int>(sql).First();
+        }
 
 
 
@@ -64,6 +68,8 @@ namespace CodingTracker.Data.Repositories
             string sql = "insert into CodingSessions (StartTime, EndTime, Duration) values (@StartTime, @EndTime, @Duration)";
             SaveData(sql, session);
         }
+
+
 
 
 
@@ -91,7 +97,6 @@ namespace CodingTracker.Data.Repositories
         }
 
 
-        // NOT IMPLEMENTED YET!!!!!
 
 
         public bool ExistsWithinTimeFrame(DateTime time)
@@ -109,6 +114,7 @@ namespace CodingTracker.Data.Repositories
         }
 
 
+        // NOT IMPLEMENTED YET!!!!!
 
 
         //Method Stubs to work out eventually... If needed?

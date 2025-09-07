@@ -1,0 +1,9 @@
+﻿namespace CodingTracker.Views.Interfaces
+{
+    public interface IMenuView
+    {
+        string RenderEntryViewOptionsAndGetSelection();
+        string RenderMainMenuAndGetSelection();
+        string RenderTrackingMenuAndGetSelection();
+    }
+}

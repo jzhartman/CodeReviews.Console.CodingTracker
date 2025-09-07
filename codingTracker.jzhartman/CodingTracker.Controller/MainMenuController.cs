@@ -17,12 +17,16 @@ namespace CodingTracker.Controller
     {
         private readonly ICodingSessionDataService _service;
         private readonly ITrackSessionController _trackController;
-        private readonly IMainMenuView _view;
+        private readonly IEntryListController _entryListController;
+        private readonly IMenuView _view;
 
-        public MainMenuController(ICodingSessionDataService service, ITrackSessionController trackController, IMainMenuView view)
+        public MainMenuController(ICodingSessionDataService service, 
+                                    ITrackSessionController trackController, IEntryListController entryListController,
+                                    IMenuView view)
         {
             _service = service;
             _trackController = trackController;
+            _entryListController = entryListController;
             _view = view;
         }
 
@@ -33,15 +37,16 @@ namespace CodingTracker.Controller
             while (!exitApp)
             {
 
-                ViewHelpers.RenderWelcome();
-                var selection = _view.RenderMenuAndGetSelection();
+                Messages.RenderWelcome();
+                var selection = _view.RenderMainMenuAndGetSelection();
 
                 switch (selection)
                 {
                     case "Track Session":    // Submenu: Enter times/Stopwatch/Return
                         _trackController.Run();
                         break;
-                    case "Manage Entries":  // Submenu: View Entries (range or all)/Update/Delete
+                    case "View/Manage Entries":  // Submenu: View Entries (range or all)/Update/Delete
+                        _entryListController.Run();
                         break;
                     case "View Reports":    // Enter Range-Period??? --> Print all records for period --> Print report data
                         break;

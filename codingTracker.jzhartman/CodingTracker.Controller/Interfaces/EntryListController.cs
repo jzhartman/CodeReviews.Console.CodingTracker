@@ -33,40 +33,51 @@ namespace CodingTracker.Controller.Interfaces
 
             while (!returnToPreviousMenu)
             {
-                var sessions = new List<CodingSessionDataRecord>();
-                DateTime startTime = new DateTime();
-                DateTime endTime = new DateTime();
-
-                var selection = _menuView.RenderEntryViewOptionsAndGetSelection();
-
-                switch (selection)
-                {
-                    case "All":
-                        sessions = _service.GetAllCodingSessions();
-                        break;
-                    case "One Year":
-                        sessions = GetSessionsForPastYear();
-                        break;
-                    case "Year to Date":
-                        sessions = GetSessionsForYearToDate();
-                        break;
-                    case "Enter Date Range":
-                        sessions = GetSessionsByDateRange();
-                        break;
-                    case "Return to Previous Menu":
-                        returnToPreviousMenu = true;
-                        break;
-                }
+                (returnToPreviousMenu, var sessions) = GetSessionListBasedOnUserDateSelection();
 
                 if (returnToPreviousMenu) continue;
 
                 CodingSessionView.RenderCodingSessions(sessions);
+
+
+
+
             }
 
-            // Get date range
-            // Print entries
+
             // Get Update/Delete/New Date Range/Return
 
+        }
+
+        private (bool, List<CodingSessionDataRecord>) GetSessionListBasedOnUserDateSelection()
+        {
+            bool returnToPreviousMenu = false;
+            var sessions = new List<CodingSessionDataRecord>();
+            DateTime startTime = new DateTime();
+            DateTime endTime = new DateTime();
+
+            var selection = _menuView.RenderEntryViewOptionsAndGetSelection();
+
+            switch (selection)
+            {
+                case "All":
+                    sessions = _service.GetAllCodingSessions();
+                    break;
+                case "One Year":
+                    sessions = GetSessionsForPastYear();
+                    break;
+                case "Year to Date":
+                    sessions = GetSessionsForYearToDate();
+                    break;
+                case "Enter Date Range":
+                    sessions = GetSessionsByDateRange();
+                    break;
+                case "Return to Previous Menu":
+                    returnToPreviousMenu = true;
+                    break;
+            }
+
+            return (returnToPreviousMenu, sessions);
         }
 
         private List<CodingSessionDataRecord> GetSessionsForPastYear()

@@ -65,6 +65,7 @@ namespace CodingTracker.Services
             else
                 return ValidationResult<DateTime>.Success(input);
         }
+
         public ValidationResult<DateTime> ValidateEndTime(DateTime input)
         {
             if (_repository.ExistsWithinTimeFrame(input))

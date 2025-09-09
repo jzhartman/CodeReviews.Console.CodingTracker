@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Collections.Specialized.BitVector32;
 
 namespace CodingTracker.Controller.Interfaces
 {
@@ -39,7 +40,27 @@ namespace CodingTracker.Controller.Interfaces
 
                 CodingSessionView.RenderCodingSessions(sessions);
 
+                bool returnToDateSelection = false;
 
+                while (!returnToDateSelection)
+                {
+                    var selection = _menuView.RenderUpdateOrDeleteOptionsAndGetSelection();
+
+                    switch (selection)
+                    {
+                        case "Change Record":
+                            var recordId = _inputView.GetRecordIdFromUser("update", sessions.Count());
+                            ManageUserUpdate(sessions[recordId]);
+                            break;
+                        case "Delete Record":
+
+                            break;
+                        case "Return to Previous Menu":
+                            returnToDateSelection = true;
+                            break;
+                    }
+
+                }
 
 
             }
@@ -47,6 +68,61 @@ namespace CodingTracker.Controller.Interfaces
 
             // Get Update/Delete/New Date Range/Return
 
+        }
+
+        private void ManageUserUpdate(CodingSessionDataRecord session)
+        {
+            DateTime newStartTime = new DateTime();
+            DateTime newEndTime = new DateTime();
+
+            string selection = _menuView.RenderUpdateTimeFeildSelector();
+
+            switch (selection)
+            {
+                case "Start Time":
+                    newStartTime = GetUpdatedStartTime(session.StartTime);
+                    break;
+                case "End Time":
+                    // Get updated endtime
+                    break;
+                case "Both":
+                    // Run both
+                    break;
+                default:
+                    break;
+            }
+
+            // Run validation on both dates
+            // update if good
+        }
+
+        private DateTime GetUpdatedStartTime(DateTime originalTime)
+        {
+            var output = new DateTime();
+            bool startTimeValid = false;
+
+            while (startTimeValid == false)
+            {
+                output = _inputView.GetUpdatedStartTimeFromUser(originalTime);
+
+                // Allow user to enter a start date with almost no validation -- will validate later?
+                startTimeValid = true;
+
+
+                //var result = _service.ValidateStartTime(output);
+
+                //if (result.IsValid)
+                //{
+                //    startTimeValid = true;
+                //    output = result.Value;
+                //    Messages.ConfirmationMessage(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
+                //}
+                //else
+                //{
+                //    Messages.ErrorMessage(result.Parameter, result.Message);
+                //}
+            }
+            return output;
         }
 
         private (bool, List<CodingSessionDataRecord>) GetSessionListBasedOnUserDateSelection()

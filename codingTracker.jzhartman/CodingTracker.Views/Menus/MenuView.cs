@@ -60,6 +60,34 @@ namespace CodingTracker.Views.Menus
                 );
             return selection;
         }
+        public string RenderUpdateOrDeleteOptionsAndGetSelection()
+        {
+            var selection = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Please select the next operation:")
+                .AddChoices(new[]
+                {
+                                "Change Record",
+                                "Delete Record",
+                                "Return to Previous Menu"
+                })
+            );
+            return selection;
+        }
+
+        public string RenderUpdateTimeFeildSelector()
+        {
+            var selection = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Please select an option:")
+                .AddChoices(new[]
+                {
+                                "Start Time",
+                                "End Time",
+                })
+            );
+            return selection;
+        }
 
     }
 }

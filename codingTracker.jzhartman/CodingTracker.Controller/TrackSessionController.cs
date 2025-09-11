@@ -40,7 +40,12 @@ namespace CodingTracker.Controller
                     case "Enter Start and End Times":
                         var startTime = GetStartTime();
                         var endTime = GetEndTime(startTime);
-                        AddSession(new CodingSession(startTime, endTime));
+                        var session = new CodingSession(startTime, endTime);
+
+                        if (ConfirmSession(session))
+                        {
+                            AddSession(session);
+                        }
                         break;
                     case "Begin Timer":
                         GetTimesWithStopwatch();
@@ -52,6 +57,11 @@ namespace CodingTracker.Controller
                         break;
                 }
             }
+        }
+
+        private bool ConfirmSession(CodingSession session)
+        {
+            return _inputView.GetAddSessionConfirmationFromUser(session);
         }
 
         private DateTime GetStartTime()

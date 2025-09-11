@@ -45,14 +45,16 @@ namespace CodingTracker.Controller.Interfaces
                 while (!returnToDateSelection)
                 {
                     var selection = _menuView.RenderUpdateOrDeleteOptionsAndGetSelection();
+                    var recordId = 0;
 
                     switch (selection)
                     {
                         case "Change Record":
-                            var recordId = _inputView.GetRecordIdFromUser("update", sessions.Count());
+                            recordId = _inputView.GetRecordIdFromUser("update", sessions.Count());
                             ManageUserUpdate(sessions[recordId]);
                             break;
                         case "Delete Record":
+                            recordId = _inputView.GetRecordIdFromUser("delete", sessions.Count());
 
                             break;
                         case "Return to Previous Menu":

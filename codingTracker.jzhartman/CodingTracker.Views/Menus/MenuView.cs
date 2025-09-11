@@ -79,7 +79,7 @@ namespace CodingTracker.Views.Menus
         {
             var selection = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-                .Title("Please select an option:")
+                .Title("Please select an option to change:")
                 .AddChoices(new[]
                 {
                                 "Start Time",

@@ -1,4 +1,5 @@
-﻿using CodingTracker.Views.Interfaces;
+﻿using CodingTracker.Models.Entities;
+using CodingTracker.Views.Interfaces;
 using Spectre.Console;
 using System;
 using System.Collections.Generic;
@@ -54,6 +55,17 @@ namespace CodingTracker.Views
         {
             AnsiConsole.MarkupInterpolated($"Changing start time from [yellow]{originalTime}[/].");
             return GetEndTimeFromUser();
+        }
+
+        public bool GetAddSessionConfirmationFromUser(CodingSession session)
+        {
+            var confirmation = AnsiConsole.Prompt(
+                new TextPrompt<bool>($"Add coding session starting at [yellow]{session.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}[/] and ending at [yellow]{session.EndTime.ToString("yyyy-MM-dd HH:mm:ss")}[/] with duration [yellow]{session.DurationText}[/]?")
+                .AddChoice(true)
+                .AddChoice(false)
+                .WithConverter(choice => choice ? "y" : "n"));
+
+            return confirmation;
         }
     }
 }

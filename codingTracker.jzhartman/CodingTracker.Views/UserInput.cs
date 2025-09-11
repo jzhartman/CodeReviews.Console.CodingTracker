@@ -17,20 +17,18 @@ namespace CodingTracker.Views
         {
             _dateFormat = dateFormat;
         }
-        public DateTime GetStartTimeFromUser()
+        public DateTime GetTimeFromUser(string parameterName, bool allowNull = false)
         {
-            var date = AnsiConsole.Prompt(
-                new TextPrompt<DateTime>("Please enter a start time using the format [yellow]'yyyy-MM-dd HH:mm:ss'[/]:"));
+            var date = new DateTime();
+            string article = GetArticle(parameterName);
+            string promptText = $"Please enter {article} {parameterName} using the format [yellow]'yyyy-MM-dd HH:mm:ss'[/]:";
 
-            //Add custom validation for time format
+            if (allowNull) date = AnsiConsole.Prompt(
+                                                new TextPrompt<DateTime>(promptText)
+                                                .AllowEmpty());
 
-            return date;
-        }
-
-        public DateTime GetEndTimeFromUser()
-        {
-            var date = AnsiConsole.Prompt(
-                new TextPrompt<DateTime>("Please enter an end time using the format [yellow]'yyyy-MM-dd HH:mm:ss'[/]:"));
+            else date = AnsiConsole.Prompt(
+                                        new TextPrompt<DateTime>(promptText));
 
             //Add custom validation for time format
 
@@ -44,18 +42,18 @@ namespace CodingTracker.Views
                 .Validate(input => 
                 {
                     if (input < 1) return Spectre.Console.ValidationResult.Error("Too low");
-                    else if (input > max) return Spectre.Console.ValidationResult.Error("Too high");
+                    else if (input >= max) return Spectre.Console.ValidationResult.Error("Too high");
                     else return Spectre.Console.ValidationResult.Success();
                 }));
 
             return id;
         }
 
-        public DateTime GetUpdatedStartTimeFromUser(DateTime originalTime)
-        {
-            AnsiConsole.MarkupInterpolated($"Changing start time from [yellow]{originalTime}[/].");
-            return GetEndTimeFromUser();
-        }
+        //public DateTime GetUpdatedStartTimeFromUser(DateTime originalTime)
+        //{
+        //    AnsiConsole.MarkupInterpolated($"Changing start time from [yellow]{originalTime}[/].");
+        //    return GetEndTimeFromUser();
+        //}
 
         public bool GetAddSessionConfirmationFromUser(CodingSession session)
         {
@@ -66,6 +64,15 @@ namespace CodingTracker.Views
                 .WithConverter(choice => choice ? "y" : "n"));
 
             return confirmation;
+        }
+
+        private string GetArticle(string noun)
+        {
+            string article = "a";
+            char firstLetter = noun.ToLower()[0];
+            if (firstLetter == 'a' || firstLetter == 'e' || firstLetter == 'i' || firstLetter == 'o' || firstLetter == 'u') article += "n";
+
+            return article;
         }
     }
 }

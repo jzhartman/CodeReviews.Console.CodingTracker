@@ -71,7 +71,7 @@ namespace CodingTracker.Controller
             
             while (startTimeValid == false)
             {
-                output = _inputView.GetStartTimeFromUser();
+                output = _inputView.GetTimeFromUser("start time");
                 
                 var result = _service.ValidateStartTime(output);
 
@@ -95,7 +95,7 @@ namespace CodingTracker.Controller
 
             while (endTimeValid == false)
             {
-                output = _inputView.GetEndTimeFromUser();
+                output = _inputView.GetTimeFromUser("end time");
 
                 if (output <= startTime)
                 {

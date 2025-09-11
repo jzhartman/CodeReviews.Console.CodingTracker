@@ -39,7 +39,7 @@ namespace CodingTracker.ConsoleApp
             //Resgister All Views
             services.AddSingleton<IMenuView, MenuView>();
             services.AddSingleton<IUserInput>(new UserInput(dateTimeFormat));
-            //services.AddSingleton<ITrackSessionView>(new TrackSessionView(dateTimeFormat));
+
 
             services.AddSingleton<ICodingSessionRepository, CodingSessionRepository>();
             services.AddSingleton<ISqliteConnectionFactory>(provider => new SqliteConnectionFactory(connectionString));

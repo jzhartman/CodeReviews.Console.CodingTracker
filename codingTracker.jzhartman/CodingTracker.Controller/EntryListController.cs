@@ -74,25 +74,15 @@ namespace CodingTracker.Controller.Interfaces
 
         private void ManageUserUpdate(CodingSessionDataRecord session)
         {
-            DateTime newStartTime = new DateTime();
-            DateTime newEndTime = new DateTime();
+            var newStartTime = _inputView.GetTimeFromUser("new start time", true);
 
-            string selection = _menuView.RenderUpdateTimeFeildSelector();
+            if (newStartTime == null) newStartTime = session.StartTime;
+            // Run validation on start time
+            // Same as previous validation except it can be >= current start time
 
-            switch (selection)
-            {
-                case "Start Time":
-                    newStartTime = GetUpdatedStartTime(session.StartTime);
-                    break;
-                case "End Time":
-                    // Get updated endtime
-                    break;
-                case "Both":
-                    // Run both
-                    break;
-                default:
-                    break;
-            }
+            var newEndTime = _inputView.GetTimeFromUser("new end time", true);
+            // Validate
+            
 
             // Run validation on both dates
             // update if good
@@ -105,7 +95,7 @@ namespace CodingTracker.Controller.Interfaces
 
             while (startTimeValid == false)
             {
-                output = _inputView.GetUpdatedStartTimeFromUser(originalTime);
+                //output = _inputView.GetUpdatedStartTimeFromUser(originalTime);
 
                 // Allow user to enter a start date with almost no validation -- will validate later?
                 startTimeValid = true;
@@ -173,13 +163,13 @@ namespace CodingTracker.Controller.Interfaces
         }
         private List<CodingSessionDataRecord> GetSessionsByDateRange()
         {
-            var startTime = _inputView.GetStartTimeFromUser();
+            var startTime = _inputView.GetTimeFromUser("start time");
             var endTime = new DateTime();
             bool endTimeValid = false;
 
             while (endTimeValid == false)
             {
-                endTime = _inputView.GetEndTimeFromUser();
+                endTime = _inputView.GetTimeFromUser("end time");
 
                 if (endTime <= startTime)
                 {

@@ -6,6 +6,5 @@
         string RenderMainMenuAndGetSelection();
         string RenderTrackingMenuAndGetSelection();
         string RenderUpdateOrDeleteOptionsAndGetSelection();
-        string RenderUpdateTimeFeildSelector();
     }
 }

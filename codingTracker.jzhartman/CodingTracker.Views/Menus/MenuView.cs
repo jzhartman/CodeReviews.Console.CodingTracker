@@ -75,19 +75,5 @@ namespace CodingTracker.Views.Menus
             return selection;
         }
 
-        public string RenderUpdateTimeFeildSelector()
-        {
-            var selection = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .Title("Please select an option to change:")
-                .AddChoices(new[]
-                {
-                                "Start Time",
-                                "End Time",
-                })
-            );
-            return selection;
-        }
-
     }
 }

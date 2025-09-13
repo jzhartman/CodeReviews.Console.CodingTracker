@@ -59,47 +59,6 @@ namespace CodingTracker.Controller
                         break;
                 }
             }
-
-
-            //All Code Below Here Is Basic Testing ONLY -- Not part of actual flow
-
-
-            //var sessions = _service.GetAllCodingSessions(); 
-            //CodingSessionView.RenderCodingSessions(sessions);
-
-            //Console.WriteLine();
-            //int id = (int)sessions[5].Id;
-            //Console.WriteLine($"Deleting record {id}");
-            //_service.DeleteById(id);
-            //sessions = _service.GetAllCodingSessions();
-            //CodingSessionView.RenderCodingSessions(sessions);
-
-
-            //Console.WriteLine();
-            //var startTime = DateTime.Parse("2025-01-07 00:00:00.1234");
-            //var endTime = DateTime.Parse("2025-02-01 23:59:59");
-            //var sessions = _service.GetByDateRange(startTime, endTime);
-            //CodingSessionView.RenderCodingSessions(sessions);
-
-            //_service.UpdateStartTimeById((int)sessions[9].Id, DateTime.Now);
-            //_service.UpdateEndTimeById((int)sessions[15].Id, DateTime.Now);
-
-            //startTime = DateTime.Parse("2025-01-01 20:00:00");
-            //endTime = DateTime.Parse("2025-01-01 20:01:15");
-
-            //int duration = (int)endTime.Subtract(startTime).TotalSeconds;
-
-            //_service.AddSession(new CodingSession{StartTime = startTime, EndTime = endTime, Duration = duration});
-
-            //sessions = _service.GetAllCodingSessions();
-            //CodingSessionView.RenderCodingSessions(sessions);
-
-            //Console.WriteLine();
-            //var session = _service.GetById(2);
-            //CodingSessionView.RenderCodingSession(session);
-
-
-
         }
     }
 }

@@ -51,7 +51,7 @@ namespace CodingTracker.Controller.Interfaces
                     {
                         case "Change Record":
                             recordId = _inputView.GetRecordIdFromUser("update", sessions.Count());
-                            ManageUserUpdate(sessions[recordId]);
+                            ManageUserUpdate(sessions[recordId-1]);
                             break;
                         case "Delete Record":
                             recordId = _inputView.GetRecordIdFromUser("delete", sessions.Count());
@@ -74,49 +74,75 @@ namespace CodingTracker.Controller.Interfaces
 
         private void ManageUserUpdate(CodingSessionDataRecord session)
         {
-            var newStartTime = _inputView.GetTimeFromUser("new start time", true);
+            var newStartTime = GetUpdatedStartTime(session);
+            var newEndTime = GetUpdatedEndTime(session, newStartTime);
 
-            if (newStartTime == null) newStartTime = session.StartTime;
-            // Run validation on start time
-            // Same as previous validation except it can be >= current start time
+            var updatedSession = new CodingSession(newStartTime, newEndTime);
 
-            var newEndTime = _inputView.GetTimeFromUser("new end time", true);
-            // Validate
-            
+            if (ConfirmUpdate(session, updatedSession))
+                UpdateSession(updatedSession, session.Id);
 
-            // Run validation on both dates
-            // update if good
+            // get confirmation
+            // if confirmed => _repository.UpdateSession(updatedsession);
+            // else => cancelled update message -- return to menu
         }
 
-        private DateTime GetUpdatedStartTime(DateTime originalTime)
+        private void UpdateSession(CodingSession session, long id)
+        {
+            var sessionDTO = new CodingSessionDataRecord {Id = id, StartTime = session.StartTime, EndTime = session.EndTime, Duration = (int)session.Duration };
+            _service.UpdateSession(sessionDTO);
+            Messages.ActionCompleteMessage(true, "Success", "Coding session successfully added!");
+        }
+        private bool ConfirmUpdate(CodingSessionDataRecord session, CodingSession updatedSession)
+        {
+            return _inputView.GetUpdateSessionConfirmationFromUser(session, updatedSession);
+        }
+        private DateTime GetUpdatedStartTime(CodingSessionDataRecord session)
         {
             var output = new DateTime();
             bool startTimeValid = false;
 
             while (startTimeValid == false)
             {
-                //output = _inputView.GetUpdatedStartTimeFromUser(originalTime);
+                var newStartTime = _inputView.GetTimeFromUser("new start time", "current start time", true);
+                var result = _service.ValidateUpdatedStartTime(session, newStartTime);
 
-                // Allow user to enter a start date with almost no validation -- will validate later?
-                startTimeValid = true;
-
-
-                //var result = _service.ValidateStartTime(output);
-
-                //if (result.IsValid)
-                //{
-                //    startTimeValid = true;
-                //    output = result.Value;
-                //    Messages.ConfirmationMessage(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
-                //}
-                //else
-                //{
-                //    Messages.ErrorMessage(result.Parameter, result.Message);
-                //}
+                if (result.IsValid)
+                {
+                    startTimeValid = true;
+                    output = result.Value;
+                    Messages.ConfirmationMessage(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
+                }
+                else
+                {
+                    Messages.ErrorMessage(result.Parameter, result.Message);
+                }
             }
             return output;
         }
+        private DateTime GetUpdatedEndTime(CodingSessionDataRecord session, DateTime newStartTime)
+        {
+            var output = new DateTime();
+            bool startTimeValid = false;
 
+            while (startTimeValid == false)
+            {
+                var newEndTime = _inputView.GetTimeFromUser("new end time", "current end time", true);
+                var result = _service.ValidateUpdatedEndTime(session, newStartTime, newEndTime);
+
+                if (result.IsValid)
+                {
+                    startTimeValid = true;
+                    output = result.Value;
+                    Messages.ConfirmationMessage(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
+                }
+                else
+                {
+                    Messages.ErrorMessage(result.Parameter, result.Message);
+                }
+            }
+            return output;
+        }
         private (bool, List<CodingSessionDataRecord>) GetSessionListBasedOnUserDateSelection()
         {
             bool returnToPreviousMenu = false;

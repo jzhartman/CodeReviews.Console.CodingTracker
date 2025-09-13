@@ -43,14 +43,9 @@ namespace CodingTracker.Services
             _repository.DeleteById(id);
         }
 
-        public void UpdateStartTimeById(int id, DateTime startTime)
+        public void UpdateSession(CodingSessionDataRecord session)
         {
-            _repository.UpdateStartTimeById(id, startTime);
-        }
-
-        public void UpdateEndTimeById(int id, DateTime endTime)
-        {
-            _repository.UpdateEndTimeById(id, endTime);
+            _repository.UpdateSession(session);
         }
 
         public void AddSession(CodingSession session)
@@ -73,9 +68,31 @@ namespace CodingTracker.Services
             else
                 return ValidationResult<DateTime>.Success(input);
         }
+        public ValidationResult<DateTime> ValidateUpdatedStartTime(CodingSessionDataRecord session, DateTime newStartTime)
+        {
+            if (newStartTime == DateTime.MinValue)
+                return ValidationResult<DateTime>.Success(session.StartTime);
 
-        //    if (input.StartTime > session.EndTime)
-        //return ValidationResult<DateTime>.Fail("Start Time",
-        //                                            "ERROR: End Time cannot be earlier than Start Time");
+            else if (_repository.ExistsWithinTimeFrameExcludingSessionById(session, newStartTime))
+                return ValidationResult<DateTime>.Fail("Start Time", "A record already exists for this time");
+
+            else
+                return ValidationResult<DateTime>.Success(newStartTime);
+        }
+
+        public ValidationResult<DateTime> ValidateUpdatedEndTime(CodingSessionDataRecord session, DateTime newStartTime, DateTime newEndTime)
+        {
+            if (newEndTime == DateTime.MinValue && session.EndTime > newStartTime)
+                return ValidationResult<DateTime>.Success(session.EndTime);
+
+            else if (newEndTime <= newStartTime)
+                return ValidationResult<DateTime>.Fail("End Time", "End time cannot be earlier than start time.");
+
+            else if (_repository.ExistsWithinTimeFrameExcludingSessionById(session, newEndTime))
+                return ValidationResult<DateTime>.Fail("End Time", "A record already exists for this time");
+
+            else
+                return ValidationResult<DateTime>.Success(newEndTime);
+        }
     }
 }

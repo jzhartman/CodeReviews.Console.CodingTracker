@@ -10,9 +10,10 @@ namespace CodingTracker.Services.Interfaces
         List<CodingSessionDataRecord> GetAllCodingSessions();
         List<CodingSessionDataRecord> GetByDateRange(DateTime startTime, DateTime endTime);
         CodingSessionDataRecord GetById(int id);
-        void UpdateEndTimeById(int id, DateTime endTime);
-        void UpdateStartTimeById(int id, DateTime startTime);
+        void UpdateSession(CodingSessionDataRecord session);
         ValidationResult<DateTime> ValidateEndTime(DateTime input);
         ValidationResult<DateTime> ValidateStartTime(DateTime input);
+        ValidationResult<DateTime> ValidateUpdatedEndTime(CodingSessionDataRecord session, DateTime newStartTime, DateTime newEndTime);
+        ValidationResult<DateTime> ValidateUpdatedStartTime(CodingSessionDataRecord session, DateTime updatedStartTime);
     }
 }

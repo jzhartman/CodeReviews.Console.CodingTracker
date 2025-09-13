@@ -6,7 +6,8 @@ namespace CodingTracker.Views.Interfaces
     {
         int GetRecordIdFromUser(string action, int max);
         bool GetAddSessionConfirmationFromUser(CodingSession session);
-        DateTime GetTimeFromUser(string parameterName, bool allowNull = false);
+        DateTime GetTimeFromUser(string parameterName, string nullBehavior = "", bool allowNull = false);
+        bool GetUpdateSessionConfirmationFromUser(CodingSessionDataRecord session, CodingSession updatedSession);
         //DateTime GetUpdatedStartTimeFromUser(DateTime originalTime);
     }
 }

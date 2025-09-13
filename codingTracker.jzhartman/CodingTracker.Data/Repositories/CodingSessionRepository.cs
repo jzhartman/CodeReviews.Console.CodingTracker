@@ -69,26 +69,10 @@ namespace CodingTracker.Data.Repositories
             SaveData(sql, session);
         }
 
-
-
-
-
-        //
-        //
-        //  UPDATE METHODS WILL NEED TO ACCOUNT FOR A CHANGE IN DURATION!!!!!!!!!!!!!!
-        //
-        //
-        public void UpdateStartTimeById(int id, DateTime startTime)
+        public void UpdateSession(CodingSessionDataRecord session)
         {
-            var parameters = new StartTimeUpdate { Id = id, StartTime = startTime };
-            string sql = "update CodingSessions Set StartTime = @StartTime where Id = @Id";
-            SaveData(sql, parameters);
-        }
-        public void UpdateEndTimeById(int id, DateTime endTime)
-        {
-            var parameters = new EndTimeUpdate { Id = id, EndTime = endTime };
-            string sql = "update CodingSessions Set EndTime = @EndTime where Id = @Id";
-            SaveData(sql, parameters);
+            string sql = "update CodingSessions Set StartTime = @StartTime, EndTime = @EndTime, Duration = @Duration where Id = @Id";
+            SaveData(sql, session);
         }
         public void DeleteById(int id)
         {
@@ -107,6 +91,21 @@ namespace CodingTracker.Data.Repositories
             string sql = @"select count(1) from CodingSessions
                             where StartTime <= @Time
                             and EndTime >= @Time";
+
+            int count = connection.ExecuteScalar<int>(sql, parameter);
+
+            return (count > 0);
+        }
+
+        public bool ExistsWithinTimeFrameExcludingSessionById(CodingSessionDataRecord session, DateTime newTime)
+        {
+            var parameter = new TimeUpdate { Id = (int)session.Id, Time = newTime };
+            using var connection = _connectionFactory.CreateConnection();
+
+            string sql = @"select count(1) from CodingSessions
+                            where StartTime <= @Time
+                            and EndTime >= @Time
+                            and Id != @Id";
 
             int count = connection.ExecuteScalar<int>(sql, parameter);
 

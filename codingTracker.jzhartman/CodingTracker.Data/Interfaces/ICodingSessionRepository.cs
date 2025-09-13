@@ -1,4 +1,5 @@
 ﻿using CodingTracker.Models.Entities;
+using System;
 
 namespace CodingTracker.Data.Interfaces
 {
@@ -8,9 +9,9 @@ namespace CodingTracker.Data.Interfaces
         List<CodingSessionDataRecord> GetAll();
         List<CodingSessionDataRecord> GetByDateRange(DateTime startTime, DateTime endTime);
         CodingSessionDataRecord GetById(int id);
-        void UpdateEndTimeById(int id, DateTime endTime);
-        void UpdateStartTimeById(int id, DateTime startTime);
+        void UpdateSession(CodingSessionDataRecord session);
         void DeleteById(int id);
         bool ExistsWithinTimeFrame(DateTime time);
+        bool ExistsWithinTimeFrameExcludingSessionById(CodingSessionDataRecord session, DateTime newTime);
     }
 }

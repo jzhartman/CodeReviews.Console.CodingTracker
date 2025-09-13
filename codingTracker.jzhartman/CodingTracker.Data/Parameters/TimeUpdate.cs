@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CodingTracker.Data.Parameters
 {
-    public class StartTimeUpdate
+    public class TimeUpdate
     {
         public int Id { get; set; }
-        public DateTime StartTime { get; set; }
+        public DateTime Time { get; set; }
     }
 }

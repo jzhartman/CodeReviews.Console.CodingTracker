@@ -29,17 +29,12 @@ public class TrackSessionController : ITrackSessionController
             switch (selection)
             {
                 case "Enter Start and End Times":
-                    var startTime = GetStartTime();
-                    var endTime = GetEndTime(startTime);
-                    var session = new CodingSession(startTime, endTime);
-
-                    if (ConfirmSession(session))
-                    {
-                        AddSession(session);
-                    }
+                    var session = GetNewSessionFromUserInput();
+                    ConfirmAndAddSession(session);
                     break;
                 case "Begin Timer":
-                    GetTimesWithStopwatch();
+                    var stopwatchSession = GetNewSessionFromStopwatch();
+                    ConfirmAndAddSession(stopwatchSession);
                     break;
                 case "Return to Main Menu":
                     returnToMainMenu = true;
@@ -50,12 +45,14 @@ public class TrackSessionController : ITrackSessionController
         }
     }
 
-    private bool ConfirmSession(CodingSession session)
+    private CodingSession GetNewSessionFromUserInput()
     {
-        return _inputView.GetAddSessionConfirmationFromUser(session);
-    }
+        var startTime = GetStartTimeFromUser();
+        var endTime = GetEndTimeFromUser(startTime);
 
-    private DateTime GetStartTime()
+        return new CodingSession(startTime, endTime);
+    }
+    private DateTime GetStartTimeFromUser()
     {
         var output = new DateTime();
         bool startTimeValid = false;
@@ -79,7 +76,7 @@ public class TrackSessionController : ITrackSessionController
         }
         return output;
     }
-    private DateTime GetEndTime(DateTime startTime)
+    private DateTime GetEndTimeFromUser(DateTime startTime)
     {
         var output = new DateTime();
         bool endTimeValid = false;
@@ -112,14 +109,45 @@ public class TrackSessionController : ITrackSessionController
         }
         return output;
     }
+    private void ConfirmAndAddSession(CodingSession session)
+    {
+        var sessionConfirmed = _inputView.GetAddSessionConfirmationFromUser(session);
+
+        if (sessionConfirmed)
+        {
+            AddSession(session);
+        }
+        else
+        {
+            Messages.ActionCancelled("addition");
+        }
+    }
     private void AddSession(CodingSession session)
     {
         _service.AddSession(session);
         Messages.ActionComplete(true, "Success", "Coding session successfully added!");
     }
 
-    private void GetTimesWithStopwatch()
+    private CodingSession GetNewSessionFromStopwatch()
     {
-        // Code here
+        var startTime = GetStartTimeWithStopwatch();
+        Messages.Confirmation(startTime.ToString("yyyy-MM-dd HH:mm:ss"));
+
+        var endTime = GetStopTimeWithStopwatch();
+        Messages.Confirmation(endTime.ToString("yyyy-MM-dd HH:mm:ss"));
+
+        return new CodingSession(startTime, endTime);
+    }
+
+    private DateTime GetStartTimeWithStopwatch()
+    {
+        var selection = _inputView.StartStopwatch();
+        return DateTime.Now;
+    }
+
+    private DateTime GetStopTimeWithStopwatch()
+    {
+        var selection = _inputView.StopStopwatch();
+        return DateTime.Now;
     }
 }

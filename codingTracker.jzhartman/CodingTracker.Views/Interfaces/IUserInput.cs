@@ -8,5 +8,7 @@ public interface IUserInput
     DateTime GetTimeFromUser(string parameterName, string nullBehavior = "", bool allowNull = false);
     bool GetUpdateSessionConfirmationFromUser(CodingSessionDataRecord session, CodingSession updatedSession);
     bool GetDeleteSessionConfirmationFromUser(CodingSessionDataRecord session);
+    string StartStopwatch();
+    string StopStopwatch();
     //DateTime GetUpdatedStartTimeFromUser(DateTime originalTime);
 }

@@ -28,6 +28,36 @@ public class UserInput : IUserInput
         return date;
     }
 
+    public string StartStopwatch()
+    {
+        AnsiConsole.WriteLine();
+        var selection = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Press the ENTER key when you are ready to begin your coding session.")
+                .AddChoices(new[]
+                {
+                    "Start Stopwatch",
+                })
+            );
+
+        return selection;
+    }
+
+    public string StopStopwatch()
+    {
+        AnsiConsole.WriteLine();
+        var selection = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Press the ENTER key when you are ready to end your coding session.")
+                .AddChoices(new[]
+                {
+                    "Stop Stopwatch",
+                })
+            );
+
+        return selection;
+    }
+
     public int GetRecordIdFromUser(string action, int max)
     {
         var id = AnsiConsole.Prompt(

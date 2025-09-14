@@ -1,9 +1,7 @@
 ﻿using System.Data;
 
-namespace CodingTracker.Data.Interfaces
+namespace CodingTracker.Data.Interfaces;
+public interface ISqliteConnectionFactory
 {
-    public interface ISqliteConnectionFactory
-    {
-        IDbConnection CreateConnection();
-    }
+    IDbConnection CreateConnection();
 }

@@ -1,218 +1,224 @@
 ﻿using CodingTracker.Models.Entities;
-using CodingTracker.Services;
 using CodingTracker.Services.Interfaces;
 using CodingTracker.Views;
 using CodingTracker.Views.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Collections.Specialized.BitVector32;
 
-namespace CodingTracker.Controller.Interfaces
+namespace CodingTracker.Controller.Interfaces;
+
+public class EntryListController : IEntryListController
 {
-    public class EntryListController : IEntryListController
+    private readonly ICodingSessionDataService _service;
+    private readonly IMenuView _menuView;
+    private readonly IUserInput _inputView;
+
+    public EntryListController(ICodingSessionDataService service,
+                                IMenuView menuView,
+                                IUserInput inputView)
     {
-        private readonly ICodingSessionDataService _service;
-        private readonly IMenuView _menuView;
-        private readonly IUserInput _inputView;
+        _service = service;
+        _menuView = menuView;
+        _inputView = inputView;
+    }
 
-        public EntryListController(ICodingSessionDataService service,
-                                    IMenuView menuView,
-                                    IUserInput inputView)
+    public void Run()
+    {
+        bool returnToPreviousMenu = false;
+
+        while (!returnToPreviousMenu)
         {
-            _service = service;
-            _menuView = menuView;
-            _inputView = inputView;
-        }
+            var dateRangeSelection = GetDateRangeSelectionFromUser();
 
-        public void Run()
-        {
+            if (dateRangeSelection == "Return to Previous Menu") { returnToPreviousMenu = true; continue; }
 
-            bool returnToPreviousMenu = false;
+            (DateTime startTime, DateTime endTime) = GetDatesBasedOnUserSelection(dateRangeSelection);
+            var sessions = _service.GetSessionListByDateRange(startTime, endTime);
 
-            while (!returnToPreviousMenu)
+            bool returnToDateSelection = false;
+
+            while (!returnToDateSelection)
             {
-                (returnToPreviousMenu, var sessions) = GetSessionListBasedOnUserDateSelection();
-
-                if (returnToPreviousMenu) continue;
-
                 CodingSessionView.RenderCodingSessions(sessions);
 
-                bool returnToDateSelection = false;
+                var selection = _menuView.RenderUpdateOrDeleteOptionsAndGetSelection();
 
-                while (!returnToDateSelection)
+                switch (selection)
                 {
-                    var selection = _menuView.RenderUpdateOrDeleteOptionsAndGetSelection();
-                    var recordId = 0;
-
-                    switch (selection)
-                    {
-                        case "Change Record":
-                            recordId = _inputView.GetRecordIdFromUser("update", sessions.Count());
-                            ManageUserUpdate(sessions[recordId-1]);
-                            break;
-                        case "Delete Record":
-                            recordId = _inputView.GetRecordIdFromUser("delete", sessions.Count());
-
-                            break;
-                        case "Return to Previous Menu":
-                            returnToDateSelection = true;
-                            break;
-                    }
-
+                    case "Change Record":
+                        ManageSessionUpdate(sessions);
+                        break;
+                    case "Delete Record":
+                        ManageSessionDelete(sessions);
+                        break;
+                    case "Return to Previous Menu":
+                        returnToDateSelection = true;
+                        break;
                 }
-
-
+                sessions = _service.GetSessionListByDateRange(startTime, endTime);
             }
-
-
-            // Get Update/Delete/New Date Range/Return
-
         }
+    }
 
-        private void ManageUserUpdate(CodingSessionDataRecord session)
+    private void ManageSessionDelete(List<CodingSessionDataRecord> sessions)
+    {
+        var recordId = _inputView.GetRecordIdFromUser("delete", sessions.Count()) - 1;
+
+        if (ConfirmDelete(sessions[recordId]))
+            DeleteSession(sessions[recordId]);
+        else
+            Messages.ActionCancelled("deletion");
+
+    }
+    private void DeleteSession(CodingSessionDataRecord session)
+    {
+        _service.DeleteById((int)session.Id);
+    }
+    private bool ConfirmDelete(CodingSessionDataRecord session)
+    {
+        return _inputView.GetDeleteSessionConfirmationFromUser(session);
+    }
+    private void ManageSessionUpdate(List<CodingSessionDataRecord> sessions)
+    {
+        var recordId = _inputView.GetRecordIdFromUser("update", sessions.Count()) - 1;
+
+        var newStartTime = GetUpdatedStartTime(sessions[recordId]);
+        var newEndTime = GetUpdatedEndTime(sessions[recordId], newStartTime);
+
+        var updatedSession = new CodingSession(newStartTime, newEndTime);
+
+        if (ConfirmUpdate(sessions[recordId], updatedSession))
+            UpdateSession(updatedSession, sessions[recordId].Id);
+        else
+            Messages.ActionCancelled("update");
+
+        // get confirmation
+        // if confirmed => _repository.UpdateSession(updatedsession);
+        // else => cancelled update message -- return to menu
+    }
+    private void UpdateSession(CodingSession session, long id)
+    {
+        var sessionDTO = new CodingSessionDataRecord {Id = id, StartTime = session.StartTime, EndTime = session.EndTime, Duration = (int)session.Duration };
+        _service.UpdateSession(sessionDTO);
+        Messages.ActionComplete(true, "Success", "Coding session successfully added!");
+    }
+    private bool ConfirmUpdate(CodingSessionDataRecord session, CodingSession updatedSession)
+    {
+        return _inputView.GetUpdateSessionConfirmationFromUser(session, updatedSession);
+    }
+    private DateTime GetUpdatedStartTime(CodingSessionDataRecord session)
+    {
+        var output = new DateTime();
+        bool startTimeValid = false;
+
+        while (startTimeValid == false)
         {
-            var newStartTime = GetUpdatedStartTime(session);
-            var newEndTime = GetUpdatedEndTime(session, newStartTime);
+            var newStartTime = _inputView.GetTimeFromUser("new start time", "current start time", true);
+            var result = _service.ValidateUpdatedStartTime(session, newStartTime);
 
-            var updatedSession = new CodingSession(newStartTime, newEndTime);
-
-            if (ConfirmUpdate(session, updatedSession))
-                UpdateSession(updatedSession, session.Id);
-
-            // get confirmation
-            // if confirmed => _repository.UpdateSession(updatedsession);
-            // else => cancelled update message -- return to menu
-        }
-
-        private void UpdateSession(CodingSession session, long id)
-        {
-            var sessionDTO = new CodingSessionDataRecord {Id = id, StartTime = session.StartTime, EndTime = session.EndTime, Duration = (int)session.Duration };
-            _service.UpdateSession(sessionDTO);
-            Messages.ActionCompleteMessage(true, "Success", "Coding session successfully added!");
-        }
-        private bool ConfirmUpdate(CodingSessionDataRecord session, CodingSession updatedSession)
-        {
-            return _inputView.GetUpdateSessionConfirmationFromUser(session, updatedSession);
-        }
-        private DateTime GetUpdatedStartTime(CodingSessionDataRecord session)
-        {
-            var output = new DateTime();
-            bool startTimeValid = false;
-
-            while (startTimeValid == false)
+            if (result.IsValid)
             {
-                var newStartTime = _inputView.GetTimeFromUser("new start time", "current start time", true);
-                var result = _service.ValidateUpdatedStartTime(session, newStartTime);
-
-                if (result.IsValid)
-                {
-                    startTimeValid = true;
-                    output = result.Value;
-                    Messages.ConfirmationMessage(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
-                }
-                else
-                {
-                    Messages.ErrorMessage(result.Parameter, result.Message);
-                }
+                startTimeValid = true;
+                output = result.Value;
+                Messages.Confirmation(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
             }
-            return output;
-        }
-        private DateTime GetUpdatedEndTime(CodingSessionDataRecord session, DateTime newStartTime)
-        {
-            var output = new DateTime();
-            bool startTimeValid = false;
-
-            while (startTimeValid == false)
+            else
             {
-                var newEndTime = _inputView.GetTimeFromUser("new end time", "current end time", true);
-                var result = _service.ValidateUpdatedEndTime(session, newStartTime, newEndTime);
-
-                if (result.IsValid)
-                {
-                    startTimeValid = true;
-                    output = result.Value;
-                    Messages.ConfirmationMessage(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
-                }
-                else
-                {
-                    Messages.ErrorMessage(result.Parameter, result.Message);
-                }
+                Messages.Error(result.Parameter, result.Message);
             }
-            return output;
         }
-        private (bool, List<CodingSessionDataRecord>) GetSessionListBasedOnUserDateSelection()
+        return output;
+    }
+    private DateTime GetUpdatedEndTime(CodingSessionDataRecord session, DateTime newStartTime)
+    {
+        var output = new DateTime();
+        bool startTimeValid = false;
+
+        while (startTimeValid == false)
         {
-            bool returnToPreviousMenu = false;
-            var sessions = new List<CodingSessionDataRecord>();
-            DateTime startTime = new DateTime();
-            DateTime endTime = new DateTime();
+            var newEndTime = _inputView.GetTimeFromUser("new end time", "current end time", true);
+            var result = _service.ValidateUpdatedEndTime(session, newStartTime, newEndTime);
 
-            var selection = _menuView.RenderEntryViewOptionsAndGetSelection();
-
-            switch (selection)
+            if (result.IsValid)
             {
-                case "All":
-                    sessions = _service.GetAllCodingSessions();
-                    break;
-                case "One Year":
-                    sessions = GetSessionsForPastYear();
-                    break;
-                case "Year to Date":
-                    sessions = GetSessionsForYearToDate();
-                    break;
-                case "Enter Date Range":
-                    sessions = GetSessionsByDateRange();
-                    break;
-                case "Return to Previous Menu":
-                    returnToPreviousMenu = true;
-                    break;
+                startTimeValid = true;
+                output = result.Value;
+                Messages.Confirmation(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
             }
-
-            return (returnToPreviousMenu, sessions);
-        }
-
-        private List<CodingSessionDataRecord> GetSessionsForPastYear()
-        {
-            var endTime = DateTime.Now;
-            var startTime = endTime.AddYears(-1);
-
-            return _service.GetByDateRange(startTime, endTime);
-        }
-        private List<CodingSessionDataRecord> GetSessionsForYearToDate()
-        {
-            var endTime = DateTime.Now;
-            var startTime = new DateTime(endTime.Year, 1, 1);
-            return _service.GetByDateRange(startTime, endTime);
-        }
-        private List<CodingSessionDataRecord> GetSessionsByDateRange()
-        {
-            var startTime = _inputView.GetTimeFromUser("start time");
-            var endTime = new DateTime();
-            bool endTimeValid = false;
-
-            while (endTimeValid == false)
+            else
             {
-                endTime = _inputView.GetTimeFromUser("end time");
-
-                if (endTime <= startTime)
-                {
-                    var parameter = "End Time";
-                    var message = $"The end time must be later than {startTime.ToString("yyyy-MM-dd HH:mm:ss")}";
-                    Messages.ErrorMessage(parameter, message);
-                }
-                else
-                {
-                    endTimeValid = true;
-                }
+                Messages.Error(result.Parameter, result.Message);
             }
+        }
+        return output;
+    }
+    private string GetDateRangeSelectionFromUser()
+    {
+        return _menuView.RenderEntryViewOptionsAndGetSelection();
+    }
+    private (DateTime, DateTime) GetDatesBasedOnUserSelection(string selection)
+    {
+        bool returnToPreviousMenu = false;
+        DateTime startTime = new DateTime();
+        DateTime endTime = new DateTime();
 
-            return _service.GetByDateRange(startTime, endTime);
-
+        switch (selection)
+        {
+            case "All":
+                (startTime, endTime) = GetAllDates();
+                break;
+            case "One Year":
+                (startTime, endTime) = GetDateRangeForPastYear();
+                break;
+            case "Year to Date":
+                (startTime, endTime) = GetDateRangeForYearToDate();
+                break;
+            case "Enter Date Range":
+                (startTime, endTime) = GetCustomDateRange();
+                break;
         }
 
+        return (startTime, endTime);
+    }
+    private (DateTime, DateTime) GetAllDates()
+    {
+        var startTime = DateTime.MinValue;
+        var endTime = DateTime.MaxValue;
+        return (startTime, endTime);
+    }
+    private (DateTime, DateTime) GetDateRangeForPastYear()
+    {
+        var endTime = DateTime.Now;
+        var startTime = endTime.AddYears(-1);
+        return (startTime, endTime);
+    }
+    private (DateTime, DateTime) GetDateRangeForYearToDate()
+    {
+        var endTime = DateTime.Now;
+        var startTime = new DateTime(endTime.Year, 1, 1);
+        return (startTime, endTime);
+    }
+    private (DateTime, DateTime) GetCustomDateRange()
+    {
+        var startTime = _inputView.GetTimeFromUser("start time");
+        var endTime = new DateTime();
+        bool endTimeValid = false;
+
+        while (endTimeValid == false)
+        {
+            endTime = _inputView.GetTimeFromUser("end time");
+
+            if (endTime <= startTime)
+            {
+                var parameter = "End Time";
+                var message = $"The end time must be later than {startTime.ToString("yyyy-MM-dd HH:mm:ss")}";
+                Messages.Error(parameter, message);
+            }
+            else
+            {
+                endTimeValid = true;
+            }
+        }
+
+        return (startTime, endTime);
 
     }
 }

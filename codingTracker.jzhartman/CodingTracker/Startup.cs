@@ -13,40 +13,38 @@ using Dapper;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 
-namespace CodingTracker.ConsoleApp
+namespace CodingTracker.ConsoleApp;
+internal static class Startup
 {
-    internal static class Startup
+    public static IServiceProvider ConfigureServices()
     {
-        public static IServiceProvider ConfigureServices()
-        {
-            var connectionString = ConfigurationManager.AppSettings.Get("connectionString");
-            
-            var dateTimeFormat = ConfigurationManager.AppSettings.Get("timeAndDateFormat");
-            SqlMapper.RemoveTypeMap(typeof(DateTime));
-            SqlMapper.RemoveTypeMap(typeof(DateTime?));
-            SqlMapper.AddTypeHandler(new DateTimeHandler(dateTimeFormat));
+        var connectionString = ConfigurationManager.AppSettings.Get("connectionString");
+        
+        var dateTimeFormat = ConfigurationManager.AppSettings.Get("timeAndDateFormat");
+        SqlMapper.RemoveTypeMap(typeof(DateTime));
+        SqlMapper.RemoveTypeMap(typeof(DateTime?));
+        SqlMapper.AddTypeHandler(new DateTimeHandler(dateTimeFormat));
 
-            var services = new ServiceCollection();
+        var services = new ServiceCollection();
 
-            //Register All Controllers
-            services.AddSingleton<IMainMenuController, MainMenuController>();
-            services.AddSingleton<ITrackSessionController, TrackSessionController>();
-            services.AddSingleton<IEntryListController, EntryListController>();
+        //Register All Controllers
+        services.AddSingleton<IMainMenuController, MainMenuController>();
+        services.AddSingleton<ITrackSessionController, TrackSessionController>();
+        services.AddSingleton<IEntryListController, EntryListController>();
 
-            //Register All Services
-            services.AddSingleton<ICodingSessionDataService, CodingSessionDataService>();
+        //Register All Services
+        services.AddSingleton<ICodingSessionDataService, CodingSessionDataService>();
 
-            //Resgister All Views
-            services.AddSingleton<IMenuView, MenuView>();
-            services.AddSingleton<IUserInput>(new UserInput(dateTimeFormat));
+        //Resgister All Views
+        services.AddSingleton<IMenuView, MenuView>();
+        services.AddSingleton<IUserInput>(new UserInput(dateTimeFormat));
 
 
-            services.AddSingleton<ICodingSessionRepository, CodingSessionRepository>();
-            services.AddSingleton<ISqliteConnectionFactory>(provider => new SqliteConnectionFactory(connectionString));
-            services.AddSingleton<IDatabaseInitializer, DatabaseInitializer>();
+        services.AddSingleton<ICodingSessionRepository, CodingSessionRepository>();
+        services.AddSingleton<ISqliteConnectionFactory>(provider => new SqliteConnectionFactory(connectionString));
+        services.AddSingleton<IDatabaseInitializer, DatabaseInitializer>();
 
-            return services.BuildServiceProvider();
-        }
-
+        return services.BuildServiceProvider();
     }
+
 }

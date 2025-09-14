@@ -1,8 +1,5 @@
-﻿
-namespace CodingTracker.Controller.Interfaces
+﻿namespace CodingTracker.Controller.Interfaces;
+public interface ITrackSessionController
 {
-    public interface ITrackSessionController
-    {
-        void Run();
-    }
+    void Run();
 }

@@ -1,7 +1,5 @@
-﻿namespace CodingTracker.Data.Interfaces
+﻿namespace CodingTracker.Data.Interfaces;
+public interface IDatabaseInitializer
 {
-    public interface IDatabaseInitializer
-    {
-        void Initialize();
-    }
+    void Initialize();
 }

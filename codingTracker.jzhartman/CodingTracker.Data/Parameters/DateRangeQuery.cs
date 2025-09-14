@@ -1,8 +1,6 @@
-﻿namespace CodingTracker.Data.Parameters
+﻿namespace CodingTracker.Data.Parameters;
+public class DateRangeQuery
 {
-    public class DateRangeQuery
-    {
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
-    }
+    public DateTime StartTime { get; set; }
+    public DateTime EndTime { get; set; }
 }

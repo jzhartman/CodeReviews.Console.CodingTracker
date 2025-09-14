@@ -1,54 +1,59 @@
 ﻿using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CodingTracker.Views
+namespace CodingTracker.Views;
+public static class Messages
 {
-    public static class Messages
+    public static void RenderWelcome()
     {
-        public static void RenderWelcome()
-        {
-            AnsiConsole.Markup("[bold blue]CODING TRACKER[/]");
-            AnsiConsole.Markup("[bold blue]Version 1.0[/]");
-            AnsiConsole.Write(new Rule());
+        AnsiConsole.Clear();
+        AnsiConsole.Write(new Rule());
+        AnsiConsole.MarkupLine("[bold blue]CODING TRACKER[/]");
+        AnsiConsole.MarkupLine("[bold blue]Version 1.0[/]");
+        AnsiConsole.Write(new Rule());
+    }
 
-        }
-        public static void ErrorMessage(string parameter, string message)
-        {
-            AddNewLines(1);
-            AnsiConsole.MarkupInterpolated($"[bold red]ERROR:[/] The value for {parameter} encountered the error: [yellow]{message}[/]");
-            AddNewLines(2);
-        }
+    public static void RenderLocation(string location)
+    {
+        AnsiConsole.MarkupLineInterpolated($"[bold]{location.ToUpper()}[/]");
+    }
+    public static void Error(string parameter, string message)
+    {
+        AddNewLines(1);
+        AnsiConsole.MarkupInterpolated($"[bold red]ERROR:[/] The value for {parameter} encountered the error: [yellow]{message}[/]");
+        AddNewLines(2);
+    }
 
-        public static void ConfirmationMessage(string valueText)
+    public static void Confirmation(string valueText)
+    {
+        AddNewLines(1);
+        AnsiConsole.MarkupInterpolated($"[bold green]ACCEPTED[/]: Value set to {valueText}");
+        AddNewLines(2);
+    }
+    public static void ActionComplete(bool isSuccess, string state, string message)
+    {
+        AddNewLines(1);
+        if (isSuccess)
         {
-            AddNewLines(1);
-            AnsiConsole.MarkupInterpolated($"[bold green]ACCEPTED[/]: Value set to {valueText}");
-            AddNewLines(2);
+            AnsiConsole.MarkupInterpolated($"[bold green]{state.ToUpper()}![/] {message}");
         }
-        public static void ActionCompleteMessage(bool isSuccess, string state, string message)
+        else
         {
-            AddNewLines(1);
-            if (isSuccess)
-            {
-                AnsiConsole.MarkupInterpolated($"[bold green]{state.ToUpper()}![/] {message}");
-            }
-            else
-            {
-                AnsiConsole.MarkupInterpolated($"[bold red]{state.ToUpper()}![/] {message}");
-            }
-            AddNewLines(2);
+            AnsiConsole.MarkupInterpolated($"[bold red]{state.ToUpper()}![/] {message}");
         }
+        AddNewLines(2);
+    }
 
-        private static void AddNewLines(int lines)
+    public static void ActionCancelled(string action)
+    {
+        AddNewLines(1);
+        AnsiConsole.MarkupInterpolated($"Cancelled {action} of coding session!");
+    }
+
+    private static void AddNewLines(int lines)
+    {
+        for (int i = 0; i < lines; i++)
         {
-            for (int i = 0; i < lines; i++)
-            {
-                AnsiConsole.WriteLine();
-            }
+            AnsiConsole.WriteLine();
         }
     }
 }

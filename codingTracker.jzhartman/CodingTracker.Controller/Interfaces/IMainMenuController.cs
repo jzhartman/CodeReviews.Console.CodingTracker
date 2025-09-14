@@ -1,7 +1,5 @@
-﻿namespace CodingTracker.Controller.Interfaces
+﻿namespace CodingTracker.Controller.Interfaces;
+public interface IMainMenuController
 {
-    public interface IMainMenuController
-    {
-        void Run();
-    }
+    void Run();
 }

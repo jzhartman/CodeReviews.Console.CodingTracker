@@ -40,6 +40,7 @@ public class ReportsController : IReportsController
         }
     }
 
+
     private string GetDateRangeSelectionFromUser()
     {
         return _menuView.RenderEntryViewOptionsAndGetSelection();

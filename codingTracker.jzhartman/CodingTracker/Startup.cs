@@ -31,6 +31,7 @@ internal static class Startup
         services.AddSingleton<IMainMenuController, MainMenuController>();
         services.AddSingleton<ITrackSessionController, TrackSessionController>();
         services.AddSingleton<IEntryListController, EntryListController>();
+        services.AddSingleton<IReportsController, ReportsController>();
 
         //Register All Services
         services.AddSingleton<ICodingSessionDataService, CodingSessionDataService>();

@@ -26,6 +26,8 @@ public class EntryListController : IEntryListController
 
         while (!returnToPreviousMenu)
         {
+            Messages.RenderWelcome();
+
             var dateRangeSelection = GetDateRangeSelectionFromUser();
 
             if (dateRangeSelection == "Return to Previous Menu") { returnToPreviousMenu = true; continue; }
@@ -54,6 +56,8 @@ public class EntryListController : IEntryListController
                         break;
                 }
                 sessions = _service.GetSessionListByDateRange(startTime, endTime);
+                Messages.RenderWelcome();
+
             }
         }
     }
@@ -70,7 +74,7 @@ public class EntryListController : IEntryListController
     }
     private void DeleteSession(CodingSessionDataRecord session)
     {
-        _service.DeleteById((int)session.Id);
+        _service.DeleteSessionById((int)session.Id);
     }
     private bool ConfirmDelete(CodingSessionDataRecord session)
     {

@@ -9,15 +9,17 @@ public class MainMenuController : IMainMenuController
     private readonly ICodingSessionDataService _service;
     private readonly ITrackSessionController _trackController;
     private readonly IEntryListController _entryListController;
+    private readonly IReportsController _reportsController;
     private readonly IMenuView _view;
 
     public MainMenuController(ICodingSessionDataService service, 
-                                ITrackSessionController trackController, IEntryListController entryListController,
+                                ITrackSessionController trackController, IEntryListController entryListController, IReportsController reportsController,
                                 IMenuView view)
     {
         _service = service;
         _trackController = trackController;
         _entryListController = entryListController;
+        _reportsController = reportsController;
         _view = view;
     }
 
@@ -27,7 +29,6 @@ public class MainMenuController : IMainMenuController
 
         while (!exitApp)
         {
-
             Messages.RenderWelcome();
             var selection = _view.RenderMainMenuAndGetSelection();
 
@@ -40,6 +41,7 @@ public class MainMenuController : IMainMenuController
                     _entryListController.Run();
                     break;
                 case "View Reports":    // Enter Range-Period??? --> Print all records for period --> Print report data
+                    _reportsController.Run();
                     break;
                 case "Manage Goal":     // Print current goal+progress/Give option to change goal
                     break;

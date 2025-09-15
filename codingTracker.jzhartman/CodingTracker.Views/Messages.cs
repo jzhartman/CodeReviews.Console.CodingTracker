@@ -10,6 +10,7 @@ public static class Messages
         AnsiConsole.MarkupLine("[bold blue]CODING TRACKER[/]");
         AnsiConsole.MarkupLine("[bold blue]Version 1.0[/]");
         AnsiConsole.Write(new Rule());
+        AddNewLines(1);
     }
 
     public static void RenderLocation(string location)

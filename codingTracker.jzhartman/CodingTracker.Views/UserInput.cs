@@ -131,7 +131,7 @@ public class UserInput : IUserInput
     }
     private string GenerateEnterDatePromptText(string parameterName, string nullBehavior, bool allowNull)
     {
-        string article = GetArticle(parameterName);
+        string article = GenerateArticleForDatePromptText(parameterName);
         string promptText = $"Please enter {article} {parameterName} using the format [yellow]'yyyy-MM-dd HH:mm:ss'[/]";
 
         if (allowNull)
@@ -145,8 +145,7 @@ public class UserInput : IUserInput
 
         return promptText;
     }
-
-    private string GetArticle(string noun)
+    private string GenerateArticleForDatePromptText(string noun)
     {
         string article = "a";
         char firstLetter = noun.ToLower()[0];

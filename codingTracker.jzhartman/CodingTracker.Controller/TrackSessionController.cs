@@ -24,6 +24,7 @@ public class TrackSessionController : ITrackSessionController
 
         while (!returnToMainMenu)
         {
+            Messages.RenderWelcome();
             var selection = _menuView.RenderTrackingMenuAndGetSelection();
 
             switch (selection)
@@ -85,26 +86,17 @@ public class TrackSessionController : ITrackSessionController
         {
             output = _inputView.GetTimeFromUser("end time");
 
-            if (output <= startTime)
+            var result = _service.ValidateEndTime(output, startTime);
+
+            if (result.IsValid)
             {
-                var parameter = "End Time";
-                var message = $"The end time must be later than {startTime.ToString("yyyy-MM-dd HH:mm:ss")}";
-                Messages.Error(parameter, message);
+                endTimeValid = true;
+                output = result.Value;
+                Messages.Confirmation(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
             }
             else
             {
-                var result = _service.ValidateEndTime(output);
-
-                if (result.IsValid)
-                {
-                    endTimeValid = true;
-                    output = result.Value;
-                    Messages.Confirmation(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
-                }
-                else
-                {
-                    Messages.Error(result.Parameter, result.Message);
-                } 
+                Messages.Error(result.Parameter, result.Message);
             }
         }
         return output;

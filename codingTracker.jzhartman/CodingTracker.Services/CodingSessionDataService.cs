@@ -13,50 +13,54 @@ public class CodingSessionDataService : ICodingSessionDataService
         _repository = repository;
     }
 
+
+
     public List<CodingSessionDataRecord> GetAllCodingSessions()
     {
         return _repository.GetAll();
     }
-
     public List<CodingSessionDataRecord> GetSessionListByDateRange(DateTime startTime, DateTime endTime)
     {
         return _repository.GetByDateRange(startTime, endTime);
     }
-
-    public CodingSessionDataRecord GetById(int id)
+    public CodingSessionDataRecord GetSessionById(int id)
     {
         // Validate that ID exists
 
         return _repository.GetById(id);
     }
-
-    public void DeleteById(int id)
+    public void DeleteSessionById(int id)
     {
         _repository.DeleteById(id);
     }
-
     public void UpdateSession(CodingSessionDataRecord session)
     {
         _repository.UpdateSession(session);
     }
-
     public void AddSession(CodingSession session)
     {
         _repository.AddSession(session);
     }
 
+
+
     public ValidationResult<DateTime> ValidateStartTime(DateTime input)
     {
         if (_repository.ExistsWithinTimeFrame(input))
             return ValidationResult<DateTime>.Fail("Start Time", "A record already exists for this time");
+        else if (input > DateTime.Now)
+            return ValidationResult<DateTime>.Fail("Start Time", "Cannot enter a future time");
         else
             return ValidationResult<DateTime>.Success(input);
     }
-
-    public ValidationResult<DateTime> ValidateEndTime(DateTime input)
+    public ValidationResult<DateTime> ValidateEndTime(DateTime input, DateTime startTime)
     {
         if (_repository.ExistsWithinTimeFrame(input))
             return ValidationResult<DateTime>.Fail("End Time", "A record already exists for this time");
+        else if (input <= startTime)
+            return ValidationResult<DateTime>.Fail("End Time", $"The end time must be later than {startTime.ToString("yyyy-MM-dd HH:mm:ss")}");
+        else if (input > DateTime.Now)
+            return ValidationResult<DateTime>.Fail("Start Time", "Cannot enter a future time");
         else
             return ValidationResult<DateTime>.Success(input);
     }
@@ -71,7 +75,6 @@ public class CodingSessionDataService : ICodingSessionDataService
         else
             return ValidationResult<DateTime>.Success(newStartTime);
     }
-
     public ValidationResult<DateTime> ValidateUpdatedEndTime(CodingSessionDataRecord session, DateTime newStartTime, DateTime newEndTime)
     {
         if (newEndTime == DateTime.MinValue && session.EndTime > newStartTime)

@@ -6,7 +6,6 @@ public class MenuView : IMenuView
 {
     public string RenderMainMenuAndGetSelection()
     {
-        AnsiConsole.WriteLine();
         var selection = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("Select from the options below:")
@@ -69,5 +68,4 @@ public class MenuView : IMenuView
         );
         return selection;
     }
-
 }

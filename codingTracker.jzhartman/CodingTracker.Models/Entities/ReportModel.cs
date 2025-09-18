@@ -9,9 +9,7 @@ public class ReportModel
 {
     public List<CodingSessionDataRecord> SessionList { get; set; }
     public double TotalTime { get; set; }
-    public string TotalTimeText { get; set; }
     public double AverageTime { get; set; }
-    public string AverageTimeText { get; set; }
     public CodingSessionDataRecord FirstEntry {  get; set; }
     public CodingSessionDataRecord LastEntry { get; set; }
     public int SessionCount { get; set; }
@@ -23,8 +21,6 @@ public class ReportModel
         CalculateAverageTime();
         GetFirstAndLastEntry();
         GetSessionCount();
-        AverageTimeText = ConvertTimeFromSecondsToText(AverageTime);
-        TotalTimeText = ConvertTimeFromSecondsToText(TotalTime);
     }
 
     private void CalculateTotalTime()
@@ -50,18 +46,4 @@ public class ReportModel
     {
         SessionCount = SessionList.Count;
     }
-
-    private string ConvertTimeFromSecondsToText(double input)
-    {
-        int miliseconds = TimeSpan.FromSeconds(input).Milliseconds;
-        int seconds = TimeSpan.FromSeconds(input).Seconds;
-
-        if ((double)miliseconds/1000 >= 0.5) seconds ++;
-
-        int minutes = TimeSpan.FromSeconds(input).Minutes;
-        int hours = TimeSpan.FromSeconds(input).Hours + TimeSpan.FromSeconds(input).Days * 24;
-
-        return $"{hours} hours, {minutes} minutes, {seconds} seconds";
-    }
-
 }

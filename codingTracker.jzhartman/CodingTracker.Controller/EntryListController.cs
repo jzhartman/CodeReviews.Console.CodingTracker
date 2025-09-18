@@ -9,15 +9,16 @@ public class EntryListController : IEntryListController
 {
     private readonly ICodingSessionDataService _service;
     private readonly IMenuView _menuView;
-    private readonly IUserInput _inputView;
+    private readonly IUserInputView _inputView;
+    private readonly IConsoleOutputView _outputView;
 
     public EntryListController(ICodingSessionDataService service,
-                                IMenuView menuView,
-                                IUserInput inputView)
+                                IMenuView menuView, IUserInputView inputView, IConsoleOutputView outputView)
     {
         _service = service;
         _menuView = menuView;
         _inputView = inputView;
+        _outputView = outputView;
     }
 
     public void Run()
@@ -26,7 +27,7 @@ public class EntryListController : IEntryListController
 
         while (!returnToPreviousMenu)
         {
-            Messages.RenderWelcome();
+            _outputView.WelcomeMessage();
 
             var dateRangeSelection = GetDateRangeSelectionFromUser();
 
@@ -39,7 +40,7 @@ public class EntryListController : IEntryListController
 
             while (!returnToDateSelection)
             {
-                CodingSessionView.RenderCodingSessions(sessions);
+                _outputView.PrintCodingSessionListAsTable(sessions);
 
                 var selection = _menuView.RenderUpdateOrDeleteOptionsAndGetSelection();
 
@@ -56,7 +57,7 @@ public class EntryListController : IEntryListController
                         break;
                 }
                 sessions = _service.GetSessionListByDateRange(startTime, endTime);
-                Messages.RenderWelcome();
+                _outputView.WelcomeMessage();
 
             }
         }
@@ -69,7 +70,7 @@ public class EntryListController : IEntryListController
         if (ConfirmDelete(sessions[recordId]))
             DeleteSession(sessions[recordId]);
         else
-            Messages.ActionCancelled("deletion");
+            _outputView.ActionCancelledMessage("deletion");
 
     }
     private void DeleteSession(CodingSessionDataRecord session)
@@ -92,7 +93,7 @@ public class EntryListController : IEntryListController
         if (ConfirmUpdate(sessions[recordId], updatedSession))
             UpdateSession(updatedSession, sessions[recordId].Id);
         else
-            Messages.ActionCancelled("update");
+            _outputView.ActionCancelledMessage("update");
 
         // get confirmation
         // if confirmed => _repository.UpdateSession(updatedsession);
@@ -102,7 +103,7 @@ public class EntryListController : IEntryListController
     {
         var sessionDTO = new CodingSessionDataRecord {Id = id, StartTime = session.StartTime, EndTime = session.EndTime, Duration = (int)session.Duration };
         _service.UpdateSession(sessionDTO);
-        Messages.ActionComplete(true, "Success", "Coding session successfully added!");
+        _outputView.ActionCompleteMessage(true, "Success", "Coding session successfully added!");
     }
     private bool ConfirmUpdate(CodingSessionDataRecord session, CodingSession updatedSession)
     {
@@ -122,11 +123,11 @@ public class EntryListController : IEntryListController
             {
                 startTimeValid = true;
                 output = result.Value;
-                Messages.Confirmation(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
+                _outputView.ConfirmationMessage(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
             }
             else
             {
-                Messages.Error(result.Parameter, result.Message);
+                _outputView.ErrorMessage(result.Parameter, result.Message);
             }
         }
         return output;
@@ -145,11 +146,11 @@ public class EntryListController : IEntryListController
             {
                 startTimeValid = true;
                 output = result.Value;
-                Messages.Confirmation(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
+                _outputView.ConfirmationMessage(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
             }
             else
             {
-                Messages.Error(result.Parameter, result.Message);
+                _outputView.ErrorMessage(result.Parameter, result.Message);
             }
         }
         return output;
@@ -214,7 +215,7 @@ public class EntryListController : IEntryListController
             {
                 var parameter = "End Time";
                 var message = $"The end time must be later than {startTime.ToString("yyyy-MM-dd HH:mm:ss")}";
-                Messages.Error(parameter, message);
+                _outputView.ErrorMessage(parameter, message);
             }
             else
             {

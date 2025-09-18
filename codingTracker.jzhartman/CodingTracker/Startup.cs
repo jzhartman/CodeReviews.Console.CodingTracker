@@ -8,7 +8,6 @@ using CodingTracker.Services;
 using CodingTracker.Services.Interfaces;
 using CodingTracker.Views;
 using CodingTracker.Views.Interfaces;
-using CodingTracker.Views.Menus;
 using Dapper;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
@@ -39,7 +38,8 @@ internal static class Startup
 
         //Resgister All Views
         services.AddSingleton<IMenuView, MenuView>();
-        services.AddSingleton<IUserInput>(new UserInput(dateTimeFormat));
+        services.AddSingleton<IConsoleOutputView, ConsoleOutputView>();
+        services.AddSingleton<IUserInputView>(new UserInputView(dateTimeFormat));
 
 
         services.AddSingleton<ICodingSessionRepository, CodingSessionRepository>();

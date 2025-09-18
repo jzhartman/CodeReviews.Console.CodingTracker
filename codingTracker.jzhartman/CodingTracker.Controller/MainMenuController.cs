@@ -11,18 +11,20 @@ public class MainMenuController : IMainMenuController
     private readonly IEntryListController _entryListController;
     private readonly IReportsController _reportsController;
     private readonly IGoalsController _goalsController;
-    private readonly IMenuView _view;
+    private readonly IMenuView _menuView;
+    private readonly IConsoleOutputView _outputView;
 
     public MainMenuController(ICodingSessionDataService service, 
                                 ITrackSessionController trackController, IEntryListController entryListController, IReportsController reportsController, IGoalsController goalsController,
-                                IMenuView view)
+                                IMenuView menuView, IConsoleOutputView outputView)
     {
         _service = service;
         _trackController = trackController;
         _entryListController = entryListController;
         _reportsController = reportsController;
         _goalsController = goalsController;
-        _view = view;
+        _menuView = menuView;
+        _outputView = outputView;
     }
 
     public void Run()
@@ -31,8 +33,8 @@ public class MainMenuController : IMainMenuController
 
         while (!exitApp)
         {
-            Messages.RenderWelcome();
-            var selection = _view.RenderMainMenuAndGetSelection();
+            _outputView.WelcomeMessage();
+            var selection = _menuView.RenderMainMenuAndGetSelection();
 
             switch (selection)
             {

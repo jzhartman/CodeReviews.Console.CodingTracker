@@ -1,7 +1,7 @@
 ﻿using CodingTracker.Models.Entities;
 
 namespace CodingTracker.Views.Interfaces;
-public interface IUserInput
+public interface IUserInputView
 {
     int GetRecordIdFromUser(string action, int max);
     bool GetAddSessionConfirmationFromUser(CodingSession session);

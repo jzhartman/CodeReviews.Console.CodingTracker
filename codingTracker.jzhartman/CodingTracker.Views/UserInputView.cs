@@ -3,10 +3,10 @@ using CodingTracker.Views.Interfaces;
 using Spectre.Console;
 
 namespace CodingTracker.Views;
-public class UserInput : IUserInput
+public class UserInputView : IUserInputView
 {
     private readonly string _dateFormat;
-    public UserInput(string dateFormat)
+    public UserInputView(string dateFormat)
     {
         _dateFormat = dateFormat;
     }

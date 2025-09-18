@@ -1,7 +1,7 @@
 ﻿using CodingTracker.Views.Interfaces;
 using Spectre.Console;
 
-namespace CodingTracker.Views.Menus;
+namespace CodingTracker.Views;
 public class MenuView : IMenuView
 {
     public string RenderMainMenuAndGetSelection()

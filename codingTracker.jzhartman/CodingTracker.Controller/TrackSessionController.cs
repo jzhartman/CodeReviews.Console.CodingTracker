@@ -9,13 +9,15 @@ public class TrackSessionController : ITrackSessionController
 {
     private readonly ICodingSessionDataService _service;
     private readonly IMenuView _menuView;
-    private readonly IUserInput _inputView;
+    private readonly IUserInputView _inputView;
+    private readonly IConsoleOutputView _outputView;
 
-    public TrackSessionController(ICodingSessionDataService service, IMenuView menuView, IUserInput inputView)
+    public TrackSessionController(ICodingSessionDataService service, IMenuView menuView, IUserInputView inputView, IConsoleOutputView outputView)
     {
         _service = service;
         _menuView = menuView;
         _inputView = inputView;
+        _outputView = outputView;
     }
 
     public void Run()
@@ -24,7 +26,7 @@ public class TrackSessionController : ITrackSessionController
 
         while (!returnToMainMenu)
         {
-            Messages.RenderWelcome();
+            _outputView.WelcomeMessage();
             var selection = _menuView.RenderTrackingMenuAndGetSelection();
 
             switch (selection)
@@ -68,11 +70,11 @@ public class TrackSessionController : ITrackSessionController
             {
                 startTimeValid = true;
                 output = result.Value;
-                Messages.Confirmation(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
+                _outputView.ConfirmationMessage(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
             }
             else
             {
-                Messages.Error(result.Parameter, result.Message);
+                _outputView.ErrorMessage(result.Parameter, result.Message);
             }
         }
         return output;
@@ -92,11 +94,11 @@ public class TrackSessionController : ITrackSessionController
             {
                 endTimeValid = true;
                 output = result.Value;
-                Messages.Confirmation(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
+                _outputView.ConfirmationMessage(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
             }
             else
             {
-                Messages.Error(result.Parameter, result.Message);
+                _outputView.ErrorMessage(result.Parameter, result.Message);
             }
         }
         return output;
@@ -111,22 +113,22 @@ public class TrackSessionController : ITrackSessionController
         }
         else
         {
-            Messages.ActionCancelled("addition");
+            _outputView.ActionCancelledMessage("addition");
         }
     }
     private void AddSession(CodingSession session)
     {
         _service.AddSession(session);
-        Messages.ActionComplete(true, "Success", "Coding session successfully added!");
+        _outputView.ActionCompleteMessage(true, "Success", "Coding session successfully added!");
     }
 
     private CodingSession GetNewSessionFromStopwatch()
     {
         var startTime = GetStartTimeWithStopwatch();
-        Messages.Confirmation(startTime.ToString("yyyy-MM-dd HH:mm:ss"));
+        _outputView.ConfirmationMessage(startTime.ToString("yyyy-MM-dd HH:mm:ss"));
 
         var endTime = GetStopTimeWithStopwatch();
-        Messages.Confirmation(endTime.ToString("yyyy-MM-dd HH:mm:ss"));
+        _outputView.ConfirmationMessage(endTime.ToString("yyyy-MM-dd HH:mm:ss"));
 
         return new CodingSession(startTime, endTime);
     }

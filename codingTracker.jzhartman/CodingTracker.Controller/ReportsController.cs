@@ -9,12 +9,15 @@ public class ReportsController : IReportsController
 {
     private readonly ICodingSessionDataService _service;
     private readonly IMenuView _menuView;
-    private readonly IUserInput _inputView;
-    public ReportsController(ICodingSessionDataService service, IMenuView menuView, IUserInput inputView)
+    private readonly IUserInputView _inputView;
+    private readonly IConsoleOutputView _outputView;
+    public ReportsController(ICodingSessionDataService service,
+                                IMenuView menuView, IUserInputView inputView, IConsoleOutputView outputView)
     {
         _service = service;
         _menuView = menuView;
         _inputView = inputView;
+        _outputView = outputView;
     }
 
     public void Run()
@@ -23,7 +26,7 @@ public class ReportsController : IReportsController
 
         while (!returnToMainMenu)
         {
-            Messages.RenderWelcome();
+            _outputView.WelcomeMessage();
 
             var dateRangeSelection = GetDateRangeSelectionFromUser();
 
@@ -34,8 +37,8 @@ public class ReportsController : IReportsController
             var sessions = _service.GetSessionListByDateRange(startTime, endTime);
             var report = new ReportModel(sessions);
                 
-            CodingSessionView.RenderCodingSessions(sessions);
-            CodingSessionView.RenderReportData(report);
+            _outputView.PrintCodingSessionListAsTable(sessions);
+            _outputView.PrintReportDataAsTable(report);
             
         }
     }
@@ -47,7 +50,6 @@ public class ReportsController : IReportsController
     }
     private (DateTime, DateTime) GetDatesBasedOnUserSelection(string selection)
     {
-        bool returnToPreviousMenu = false;
         DateTime startTime = new DateTime();
         DateTime endTime = new DateTime();
 
@@ -101,7 +103,7 @@ public class ReportsController : IReportsController
             {
                 var parameter = "End Time";
                 var message = $"The end time must be later than {startTime.ToString("yyyy-MM-dd HH:mm:ss")}";
-                Messages.Error(parameter, message);
+                _outputView.ErrorMessage(parameter, message);
             }
             else
             {

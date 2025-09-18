@@ -10,16 +10,18 @@ public class MainMenuController : IMainMenuController
     private readonly ITrackSessionController _trackController;
     private readonly IEntryListController _entryListController;
     private readonly IReportsController _reportsController;
+    private readonly IGoalsController _goalsController;
     private readonly IMenuView _view;
 
     public MainMenuController(ICodingSessionDataService service, 
-                                ITrackSessionController trackController, IEntryListController entryListController, IReportsController reportsController,
+                                ITrackSessionController trackController, IEntryListController entryListController, IReportsController reportsController, IGoalsController goalsController,
                                 IMenuView view)
     {
         _service = service;
         _trackController = trackController;
         _entryListController = entryListController;
         _reportsController = reportsController;
+        _goalsController = goalsController;
         _view = view;
     }
 
@@ -44,6 +46,7 @@ public class MainMenuController : IMainMenuController
                     _reportsController.Run();
                     break;
                 case "Manage Goal":     // Print current goal+progress/Give option to change goal
+                    _goalsController.Run();
                     break;
                 case "Exit":            // Generic goodbye message
                     exitApp = true;

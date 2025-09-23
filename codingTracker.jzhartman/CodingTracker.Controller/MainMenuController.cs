@@ -34,7 +34,7 @@ public class MainMenuController : IMainMenuController
         while (!exitApp)
         {
             _outputView.WelcomeMessage();
-            var selection = _menuView.RenderMainMenuAndGetSelection();
+            var selection = _menuView.PrintMainMenuAndGetSelection();
 
             switch (selection)
             {

@@ -27,7 +27,7 @@ public class TrackSessionController : ITrackSessionController
         while (!returnToMainMenu)
         {
             _outputView.WelcomeMessage();
-            var selection = _menuView.RenderTrackingMenuAndGetSelection();
+            var selection = _menuView.PrintTrackingMenuAndGetSelection();
 
             switch (selection)
             {

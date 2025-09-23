@@ -42,7 +42,7 @@ public class EntryListController : IEntryListController
             {
                 _outputView.PrintCodingSessionListAsTable(sessions);
 
-                var selection = _menuView.RenderUpdateOrDeleteOptionsAndGetSelection();
+                var selection = _menuView.PrintUpdateOrDeleteOptionsAndGetSelection();
 
                 switch (selection)
                 {
@@ -157,7 +157,7 @@ public class EntryListController : IEntryListController
     }
     private string GetDateRangeSelectionFromUser()
     {
-        return _menuView.RenderEntryViewOptionsAndGetSelection();
+        return _menuView.PrintEntryViewOptionsAndGetSelection();
     }
     private (DateTime, DateTime) GetDatesBasedOnUserSelection(string selection)
     {

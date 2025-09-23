@@ -4,7 +4,7 @@ using Spectre.Console;
 namespace CodingTracker.Views;
 public class MenuView : IMenuView
 {
-    public string RenderMainMenuAndGetSelection()
+    public string PrintMainMenuAndGetSelection()
     {
         var selection = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -22,7 +22,7 @@ public class MenuView : IMenuView
         return selection;
     }
 
-    public string RenderTrackingMenuAndGetSelection()
+    public string PrintTrackingMenuAndGetSelection()
     {
         var selection = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -38,7 +38,7 @@ public class MenuView : IMenuView
         return selection;
     }
 
-    public string RenderEntryViewOptionsAndGetSelection()
+    public string PrintEntryViewOptionsAndGetSelection()
     {
         var selection = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -54,7 +54,7 @@ public class MenuView : IMenuView
             );
         return selection;
     }
-    public string RenderUpdateOrDeleteOptionsAndGetSelection()
+    public string PrintUpdateOrDeleteOptionsAndGetSelection()
     {
         var selection = AnsiConsole.Prompt(
         new SelectionPrompt<string>()

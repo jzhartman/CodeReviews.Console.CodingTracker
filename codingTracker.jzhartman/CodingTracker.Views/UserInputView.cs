@@ -1,6 +1,8 @@
 ﻿using CodingTracker.Models.Entities;
 using CodingTracker.Views.Interfaces;
+using Microsoft.VisualBasic;
 using Spectre.Console;
+using System.Globalization;
 
 namespace CodingTracker.Views;
 public class UserInputView : IUserInputView
@@ -12,20 +14,35 @@ public class UserInputView : IUserInputView
     }
     public DateTime GetTimeFromUser(string parameterName, string nullBehavior = "", bool allowNull = false)
     {
-        var date = new DateTime();
+        var timeInput = string.Empty;
         var promptText = GenerateEnterDatePromptText(parameterName, nullBehavior, allowNull);
 
-        if (allowNull) date = AnsiConsole.Prompt(
-                                        new TextPrompt<DateTime>(promptText)
-                                        .AllowEmpty());
+        if (allowNull) timeInput = AnsiConsole.Prompt(
+                                        new TextPrompt<string>(promptText)
+                                        .AllowEmpty()
+                                        .ValidationErrorMessage("[red]That's not a valid date format. Please use MM/dd/yyyy.[/]")
+                                        .Validate(input =>
+                                        {
+                                            if (DateTime.TryParseExact(input, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+                                            {
+                                                return ValidationResult.Success();
+                                            }
+                                            return ValidationResult.Error();
+                                        }));
 
-        else date = AnsiConsole.Prompt(
-                                        new TextPrompt<DateTime>(promptText));
-        
+        else timeInput = AnsiConsole.Prompt(
+                                        new TextPrompt<string>(promptText)
+                                        .ValidationErrorMessage("[red]That's not a valid date format. Please use MM/dd/yyyy.[/]")
+                                        .Validate(input =>
+                                        {
+                                            if (DateTime.TryParseExact(input, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+                                            {
+                                                return ValidationResult.Success();
+                                            }
+                                            return ValidationResult.Error();
+                                        }));
 
-        //Add custom validation for time format
-
-        return date;
+        return DateTime.ParseExact(timeInput, _dateFormat, CultureInfo.InvariantCulture);
     }
 
     public string StartStopwatch()

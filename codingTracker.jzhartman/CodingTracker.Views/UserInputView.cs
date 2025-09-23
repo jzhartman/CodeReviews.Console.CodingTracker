@@ -16,11 +16,13 @@ public class UserInputView : IUserInputView
     {
         var timeInput = string.Empty;
         var promptText = GenerateEnterDatePromptText(parameterName, nullBehavior, allowNull);
+        var errorMessageText = $"[bold red]ERROR:[/] The value you entered does not match the required format!";
+
 
         if (allowNull) timeInput = AnsiConsole.Prompt(
                                         new TextPrompt<string>(promptText)
                                         .AllowEmpty()
-                                        .ValidationErrorMessage("[red]That's not a valid date format. Please use MM/dd/yyyy.[/]")
+                                        .ValidationErrorMessage(errorMessageText)
                                         .Validate(input =>
                                         {
                                             if (DateTime.TryParseExact(input, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
@@ -32,7 +34,7 @@ public class UserInputView : IUserInputView
 
         else timeInput = AnsiConsole.Prompt(
                                         new TextPrompt<string>(promptText)
-                                        .ValidationErrorMessage("[red]That's not a valid date format. Please use MM/dd/yyyy.[/]")
+                                        .ValidationErrorMessage(errorMessageText)
                                         .Validate(input =>
                                         {
                                             if (DateTime.TryParseExact(input, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
@@ -171,30 +173,3 @@ public class UserInputView : IUserInputView
         return article;
     }
 }
-
-
-/*
-    // Define the target date format.
-    const string dateFormat = "yyyy-MM-dd";
-    
-    // Prompt for a date with validation.
-    var dateString = AnsiConsole.Prompt(
-        new TextPrompt<string>("Enter a date in [green]yyyy-MM-dd[/] format:")
-            .PromptStyle("yellow")
-            .ValidationErrorMessage($"[red]Invalid date format. Please use {dateFormat}.[/]")
-            .Validate(input =>
-            {
-                // Use DateTime.TryParseExact for robust format checking.
-                if (DateTime.TryParseExact(input, dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
-                {
-                    return ValidationResult.Success();
-                }
-                
-                return ValidationResult.Error();
-            }));
-
-    // After successful validation, parse the string into a DateTime object.
-    DateTime parsedDate = DateTime.ParseExact(dateString, dateFormat, CultureInfo.InvariantCulture);
-
-    AnsiConsole.MarkupLine($"You entered: [green]{parsedDate:yyyy-MM-dd}[/]");
-*/

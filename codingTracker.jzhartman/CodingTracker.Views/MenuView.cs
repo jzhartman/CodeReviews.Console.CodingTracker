@@ -46,9 +46,11 @@ public class MenuView : IMenuView
                 .AddChoices(new[]
                 {
                     "All",
-                    "One Year",
+                    "Past Year",
                     "Year to Date",
-                    "Enter Date Range",
+                    "Custom Week",
+                    "Custom Month",
+                    "Custom Year",
                     "Return to Previous Menu"
                 })
             );

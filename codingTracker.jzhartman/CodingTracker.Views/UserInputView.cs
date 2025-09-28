@@ -115,9 +115,11 @@ public class UserInputView : IUserInputView
     }
     public bool GetDeleteSessionConfirmationFromUser(CodingSessionDataRecord session)
     {
+        var duration = ConvertTimeFromSecondsToText(session.Duration);
+
         string promptText = $"Confirm deletion of coding session with start time [yellow]{session.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}[/]"
                             + $" and end time [yellow]{session.EndTime.ToString("yyyy-MM-dd HH:mm:ss")}[/]"
-                            + $" with duration [yellow]{TimeSpan.FromSeconds(session.Duration).ToString()}[/]";
+                            + $" with duration [yellow]{duration}[/]";
 
         var confirmation = AnsiConsole.Prompt(
             new TextPrompt<bool>(promptText)
@@ -126,6 +128,19 @@ public class UserInputView : IUserInputView
             .WithConverter(choice => choice ? "y" : "n"));
 
         return confirmation;
+    }
+
+    private string ConvertTimeFromSecondsToText(double input)
+    {
+        int miliseconds = TimeSpan.FromSeconds(input).Milliseconds;
+        int seconds = TimeSpan.FromSeconds(input).Seconds;
+
+        if ((double)miliseconds / 1000 >= 0.5) seconds++;
+
+        int minutes = TimeSpan.FromSeconds(input).Minutes;
+        int hours = TimeSpan.FromSeconds(input).Hours + TimeSpan.FromSeconds(input).Days * 24;
+
+        return $"{hours}:{minutes:00}:{seconds:00}";
     }
 
     private string GenerateUpdateSessionConfirmationPrompt(CodingSessionDataRecord session, CodingSession updatedSession)

@@ -14,4 +14,7 @@ public interface ICodingSessionDataService
     ValidationResult<DateTime> ValidateStartTime(DateTime input);
     ValidationResult<DateTime> ValidateUpdatedEndTime(CodingSessionDataRecord session, DateTime newStartTime, DateTime newEndTime);
     ValidationResult<DateTime> ValidateUpdatedStartTime(CodingSessionDataRecord session, DateTime updatedStartTime);
+    (DateTime, DateTime) GetBasicDateRange(string selection);
+    DateTime GetEndTimeForAdvancedDateRange(string selection, DateTime startTime);
+    ValidationResult<DateTime> ValidateDateRangeStartTime(DateTime input);
 }

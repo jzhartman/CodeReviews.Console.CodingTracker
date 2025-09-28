@@ -161,69 +161,47 @@ public class EntryListController : IEntryListController
     }
     private (DateTime, DateTime) GetDatesBasedOnUserSelection(string selection)
     {
-        bool returnToPreviousMenu = false;
         DateTime startTime = new DateTime();
         DateTime endTime = new DateTime();
 
         switch (selection)
         {
             case "All":
-                (startTime, endTime) = GetAllDates();
-                break;
-            case "One Year":
-                (startTime, endTime) = GetDateRangeForPastYear();
-                break;
+            case "Past Year":
             case "Year to Date":
-                (startTime, endTime) = GetDateRangeForYearToDate();
+                (startTime, endTime) = _service.GetBasicDateRange(selection);
                 break;
-            case "Enter Date Range":
-                (startTime, endTime) = GetCustomDateRange();
+            case "Custom Week":
+            case "Custom Month":
+            case "Custom Year":
+                startTime = GetRangeStartTime();
+                endTime = _service.GetEndTimeForAdvancedDateRange(selection, startTime);
                 break;
         }
 
         return (startTime, endTime);
     }
-    private (DateTime, DateTime) GetAllDates()
+    private DateTime GetRangeStartTime()
     {
-        var startTime = DateTime.MinValue;
-        var endTime = DateTime.MaxValue;
-        return (startTime, endTime);
-    }
-    private (DateTime, DateTime) GetDateRangeForPastYear()
-    {
-        var endTime = DateTime.Now;
-        var startTime = endTime.AddYears(-1);
-        return (startTime, endTime);
-    }
-    private (DateTime, DateTime) GetDateRangeForYearToDate()
-    {
-        var endTime = DateTime.Now;
-        var startTime = new DateTime(endTime.Year, 1, 1);
-        return (startTime, endTime);
-    }
-    private (DateTime, DateTime) GetCustomDateRange()
-    {
-        var startTime = _inputView.GetTimeFromUser("start time");
-        var endTime = new DateTime();
-        bool endTimeValid = false;
+        var output = new DateTime();
+        bool startTimeValid = false;
 
-        while (endTimeValid == false)
+        while (startTimeValid == false)
         {
-            endTime = _inputView.GetTimeFromUser("end time");
+            var startTime = _inputView.GetTimeFromUser("start time");
+            var result = _service.ValidateDateRangeStartTime(startTime);
 
-            if (endTime <= startTime)
+            if (result.IsValid)
             {
-                var parameter = "End Time";
-                var message = $"The end time must be later than {startTime.ToString("yyyy-MM-dd HH:mm:ss")}";
-                _outputView.ErrorMessage(parameter, message);
+                startTimeValid = true;
+                output = result.Value;
+                _outputView.ConfirmationMessage(result.Value.ToString("yyyy-MM-dd HH:mm:ss"));
             }
             else
             {
-                endTimeValid = true;
+                _outputView.ErrorMessage(result.Parameter, result.Message);
             }
         }
-
-        return (startTime, endTime);
-
+        return output;
     }
 }

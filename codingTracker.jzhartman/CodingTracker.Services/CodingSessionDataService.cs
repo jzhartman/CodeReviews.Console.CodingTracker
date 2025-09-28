@@ -14,7 +14,20 @@ public class CodingSessionDataService : ICodingSessionDataService
     }
 
 
+    //  MOVE TO CRUD SERVICES FILE
 
+    public void DeleteSessionById(int id)
+    {
+        _repository.DeleteById(id);
+    }
+    public void UpdateSession(CodingSessionDataRecord session)
+    {
+        _repository.UpdateSession(session);
+    }
+    public void AddSession(CodingSession session)
+    {
+        _repository.AddSession(session);
+    }
     public List<CodingSessionDataRecord> GetAllCodingSessions()
     {
         return _repository.GetAll();
@@ -29,20 +42,82 @@ public class CodingSessionDataService : ICodingSessionDataService
 
         return _repository.GetById(id);
     }
-    public void DeleteSessionById(int id)
+
+
+
+
+
+    //  Separate to new file?
+    // Provides Calculated Values Based On User Input
+
+    public (DateTime, DateTime) GetBasicDateRange(string selection)
     {
-        _repository.DeleteById(id);
+        DateTime startTime = new DateTime();
+        DateTime endTime = new DateTime();
+
+        switch (selection)
+        {
+            case "All":
+                (startTime, endTime) = GetAllDates();
+                break;
+            case "Past Year":
+                (startTime, endTime) = GetDateRangeForPastYear();
+                break;
+            case "Year to Date":
+                (startTime, endTime) = GetDateRangeForYearToDate();
+                break;
+        }
+
+        return (startTime, endTime);
     }
-    public void UpdateSession(CodingSessionDataRecord session)
+    public DateTime GetEndTimeForAdvancedDateRange(string selection, DateTime startTime)
     {
-        _repository.UpdateSession(session);
+        DateTime endTime = new DateTime();
+
+        switch (selection)
+        {
+
+            case "Custom Week":
+                endTime = endTime = startTime.AddDays(7);
+                break;
+            case "Custom Month":
+                endTime = startTime.AddMonths(1);
+                break;
+            case "Custom Year":
+                endTime = startTime.AddYears(1);
+                break;
+        }
+
+        return endTime;
     }
-    public void AddSession(CodingSession session)
+    private (DateTime, DateTime) GetAllDates()
     {
-        _repository.AddSession(session);
+        var startTime = DateTime.MinValue;
+        var endTime = DateTime.MaxValue;
+        return (startTime, endTime);
+    }
+    private (DateTime, DateTime) GetDateRangeForPastYear()
+    {
+        var endTime = DateTime.Now;
+        var startTime = endTime.AddYears(-1);
+        return (startTime, endTime);
+    }
+    private (DateTime, DateTime) GetDateRangeForYearToDate()
+    {
+        var endTime = DateTime.Now;
+        var startTime = new DateTime(endTime.Year, 1, 1);
+        return (startTime, endTime);
     }
 
 
+
+
+
+
+
+
+
+    // MOVE TO VALIDATION SERVICES FILE
 
     public ValidationResult<DateTime> ValidateStartTime(DateTime input)
     {
@@ -88,5 +163,19 @@ public class CodingSessionDataService : ICodingSessionDataService
 
         else
             return ValidationResult<DateTime>.Success(newEndTime);
+    }
+    public ValidationResult<DateTime> ValidateReportEndTime(DateTime input, DateTime startTime)
+    {
+        if (input <= startTime)
+            return ValidationResult<DateTime>.Fail("End Time", $"The end time must be later than {startTime.ToString("yyyy-MM-dd HH:mm:ss")}");
+        else
+            return ValidationResult<DateTime>.Success(input);
+    }
+    public ValidationResult<DateTime> ValidateDateRangeStartTime(DateTime input)
+    {
+        if (input > DateTime.Now)
+            return ValidationResult<DateTime>.Fail("Start Time", "Cannot enter a future time");
+        else
+            return ValidationResult<DateTime>.Success(input);
     }
 }

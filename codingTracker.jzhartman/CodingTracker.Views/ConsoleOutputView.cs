@@ -41,7 +41,6 @@ public class ConsoleOutputView : IConsoleOutputView
         }
         AddNewLines(2);
     }
-
     public void ActionCancelledMessage(string action)
     {
         AddNewLines(1);
@@ -74,12 +73,10 @@ public class ConsoleOutputView : IConsoleOutputView
         AnsiConsole.Write(grid);
         AddNewLines(2);
     }
-
     public void PrintSingleCodingSession(CodingSessionDataRecord session)
     {
         Console.WriteLine($"{session.Id}:\t{session.StartTime} to {session.EndTime} for a duration of {session.Duration}");
     }
-
     public void PrintReportDataAsTable(ReportModel report)
     {
         AnsiConsole.WriteLine();
@@ -95,7 +92,8 @@ public class ConsoleOutputView : IConsoleOutputView
 
         AnsiConsole.Write(grid);
 
-        AnsiConsole.WriteLine("Press any key to continue");
+        AddNewLines(2);
+        AnsiConsole.Write("Press any key to continue... ");
         AnsiConsole.Console.Input.ReadKey(false);
     }
 

@@ -80,7 +80,18 @@ public class CodingSessionRepository : ICodingSessionRepository
     }
 
 
+    public DateTime GetStartTimeOfNextRecord(DateTime time)
+    {
+        var parameter = new DateValue { Time = time };
+        using var connection = _connectionFactory.CreateConnection();
 
+        string sql = @"select StartTime from CodingSessions
+                            where StartTime > @Time
+                            order by StartTime
+                            limit 1";
+
+        return LoadData<DateTime, DateValue>(sql, parameter).FirstOrDefault();
+;    }
 
     public bool ExistsWithinTimeFrame(DateTime time)
     {

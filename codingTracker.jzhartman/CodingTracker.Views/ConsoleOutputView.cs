@@ -14,14 +14,12 @@ public class ConsoleOutputView : IConsoleOutputView
         AnsiConsole.Write(new Rule());
         AddNewLines(1);
     }
-
     public void ErrorMessage(string parameter, string message)
     {
         AddNewLines(1);
         AnsiConsole.MarkupInterpolated($"[bold red]ERROR:[/] The value for {parameter} encountered the error: [yellow]{message}[/]");
         AddNewLines(2);
     }
-
     public void ConfirmationMessage(string valueText)
     {
         AddNewLines(1);
@@ -46,8 +44,6 @@ public class ConsoleOutputView : IConsoleOutputView
         AddNewLines(1);
         AnsiConsole.MarkupInterpolated($"Cancelled {action} of coding session!");
     }
-
-
     public void PrintCodingSessionListAsTable(List<CodingSessionDataRecord> sessions)
     {
         int count = 1;
@@ -96,6 +92,8 @@ public class ConsoleOutputView : IConsoleOutputView
         AnsiConsole.Write("Press any key to continue... ");
         AnsiConsole.Console.Input.ReadKey(false);
     }
+
+
 
 
     private void AddNewLines(int lines)

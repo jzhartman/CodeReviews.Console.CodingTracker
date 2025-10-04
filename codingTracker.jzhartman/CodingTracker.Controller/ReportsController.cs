@@ -38,8 +38,7 @@ public class ReportsController : IReportsController
             var report = new ReportModel(sessions);
                 
             _outputView.PrintCodingSessionListAsTable(sessions);
-            _outputView.PrintReportDataAsTable(report);
-            
+            _outputView.PrintReportDataAsTable(report);  
         }
     }
 
@@ -70,7 +69,6 @@ public class ReportsController : IReportsController
 
         return (startTime, endTime);
     }
-
     private DateTime GetRangeStartTime()
     {
         var output = new DateTime();

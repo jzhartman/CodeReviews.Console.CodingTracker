@@ -10,4 +10,5 @@ public interface ICodingSessionRepository
     void DeleteById(int id);
     bool ExistsWithinTimeFrame(DateTime time);
     bool ExistsWithinTimeFrameExcludingSessionById(CodingSessionDataRecord session, DateTime newTime);
+    DateTime GetStartTimeOfNextRecord(DateTime time);
 }

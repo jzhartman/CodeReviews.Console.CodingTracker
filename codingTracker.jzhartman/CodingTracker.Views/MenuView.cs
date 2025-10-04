@@ -63,9 +63,9 @@ public class MenuView : IMenuView
             .Title("Please select the next operation:")
             .AddChoices(new[]
             {
-                            "Change Record",
-                            "Delete Record",
-                            "Return to Previous Menu"
+                    "Change Record",
+                    "Delete Record",
+                    "Return to Previous Menu"
             })
         );
         return selection;

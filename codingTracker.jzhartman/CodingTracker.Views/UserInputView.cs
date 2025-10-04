@@ -46,7 +46,6 @@ public class UserInputView : IUserInputView
 
         return DateTime.ParseExact(timeInput, _dateFormat, CultureInfo.InvariantCulture);
     }
-
     public string StartStopwatch()
     {
         AnsiConsole.WriteLine();
@@ -61,7 +60,6 @@ public class UserInputView : IUserInputView
 
         return selection;
     }
-
     public string StopStopwatch()
     {
         AnsiConsole.WriteLine();
@@ -76,7 +74,6 @@ public class UserInputView : IUserInputView
 
         return selection;
     }
-
     public int GetRecordIdFromUser(string action, int max)
     {
         var id = AnsiConsole.Prompt(
@@ -92,15 +89,16 @@ public class UserInputView : IUserInputView
     }
     public bool GetAddSessionConfirmationFromUser(CodingSession session)
     {
+        var duration = ConvertTimeFromSecondsToText(session.Duration);
+
         var confirmation = AnsiConsole.Prompt(
-            new TextPrompt<bool>($"Add coding session starting at [yellow]{session.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}[/] and ending at [yellow]{session.EndTime.ToString("yyyy-MM-dd HH:mm:ss")}[/] with duration [yellow]{session.DurationText}[/]?")
+            new TextPrompt<bool>($"Add coding session starting at [yellow]{session.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}[/] and ending at [yellow]{session.EndTime.ToString("yyyy-MM-dd HH:mm:ss")}[/] with duration [yellow]{duration}[/]?")
             .AddChoice(true)
             .AddChoice(false)
             .WithConverter(choice => choice ? "y" : "n"));
 
         return confirmation;
     }
-
     public bool GetUpdateSessionConfirmationFromUser(CodingSessionDataRecord session, CodingSession updatedSession)
     {
         string promptText = GenerateUpdateSessionConfirmationPrompt(session, updatedSession);
@@ -130,6 +128,9 @@ public class UserInputView : IUserInputView
         return confirmation;
     }
 
+
+
+
     private string ConvertTimeFromSecondsToText(double input)
     {
         int miliseconds = TimeSpan.FromSeconds(input).Milliseconds;
@@ -142,7 +143,6 @@ public class UserInputView : IUserInputView
 
         return $"{hours}:{minutes:00}:{seconds:00}";
     }
-
     private string GenerateUpdateSessionConfirmationPrompt(CodingSessionDataRecord session, CodingSession updatedSession)
     {
         string prompt = $"Update coding session ";

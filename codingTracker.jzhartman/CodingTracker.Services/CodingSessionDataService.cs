@@ -188,14 +188,24 @@ public class CodingSessionDataService : ICodingSessionDataService
             return ValidationResult<DateTime>.Success(input);
     }
 
-    private bool TimeOverlapsNextEntry(DateTime input, DateTime startTime, long id = -1)
+    private bool TimeOverlapsNextEntry(DateTime input, DateTime startTime)
     {
         var nextRecordStartTime = _repository.GetStartTimeOfNextRecord(startTime);
 
         if (nextRecordStartTime == null || nextRecordStartTime == DateTime.MinValue)
             return false;
-        else if (id >= 0)
+        else if (input >= nextRecordStartTime)
+            return true;
+        else
+            return false;
+    }
 
+    private bool TimeOverlapsNextEntry(DateTime input, DateTime startTime, long sessionId)
+    {
+        var nextRecordStartTime = _repository.GetStartTimeOfNextRecordExcludingCurrentSession(startTime, sessionId);
+
+        if (nextRecordStartTime == null || nextRecordStartTime == DateTime.MinValue)
+            return false;
         else if (input >= nextRecordStartTime)
             return true;
         else

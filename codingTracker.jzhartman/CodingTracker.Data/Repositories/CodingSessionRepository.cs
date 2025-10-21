@@ -93,6 +93,22 @@ public class CodingSessionRepository : ICodingSessionRepository
         return LoadData<DateTime, DateValue>(sql, parameter).FirstOrDefault();
 ;    }
 
+
+    public DateTime GetStartTimeOfNextRecordExcludingCurrentSession(DateTime time, long id)
+    {
+        var parameter = new TimeUpdate { Time = time, Id = (int)id };
+        using var connection = _connectionFactory.CreateConnection();
+
+        string sql = @"select StartTime from CodingSessions
+                            where StartTime > @Time
+                            and Id != @Id
+                            order by StartTime
+                            limit 1";
+
+        return LoadData<DateTime, TimeUpdate>(sql, parameter).FirstOrDefault();
+        ;
+    }
+
     public bool ExistsWithinTimeFrame(DateTime time)
     {
         var parameter = new DateValue { Time = time};

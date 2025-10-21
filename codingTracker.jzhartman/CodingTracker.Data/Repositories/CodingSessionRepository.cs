@@ -37,7 +37,6 @@ public class CodingSessionRepository : ICodingSessionRepository
     }
 
 
-
     public List<CodingSessionDataRecord> GetAll()
     {
         string sql = "Select * from CodingSessions order by StartTime";
@@ -59,27 +58,6 @@ public class CodingSessionRepository : ICodingSessionRepository
         string sql = "select count(*) from CodingSessions";
         return LoadData<int>(sql).First();
     }
-
-
-
-    public void AddSession(CodingSession session)
-    {
-        string sql = "insert into CodingSessions (StartTime, EndTime, Duration) values (@StartTime, @EndTime, @Duration)";
-        SaveData(sql, session);
-    }
-
-    public void UpdateSession(CodingSessionDataRecord session)
-    {
-        string sql = "update CodingSessions Set StartTime = @StartTime, EndTime = @EndTime, Duration = @Duration where Id = @Id";
-        SaveData(sql, session);
-    }
-    public void DeleteById(int id)
-    {
-        string sql = $"delete from CodingSessions where Id = {id}";
-        SaveData(sql);
-    }
-
-
     public DateTime GetStartTimeOfNextRecord(DateTime time)
     {
         var parameter = new DateValue { Time = time };
@@ -92,8 +70,6 @@ public class CodingSessionRepository : ICodingSessionRepository
 
         return LoadData<DateTime, DateValue>(sql, parameter).FirstOrDefault();
 ;    }
-
-
     public DateTime GetStartTimeOfNextRecordExcludingCurrentSession(DateTime time, long id)
     {
         var parameter = new TimeUpdate { Time = time, Id = (int)id };
@@ -108,7 +84,6 @@ public class CodingSessionRepository : ICodingSessionRepository
         return LoadData<DateTime, TimeUpdate>(sql, parameter).FirstOrDefault();
         ;
     }
-
     public bool ExistsWithinTimeFrame(DateTime time)
     {
         var parameter = new DateValue { Time = time};
@@ -136,4 +111,25 @@ public class CodingSessionRepository : ICodingSessionRepository
 
         return (count > 0);
     }
+
+
+    public void AddSession(CodingSession session)
+    {
+        string sql = "insert into CodingSessions (StartTime, EndTime, Duration) values (@StartTime, @EndTime, @Duration)";
+        SaveData(sql, session);
+    }
+    public void UpdateSession(CodingSessionDataRecord session)
+    {
+        string sql = "update CodingSessions Set StartTime = @StartTime, EndTime = @EndTime, Duration = @Duration where Id = @Id";
+        SaveData(sql, session);
+    }
+    public void DeleteById(int id)
+    {
+        string sql = $"delete from CodingSessions where Id = {id}";
+        SaveData(sql);
+    }
+
+
+
+
 }

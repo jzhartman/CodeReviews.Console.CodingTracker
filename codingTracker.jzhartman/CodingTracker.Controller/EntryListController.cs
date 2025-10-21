@@ -95,10 +95,6 @@ public class EntryListController : IEntryListController
             UpdateSession(updatedSession, sessions[recordId].Id);
         else
             _outputView.ActionCancelledMessage("update");
-
-        // get confirmation
-        // if confirmed => _repository.UpdateSession(updatedsession);
-        // else => cancelled update message -- return to menu
     }
     private void UpdateSession(CodingSession session, long id)
     {

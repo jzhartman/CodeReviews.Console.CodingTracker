@@ -130,8 +130,6 @@ public class CodingSessionDataService : ICodingSessionDataService
     }
     public ValidationResult<DateTime> ValidateEndTime(DateTime input, DateTime startTime)
     {
-        //var nextRecordStartTime = _repository.GetStartTimeOfNextRecord(input);
-
         if (_repository.ExistsWithinTimeFrame(input))
             return ValidationResult<DateTime>.Fail("End Time", "A record already exists for this time");
         else if (TimeOverlapsNextEntry(input, startTime))
@@ -160,14 +158,10 @@ public class CodingSessionDataService : ICodingSessionDataService
             return ValidationResult<DateTime>.Success(session.EndTime);
         else if (newEndTime <= newStartTime)
             return ValidationResult<DateTime>.Fail("End Time", "End time must be later than start time.");
-
         else if (_repository.ExistsWithinTimeFrameExcludingSessionById(session, newEndTime))
             return ValidationResult<DateTime>.Fail("End Time", "A record already exists for this time");
-
         else if (TimeOverlapsNextEntry(newEndTime, newStartTime, session.Id))
             return ValidationResult<DateTime>.Fail("End Time", "This end time overlaps an existing session");
-
-
         else if (newEndTime > DateTime.Now)
             return ValidationResult<DateTime>.Fail("End Time", "Cannot enter a future time");
         else
@@ -199,7 +193,6 @@ public class CodingSessionDataService : ICodingSessionDataService
         else
             return false;
     }
-
     private bool TimeOverlapsNextEntry(DateTime input, DateTime startTime, long sessionId)
     {
         var nextRecordStartTime = _repository.GetStartTimeOfNextRecordExcludingCurrentSession(startTime, sessionId);

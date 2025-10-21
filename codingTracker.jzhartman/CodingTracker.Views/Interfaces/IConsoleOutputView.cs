@@ -9,6 +9,6 @@ public interface IConsoleOutputView
     void ErrorMessage(string parameter, string message);
     void PrintCodingSessionListAsTable(List<CodingSessionDataRecord> sessions);
     void PrintReportDataAsTable(ReportModel report);
-    void PrintSingleCodingSession(CodingSessionDataRecord session);
+    void PrintCodingSessionToUpdateById(CodingSessionDataRecord session, int rowId);
     void WelcomeMessage();
 }

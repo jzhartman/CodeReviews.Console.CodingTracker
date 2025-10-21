@@ -16,13 +16,11 @@ public class ConsoleOutputView : IConsoleOutputView
     }
     public void ErrorMessage(string parameter, string message)
     {
-        AddNewLines(1);
         AnsiConsole.MarkupInterpolated($"[bold red]ERROR:[/] The value for {parameter} encountered the error: [yellow]{message}[/]");
         AddNewLines(2);
     }
     public void ConfirmationMessage(string valueText)
     {
-        AddNewLines(1);
         AnsiConsole.MarkupInterpolated($"[bold green]ACCEPTED[/]: Value set to {valueText}");
         AddNewLines(2);
     }
@@ -69,9 +67,23 @@ public class ConsoleOutputView : IConsoleOutputView
         AnsiConsole.Write(grid);
         AddNewLines(2);
     }
-    public void PrintSingleCodingSession(CodingSessionDataRecord session)
+    public void PrintCodingSessionToUpdateById(CodingSessionDataRecord session, int rowId)
     {
-        Console.WriteLine($"{session.Id}:\t{session.StartTime} to {session.EndTime} for a duration of {session.Duration}");
+        var grid = new Grid();
+        grid.AddColumn();
+        grid.AddColumn();
+        grid.AddColumn();
+        grid.AddColumn();
+
+        grid.AddRow(new string[] { $"[blue]{rowId}[/]",
+                                        $"{session.StartTime.ToString("yyyy-MM-dd")} [yellow]{session.StartTime.ToString("HH:mm:ss")}[/]",
+                                        $"{session.EndTime.ToString("yyyy-MM-dd")} [yellow]{session.EndTime.ToString("HH:mm:ss")}[/]",
+                                        $"{ConvertTimeFromSecondsToText(session.Duration)}" });
+
+        AnsiConsole.Write("Updating Record: ");
+        AnsiConsole.Write(grid);
+
+        AddNewLines(1);
     }
     public void PrintReportDataAsTable(ReportModel report)
     {

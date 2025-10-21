@@ -12,25 +12,36 @@ public class UserInputView : IUserInputView
     {
         _dateFormat = dateFormat;
     }
-    public DateTime GetTimeFromUser(string parameterName, string nullBehavior = "", bool allowNull = false)
+    public DateTime GetTimeFromUser(string parameterName, bool allowNull = false)
     {
         var timeInput = string.Empty;
-        var promptText = GenerateEnterDatePromptText(parameterName, nullBehavior, allowNull);
-        var errorMessageText = $"[bold red]ERROR:[/] The value you entered does not match the required format!";
+        var promptText = GenerateEnterDatePromptText(parameterName, allowNull);
+        var errorMessageText = $"[bold red]ERROR:[/] The value you entered does not match the required format!\r\n";
 
 
-        if (allowNull) timeInput = AnsiConsole.Prompt(
+        if (allowNull)
+        {
+            timeInput = AnsiConsole.Prompt(
+
                                         new TextPrompt<string>(promptText)
                                         .AllowEmpty()
                                         .ValidationErrorMessage(errorMessageText)
                                         .Validate(input =>
                                         {
-                                            if (DateTime.TryParseExact(input, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+                                            if (String.IsNullOrWhiteSpace(input))
                                             {
                                                 return ValidationResult.Success();
                                             }
-                                            return ValidationResult.Error();
+                                            else if (DateTime.TryParseExact(input, _dateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+                                            {
+                                                return ValidationResult.Success();
+                                            }
+                                            else
+                                                return ValidationResult.Error();
                                         }));
+
+            if (timeInput == "") timeInput = DateTime.MinValue.ToString(_dateFormat);
+        }
 
         else timeInput = AnsiConsole.Prompt(
                                         new TextPrompt<string>(promptText)
@@ -163,14 +174,17 @@ public class UserInputView : IUserInputView
 
         return prompt;
     }
-    private string GenerateEnterDatePromptText(string parameterName, string nullBehavior, bool allowNull)
+    private string GenerateEnterDatePromptText(string parameterName, bool allowNull)
     {
         string article = GenerateArticleForDatePromptText(parameterName);
         string promptText = $"Please enter {article} {parameterName} using the format [yellow]'yyyy-MM-dd HH:mm:ss'[/]";
 
         if (allowNull)
         {
-            promptText += $".\r\nPress enter with blank line to use {nullBehavior}:";
+            if (parameterName == "new start time")
+                promptText += $".\r\nOr, leave blank and press ENTER to keep the existing start time:";
+            else if (parameterName == "new end time")
+                promptText += $".\r\nOr, leave blank and press ENTER to keep the existing end time:";
         }
         else
         {

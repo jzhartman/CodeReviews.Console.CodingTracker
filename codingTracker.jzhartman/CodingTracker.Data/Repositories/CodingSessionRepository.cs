@@ -106,7 +106,6 @@ public class CodingSessionRepository : ICodingSessionRepository
 
         return (count > 0);
     }
-
     public bool ExistsWithinTimeFrameExcludingSessionById(CodingSessionDataRecord session, DateTime newTime)
     {
         var parameter = new TimeUpdate { Id = (int)session.Id, Time = newTime };
@@ -121,27 +120,4 @@ public class CodingSessionRepository : ICodingSessionRepository
 
         return (count > 0);
     }
-
-
-    // NOT IMPLEMENTED YET!!!!!
-
-
-    //Method Stubs to work out eventually... If needed?
-
-
-
-
-    public List<CodingSessionDataRecord> GetLongestDuration()
-    {
-        string sql = $"select * from CodingSessions where ";
-        return LoadData<CodingSessionDataRecord>(sql);
-    }
-
-
-
-    // Method here using the following snippet
-    // using var connection = connectionFactory.CreateConnection();
-    // connection.Open();
-    // insert Dapper query here
-
 }

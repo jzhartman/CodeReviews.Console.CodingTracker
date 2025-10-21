@@ -84,6 +84,7 @@ public class EntryListController : IEntryListController
     private void ManageSessionUpdate(List<CodingSessionDataRecord> sessions)
     {
         var recordId = _inputView.GetRecordIdFromUser("update", sessions.Count()) - 1;
+        _outputView.PrintCodingSessionToUpdateById(sessions[recordId], recordId+1);
 
         var newStartTime = GetUpdatedStartTime(sessions[recordId]);
         var newEndTime = GetUpdatedEndTime(sessions[recordId], newStartTime);
@@ -116,7 +117,7 @@ public class EntryListController : IEntryListController
 
         while (startTimeValid == false)
         {
-            var newStartTime = _inputView.GetTimeFromUser("new start time", "current start time", true);
+            var newStartTime = _inputView.GetTimeFromUser("new start time", true);
             var result = _service.ValidateUpdatedStartTime(session, newStartTime);
 
             if (result.IsValid)
@@ -139,7 +140,7 @@ public class EntryListController : IEntryListController
 
         while (startTimeValid == false)
         {
-            var newEndTime = _inputView.GetTimeFromUser("new end time", "current end time", true);
+            var newEndTime = _inputView.GetTimeFromUser("new end time", true);
             var result = _service.ValidateUpdatedEndTime(session, newStartTime, newEndTime);
 
             if (result.IsValid)

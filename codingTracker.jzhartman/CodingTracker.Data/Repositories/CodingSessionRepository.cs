@@ -84,6 +84,16 @@ public class CodingSessionRepository : ICodingSessionRepository
         return LoadData<DateTime, TimeUpdate>(sql, parameter).FirstOrDefault();
         ;
     }
+    public DateTime GetStartTimeOfLastRecord()
+    {
+        using var connection = _connectionFactory.CreateConnection();
+
+        string sql = @"select StartTime from CodingSessions
+                            order by StartTime DESC
+                            limit 1";
+
+        return LoadData<DateTime>(sql).FirstOrDefault();
+    }
     public bool ExistsWithinTimeFrame(DateTime time)
     {
         var parameter = new DateValue { Time = time};

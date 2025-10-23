@@ -178,6 +178,8 @@ public class CodingSessionDataService : ICodingSessionDataService
     {
         if (input > DateTime.Now)
             return ValidationResult<DateTime>.Fail("Start Time", "Cannot enter a future time");
+        else if (input > _repository.GetStartTimeOfLastRecord())
+            return ValidationResult<DateTime>.Fail("Start Time", "There are no records within this time period.");
         else
             return ValidationResult<DateTime>.Success(input);
     }

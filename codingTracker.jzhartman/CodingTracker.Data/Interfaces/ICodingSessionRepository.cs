@@ -12,4 +12,5 @@ public interface ICodingSessionRepository
     bool ExistsWithinTimeFrameExcludingSessionById(CodingSessionDataRecord session, DateTime newTime);
     DateTime GetStartTimeOfNextRecord(DateTime time);
     DateTime GetStartTimeOfNextRecordExcludingCurrentSession(DateTime time, long id);
+    DateTime GetStartTimeOfLastRecord();
 }

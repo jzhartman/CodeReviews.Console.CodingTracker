@@ -4,39 +4,9 @@ using CodingTracker.Models.Entities;
 using Dapper;
 
 namespace CodingTracker.Data.Repositories;
-public class CodingSessionRepository : ICodingSessionRepository
+public class CodingSessionRepository : RepositoryGenerics, ICodingSessionRepository
 {
-    private readonly ISqliteConnectionFactory _connectionFactory;
-
-    public CodingSessionRepository(ISqliteConnectionFactory connectionFactory)
-    {
-        _connectionFactory = connectionFactory;
-    }
-
-    private List<T> LoadData<T>(string sql)
-    {
-        using var connection = _connectionFactory.CreateConnection();
-        List<T> sessions = connection.Query<T>(sql).ToList();
-        return sessions;
-    }
-    private List<T> LoadData<T, U>(string sql, U parameters)
-    {
-        using var connection = _connectionFactory.CreateConnection();
-        List<T> sessions = connection.Query<T>(sql, parameters).ToList();
-        return sessions;
-    }
-    private void SaveData(string sql)
-    {
-        using var connection = _connectionFactory.CreateConnection();
-        connection.Execute(sql);
-    }
-    private void SaveData<T>(string sql, T parameters)
-    {
-        using var connection = _connectionFactory.CreateConnection();
-        connection.Execute(sql, parameters);
-    }
-
-
+    public CodingSessionRepository(ISqliteConnectionFactory connectionFactory) : base(connectionFactory) {}
     public List<CodingSessionDataRecord> GetAll()
     {
         string sql = "Select * from CodingSessions order by StartTime";

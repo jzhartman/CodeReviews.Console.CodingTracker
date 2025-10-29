@@ -10,7 +10,7 @@ internal class Program
     {
         Batteries.Init();
         var serviceProvider = Startup.ConfigureServices();
-        serviceProvider.GetRequiredService<IDatabaseInitializer>().Initialize();
+        serviceProvider.GetRequiredService<IDatabaseInitializer>().Run();
 
         serviceProvider.GetRequiredService<IMainMenuController>().Run();
     }

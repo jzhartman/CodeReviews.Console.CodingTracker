@@ -1,4 +1,6 @@
 ﻿using CodingTracker.Data.Interfaces;
+using CodingTracker.Data.Parameters;
+using CodingTracker.Data.TypeHandlers;
 using CodingTracker.Models.Entities;
 using System;
 using System.Collections.Generic;
@@ -19,8 +21,9 @@ public class GoalRepository : RepositoryGenerics, IGoalRepository
 
     public List<GoalDTO> GetAllGoalsByStatus(GoalStatus status)
     {
-        string sql = $"select * from Goals where Status = {status}";
-        return LoadData<GoalDTO>(sql);
+        var goalStatus = new GoalStatusQuery {Status = status };
+        string sql = $"select * from Goals where Status = @Status";
+        return LoadData<GoalDTO, GoalStatusQuery>(sql, goalStatus);
     }
 
     public void AddGoal(GoalModel goal)

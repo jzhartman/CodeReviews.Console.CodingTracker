@@ -116,10 +116,12 @@ public class ConsoleOutputView : IConsoleOutputView
         grid.AddColumn();
         grid.AddColumn();
         grid.AddColumn();
+        grid.AddColumn();
         grid.AddRow(new Text[] {new Text("Id").Centered(),
                                 new Text("Start Time").Centered(),
                                 new Text("End Time").Centered(),
-                                new Text("Status").Centered()});
+                                new Text("Status").Centered(),
+                                new Text("Type").Centered()});
 
         foreach (var goal in goals)
         {

@@ -46,7 +46,7 @@ public class DatabaseInitializer : IDatabaseInitializer
                             Duration integer not null";
 
         if (tableName == "Goals")
-            parameters = @"Id integer primmary key not null,
+            parameters = @"Id integer primary key not null,
                             Type text not null,
                             StartTime text not null,
                             EndTime text not null,

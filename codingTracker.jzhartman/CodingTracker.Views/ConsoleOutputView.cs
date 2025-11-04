@@ -108,6 +108,39 @@ public class ConsoleOutputView : IConsoleOutputView
 
 
 
+    public void PrintGoalListAsTable(List<GoalDTO> goals)
+    {
+        int count = 1;
+        var grid = new Grid();
+        grid.AddColumn();
+        grid.AddColumn();
+        grid.AddColumn();
+        grid.AddColumn();
+        grid.AddRow(new Text[] {new Text("Id").Centered(),
+                                new Text("Start Time").Centered(),
+                                new Text("End Time").Centered(),
+                                new Text("Status").Centered()});
+
+        foreach (var goal in goals)
+        {
+            grid.AddRow(new string[] { $"[blue]{count}[/]",
+                                        $"{goal.StartTime.ToString("yyyy-MM-dd")} [yellow]{goal.StartTime.ToString("HH:mm:ss")}[/]",
+                                        $"{goal.EndTime.ToString("yyyy-MM-dd")} [yellow]{goal.EndTime.ToString("HH:mm:ss")}[/]",
+                                        $"{goal.Status}",
+                                        $"{goal.Type}"});
+            count++;
+        }
+
+        AnsiConsole.Write(grid);
+        AddNewLines(2);
+    }
+
+
+
+
+
+
+
     private void AddNewLines(int lines)
     {
         for (int i = 0; i < lines; i++)

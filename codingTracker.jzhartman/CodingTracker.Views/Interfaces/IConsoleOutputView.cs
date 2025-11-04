@@ -11,4 +11,5 @@ public interface IConsoleOutputView
     void PrintReportDataAsTable(ReportModel report);
     void PrintCodingSessionToUpdateById(CodingSessionDataRecord session, int rowId);
     void WelcomeMessage();
+    void PrintGoalListAsTable(List<GoalDTO> goals);
 }

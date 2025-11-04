@@ -23,6 +23,9 @@ internal static class Startup
         SqlMapper.RemoveTypeMap(typeof(DateTime));
         SqlMapper.RemoveTypeMap(typeof(DateTime?));
         SqlMapper.AddTypeHandler(new DateTimeHandler(dateTimeFormat));
+        SqlMapper.AddTypeHandler(new GoalTypeHandler());
+        SqlMapper.AddTypeHandler(new GoalStatusHandler());
+
 
         var services = new ServiceCollection();
 
@@ -35,13 +38,15 @@ internal static class Startup
 
         //Register All Services
         services.AddSingleton<ICodingSessionDataService, CodingSessionDataService>();
+        services.AddSingleton<IGoalDataService, GoalDataService>();
 
         //Resgister All Views
         services.AddSingleton<IMenuView, MenuView>();
         services.AddSingleton<IConsoleOutputView, ConsoleOutputView>();
         services.AddSingleton<IUserInputView>(new UserInputView(dateTimeFormat));
 
-
+        //Register repos and data items
+        services.AddSingleton<IGoalRepository, GoalRepository>();
         services.AddSingleton<ICodingSessionRepository, CodingSessionRepository>();
         services.AddSingleton<ISqliteConnectionFactory>(provider => new SqliteConnectionFactory(connectionString));
         services.AddSingleton<IDatabaseInitializer, DatabaseInitializer>();

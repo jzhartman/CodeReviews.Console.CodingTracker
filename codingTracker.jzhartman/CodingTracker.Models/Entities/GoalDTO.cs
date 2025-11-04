@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CodingTracker.Models.Entities;
-public class GoalModel
+public class GoalDTO
 {
+    public int Id { get; set; }
     public GoalType Type { get; set; }
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }

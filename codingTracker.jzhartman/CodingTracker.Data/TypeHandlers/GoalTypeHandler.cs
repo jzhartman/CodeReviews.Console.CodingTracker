@@ -1,11 +1,6 @@
 ﻿using CodingTracker.Models.Entities;
 using Dapper;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodingTracker.Data.TypeHandlers;
 public class GoalTypeHandler : SqlMapper.TypeHandler<GoalType>
@@ -17,12 +12,12 @@ public class GoalTypeHandler : SqlMapper.TypeHandler<GoalType>
             return default(GoalType);
         }
 
-        return (GoalType)Enum.Parse(typeof(GoalType), value.ToString());
+        return (GoalType)Enum.Parse(typeof(GoalType), value.ToString(), true);
     }
 
     public override void SetValue(IDbDataParameter parameter, GoalType value)
     {
-        parameter.DbType = DbType.String;
         parameter.Value = value.ToString();
+        parameter.DbType = DbType.String;
     }
 }

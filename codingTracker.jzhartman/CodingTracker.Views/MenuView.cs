@@ -70,4 +70,19 @@ public class MenuView : IMenuView
         );
         return selection;
     }
+
+    public string PrintGoalOptionsAndGetSelection()
+    {
+        var selection = AnsiConsole.Prompt(
+        new SelectionPrompt<string>()
+            .Title("Please select the next operation:")
+            .AddChoices(new[]
+            {
+                    "Change Record",
+                    "Delete Record",
+                    "Return to Previous Menu"
+            })
+        );
+        return selection;
+    }
 }

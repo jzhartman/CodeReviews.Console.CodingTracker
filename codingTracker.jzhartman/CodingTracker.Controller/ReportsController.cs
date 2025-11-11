@@ -28,7 +28,7 @@ public class ReportsController : IReportsController
         {
             _outputView.WelcomeMessage();
 
-            var dateRangeSelection = GetDateRangeSelectionFromUser();
+            var dateRangeSelection = _menuView.PrintEntryViewOptionsAndGetSelection();
 
             if (dateRangeSelection == "Return to Previous Menu") { returnToMainMenu = true; continue; }
 
@@ -42,11 +42,6 @@ public class ReportsController : IReportsController
         }
     }
 
-
-    private string GetDateRangeSelectionFromUser()
-    {
-        return _menuView.PrintEntryViewOptionsAndGetSelection();
-    }
     private (DateTime, DateTime) GetDatesBasedOnUserSelection(string selection)
     {
         DateTime startTime = new DateTime();

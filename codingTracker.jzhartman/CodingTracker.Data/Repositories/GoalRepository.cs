@@ -26,6 +26,12 @@ public class GoalRepository : RepositoryGenerics, IGoalRepository
         return LoadData<GoalDTO, GoalStatusQuery>(sql, goalStatus);
     }
 
+    public List<GoalDTO> GetAllGoals()
+    {
+        string sql = $"select * from Goals";
+        return LoadData<GoalDTO>(sql);
+    }
+
     public void AddGoal(GoalModel goal)
     {
         string sql = "insert into Goals (StartTime, EndTime, Type, Status) values (@StartTime, @EndTime, @Type, @Status)";
@@ -36,6 +42,12 @@ public class GoalRepository : RepositoryGenerics, IGoalRepository
     {
         string sql = "update Goals set StartTime = @StartTime, EndTime = @EndTime, Type = @Type, Status = @Status where Id = @Id";
         SaveData(sql, goal);
+    }
+
+    public int GetGoalCount()
+    {
+        string sql = "select count(*) from Goals";
+        return LoadData<int>(sql).First();
     }
 
 }

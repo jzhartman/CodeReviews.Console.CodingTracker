@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace CodingTracker.Services;
 public class GoalDataService : IGoalDataService
 {
-    public readonly IGoalRepository _repository;
+    private readonly IGoalRepository _repository;
 
     public GoalDataService(IGoalRepository repository)
     {
@@ -28,6 +28,14 @@ public class GoalDataService : IGoalDataService
     public List<GoalDTO> GetAllGoalsByStatus(GoalStatus status)
     {
         return _repository.GetAllGoalsByStatus(status);
+    }
+    public List<GoalDTO> GetAllGoals()
+    {
+        return _repository.GetAllGoals();
+    }
+    public int GetGoalCount()
+    {
+        return _repository.GetGoalCount();
     }
 
 }

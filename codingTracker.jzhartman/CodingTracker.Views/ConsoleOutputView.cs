@@ -1,6 +1,7 @@
 ﻿using CodingTracker.Models.Entities;
 using CodingTracker.Views.Interfaces;
 using Spectre.Console;
+using System.Reflection.Metadata;
 
 namespace CodingTracker.Views;
 public class ConsoleOutputView : IConsoleOutputView
@@ -104,10 +105,14 @@ public class ConsoleOutputView : IConsoleOutputView
         AnsiConsole.Write("Press any key to continue... ");
         AnsiConsole.Console.Input.ReadKey(false);
     }
+     
 
 
-
-
+    public void NoRecordsMessage(string recordType)
+    {
+        AnsiConsole.MarkupInterpolated($"No {recordType} records exist!");
+        AddNewLines(2);
+    }
     public void PrintGoalListAsTable(List<GoalDTO> goals)
     {
         int count = 1;

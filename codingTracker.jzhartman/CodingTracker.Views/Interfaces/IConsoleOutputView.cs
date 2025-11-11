@@ -12,4 +12,5 @@ public interface IConsoleOutputView
     void PrintCodingSessionToUpdateById(CodingSessionDataRecord session, int rowId);
     void WelcomeMessage();
     void PrintGoalListAsTable(List<GoalDTO> goals);
+    void NoRecordsMessage(string recordType);
 }

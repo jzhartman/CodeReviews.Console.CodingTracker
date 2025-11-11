@@ -62,9 +62,27 @@ public class GoalsController : IGoalsController
         var startTime = GetStartTimeFromUser();
         var endTime = GetEndTimeFromUser(startTime);
         var goalType = GetGoalTypeFromUser();
+        var goalValue = GetGoalValueFromUser();
 
 
+        // Confirm, then add or cancel!
 
+        _goalService.AddGoal(
+            new GoalModel
+            {
+                StartTime = startTime,
+                EndTime = endTime,
+                Type = goalType,
+                Value = goalValue,
+                Status = GoalStatus.InProgress
+            }
+            );
+
+    }
+
+    private int GetGoalValueFromUser()
+    {
+        throw new NotImplementedException();
     }
 
     private DateTime GetStartTimeFromUser()

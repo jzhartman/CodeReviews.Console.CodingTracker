@@ -11,4 +11,5 @@ public class GoalModel
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
     public GoalStatus Status { get; set; }
+    public int Value { get; set; }
 }

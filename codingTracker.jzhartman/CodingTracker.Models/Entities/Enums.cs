@@ -10,7 +10,8 @@ public enum GoalType
 {
     TotalTime,
     AverageTime,
-    DaysPerPeriod
+    DaysPerPeriod,
+    Unknown
 }
 
 public enum GoalStatus

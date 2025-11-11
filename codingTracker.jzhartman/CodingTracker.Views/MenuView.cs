@@ -78,9 +78,25 @@ public class MenuView : IMenuView
             .Title("Please select the next operation:")
             .AddChoices(new[]
             {
-                    "Change Record",
-                    "Delete Record",
+                    "Add Goal",
+                    "Delete Goal",
+                    "Extend Goal",
                     "Return to Previous Menu"
+            })
+        );
+        return selection;
+    }
+
+    public string PrintGoalTypesAndGetSelection()
+    {
+        var selection = AnsiConsole.Prompt(
+        new SelectionPrompt<string>()
+            .Title("Please select the next operation:")
+            .AddChoices(new[]
+            {
+                    "Total Time",
+                    "Average Time",
+                    "Days Per Period"
             })
         );
         return selection;

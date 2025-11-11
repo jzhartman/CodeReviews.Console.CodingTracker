@@ -27,14 +27,12 @@ public class DatabaseInitializer : IDatabaseInitializer
             SeedData(tableName);
         }
     }
-
     private bool TableExists(string tableName)
     {
         using var connection = _connectionFactory.CreateConnection();
         int count = connection.ExecuteScalar<int>($"select count(*) from sqlite_master where type='table' and name='{tableName}'");
         return count == 1;
     }
-
     private void CreateTable(string tableName)
     {
         string parameters = string.Empty;
@@ -50,7 +48,8 @@ public class DatabaseInitializer : IDatabaseInitializer
                             Type text not null,
                             StartTime text not null,
                             EndTime text not null,
-                            Status text not null";
+                            Status text not null,
+                            Value integer not null";
 
         using var connection = _connectionFactory.CreateConnection();
 
@@ -58,7 +57,6 @@ public class DatabaseInitializer : IDatabaseInitializer
         command.CommandText = $"create table if not exists {tableName}({parameters})";
         command.ExecuteNonQuery();
     }
-
     private void SeedData(string tableName)
     {
         using var connection = _connectionFactory.CreateConnection();
@@ -73,7 +71,6 @@ public class DatabaseInitializer : IDatabaseInitializer
         command.CommandText = sql;
         command.ExecuteNonQuery();
     }
-
     private string CreateCodingSessionsSqlString()
     {
         string sql = "insert into CodingSessions(StartTime, EndTime, Duration)\nValues\n";

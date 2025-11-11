@@ -14,8 +14,7 @@ public class CodingSessionDataService : ICodingSessionDataService
     }
 
 
-    //  MOVE TO CRUD SERVICES FILE
-
+    //  CRUD SERVICES
     public void DeleteSessionById(int id)
     {
         _repository.DeleteById(id);
@@ -38,18 +37,12 @@ public class CodingSessionDataService : ICodingSessionDataService
     }
     public CodingSessionDataRecord GetSessionById(int id)
     {
-        // Validate that ID exists
-
         return _repository.GetById(id);
     }
 
 
 
-
-
-    //  Separate to new file?
-    // Provides Calculated Values Based On User Input
-
+    // DATA SERVICES
     public (DateTime, DateTime) GetBasicDateRange(string selection)
     {
         DateTime startTime = new DateTime();
@@ -111,14 +104,7 @@ public class CodingSessionDataService : ICodingSessionDataService
 
 
 
-
-
-
-
-
-
-    // MOVE TO VALIDATION SERVICES FILE
-
+    // VALIDATION SERVICES
     public ValidationResult<DateTime> ValidateStartTime(DateTime input)
     {
         if (_repository.ExistsWithinTimeFrame(input))
@@ -171,6 +157,20 @@ public class CodingSessionDataService : ICodingSessionDataService
     {
         if (input <= startTime)
             return ValidationResult<DateTime>.Fail("End Time", $"The end time must be later than {startTime.ToString("yyyy-MM-dd HH:mm:ss")}");
+        else
+            return ValidationResult<DateTime>.Success(input);
+    }
+    public ValidationResult<DateTime> ValidateGoalStartTime(DateTime input)
+    {
+        if (input > DateTime.Now)
+            return ValidationResult<DateTime>.Fail("Start Time", "Cannot enter a future time");
+        else
+            return ValidationResult<DateTime>.Success(input);
+    }
+    public ValidationResult<DateTime> ValidateGoalEndTime(DateTime input, DateTime startTime)
+    {
+        if (input > DateTime.Now)
+            return ValidationResult<DateTime>.Fail("End Time", "Goal must end at a future time");
         else
             return ValidationResult<DateTime>.Success(input);
     }

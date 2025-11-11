@@ -138,6 +138,16 @@ public class UserInputView : IUserInputView
 
         return confirmation;
     }
+    public bool GetAddGoalConfirmationFromUser(GoalModel goal)
+    {
+        var confirmation = AnsiConsole.Prompt(
+            new TextPrompt<bool>($"Add goal starting at [yellow]{goal.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}[/] and ending at [yellow]{goal.EndTime.ToString("yyyy-MM-dd HH:mm:ss")}[/] with duration [yellow]{goal.Value}[/]?")
+            .AddChoice(true)
+            .AddChoice(false)
+            .WithConverter(choice => choice ? "y" : "n"));
+
+        return confirmation;
+    }
 
 
 

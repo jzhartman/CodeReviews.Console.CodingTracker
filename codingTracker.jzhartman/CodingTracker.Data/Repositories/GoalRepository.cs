@@ -34,7 +34,7 @@ public class GoalRepository : RepositoryGenerics, IGoalRepository
 
     public void AddGoal(GoalModel goal)
     {
-        string sql = "insert into Goals (StartTime, EndTime, Type, Status) values (@StartTime, @EndTime, @Type, @Status)";
+        string sql = "insert into Goals (StartTime, EndTime, Type, Status, Value) values (@StartTime, @EndTime, @Type, @Status, @Value)";
         SaveData(sql, goal);
     }
 

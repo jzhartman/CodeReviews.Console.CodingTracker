@@ -162,15 +162,17 @@ public class CodingSessionDataService : ICodingSessionDataService
     }
     public ValidationResult<DateTime> ValidateGoalStartTime(DateTime input)
     {
-        if (input > DateTime.Now)
-            return ValidationResult<DateTime>.Fail("Start Time", "Cannot enter a future time");
-        else
+        //if (input > DateTime.Now)
+        //    return ValidationResult<DateTime>.Fail("Start Time", "Cannot enter a future time");
+        //else
             return ValidationResult<DateTime>.Success(input);
     }
     public ValidationResult<DateTime> ValidateGoalEndTime(DateTime input, DateTime startTime)
     {
-        if (input > DateTime.Now)
+        if (input < DateTime.Now)
             return ValidationResult<DateTime>.Fail("End Time", "Goal must end at a future time");
+        else if (input <= startTime)
+            return ValidationResult<DateTime>.Fail("End Time", "Goal end time cannot be before start time");
         else
             return ValidationResult<DateTime>.Success(input);
     }

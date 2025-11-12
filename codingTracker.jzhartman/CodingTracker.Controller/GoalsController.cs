@@ -132,8 +132,7 @@ public class GoalsController : IGoalsController
             }
         }
         return output;
-    }
-
+    } 
     private GoalType GetGoalTypeFromUser()
     {
         var selection = _menuView.PrintGoalTypesAndGetSelection();

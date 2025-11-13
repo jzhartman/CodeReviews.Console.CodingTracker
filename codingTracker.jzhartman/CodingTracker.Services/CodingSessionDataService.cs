@@ -160,6 +160,8 @@ public class CodingSessionDataService : ICodingSessionDataService
         else
             return ValidationResult<DateTime>.Success(input);
     }
+
+
     public ValidationResult<DateTime> ValidateGoalStartTime(DateTime input)
     {
         //if (input > DateTime.Now)
@@ -173,6 +175,8 @@ public class CodingSessionDataService : ICodingSessionDataService
             return ValidationResult<DateTime>.Fail("End Time", "Goal must end at a future time");
         else if (input <= startTime)
             return ValidationResult<DateTime>.Fail("End Time", "Goal end time cannot be before start time");
+        else if (input >= startTime.AddYears(1))
+            return ValidationResult<DateTime>.Fail("End Time", "Goal time duration cannot exceed one year");
         else
             return ValidationResult<DateTime>.Success(input);
     }

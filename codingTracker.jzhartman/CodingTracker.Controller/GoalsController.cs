@@ -1,5 +1,6 @@
 ﻿using CodingTracker.Controller.Interfaces;
 using CodingTracker.Models.Entities;
+using CodingTracker.Models.Validation;
 using CodingTracker.Services.Interfaces;
 using CodingTracker.Views.Interfaces;
 
@@ -62,7 +63,7 @@ public class GoalsController : IGoalsController
         var startTime = GetStartTimeFromUser();
         var endTime = GetEndTimeFromUser(startTime);
         var goalType = GetGoalTypeFromUser();
-        var goalValue = GetGoalValueFromUser();
+        var goalValue = GetGoalValueFromUser(startTime, endTime, goalType);
 
 
         // Confirm, then add or cancel!
@@ -80,10 +81,43 @@ public class GoalsController : IGoalsController
 
     }
 
-    private int GetGoalValueFromUser()
+    private int GetGoalValueFromUser(DateTime startTime, DateTime endTime, GoalType goalType)
     {
-        throw new NotImplementedException();
+        int goalValue = -1;
+        bool valueIsValid = false;
+
+        while (valueIsValid == false)
+        {
+            TimeSpan maxTime = new TimeSpan();
+            TimeSpan valueTime = new TimeSpan();
+
+            switch (goalType)
+            {
+                case GoalType.AverageTime:
+                    maxTime = new TimeSpan(23, 59, 59);
+                    valueTime = _inputView.GetGoalValueTime(goalType, maxTime);
+                    goalValue = (int)valueTime.TotalSeconds;
+                    break;
+                case GoalType.TotalTime:
+                    maxTime = endTime - startTime;
+                    valueTime = _inputView.GetGoalValueTime(goalType, maxTime);
+                    goalValue = (int)valueTime.TotalSeconds;
+                    break;
+                case GoalType.DaysPerPeriod:
+                    maxTime = endTime - startTime;
+                    int maxDays = maxTime.Days;
+                    goalValue = _inputView.GetGoalValueForDaysPerPeriod(maxDays);
+                    break;
+                default:
+                    break;
+            }
+
+
+        }
+
+        return goalValue;
     }
+
 
     private DateTime GetStartTimeFromUser()
     {

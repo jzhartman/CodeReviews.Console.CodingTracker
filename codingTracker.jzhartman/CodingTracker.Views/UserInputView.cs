@@ -98,6 +98,37 @@ public class UserInputView : IUserInputView
 
         return id;
     }
+
+    public TimeSpan GetGoalValueTime(GoalType goalType, TimeSpan maxTime)
+    {
+        string promptText = "Please enter the value for the ";
+        if (goalType == GoalType.TotalTime) promptText += "total time coded within this timeframe using the format [yellow]d.HH:mm:ss[/]:";
+        if (goalType == GoalType.AverageTime) promptText += "average daily time within this timeframe using the format [yellow]HH:mm:ss[/]:";
+
+        var goalValue = AnsiConsole.Prompt(
+            new TextPrompt<TimeSpan>(promptText)
+            .Validate(input =>
+            {
+                if (input.TotalMilliseconds < 1) return Spectre.Console.ValidationResult.Error("Value must be greater than zero!");
+                else if (input > maxTime) return Spectre.Console.ValidationResult.Error($"Input cannot exceed {maxTime}!");
+                else return Spectre.Console.ValidationResult.Success();
+            }));
+
+        return goalValue;
+    }
+    public int GetGoalValueForDaysPerPeriod(int maxValue)
+    {
+        var goalValue = AnsiConsole.Prompt(
+            new TextPrompt<int>($"Please enter the goal value for the days per period:")
+            .Validate(input =>
+            {
+                if (input < 1) return Spectre.Console.ValidationResult.Error("Value must be greater than zero!");
+                else if (input > maxValue) return Spectre.Console.ValidationResult.Error($"Value cannot be greater than {maxValue}");
+                else return Spectre.Console.ValidationResult.Success();
+            }));
+
+        return goalValue;
+    }
     public bool GetAddSessionConfirmationFromUser(CodingSession session)
     {
         var duration = ConvertTimeFromSecondsToText(session.Duration);

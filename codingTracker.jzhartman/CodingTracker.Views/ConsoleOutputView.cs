@@ -43,6 +43,11 @@ public class ConsoleOutputView : IConsoleOutputView
         AddNewLines(1);
         AnsiConsole.MarkupInterpolated($"Cancelled {action} of coding session!");
     }
+    public void GoalCancelledMessage(string action)
+    {
+        AddNewLines(1);
+        AnsiConsole.MarkupInterpolated($"Cancelled {action} of goal!");
+    }
     public void PrintCodingSessionListAsTable(List<CodingSessionDataRecord> sessions)
     {
         int count = 1;

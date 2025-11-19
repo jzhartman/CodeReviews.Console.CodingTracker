@@ -13,4 +13,5 @@ public interface IConsoleOutputView
     void WelcomeMessage();
     void PrintGoalListAsTable(List<GoalDTO> goals);
     void NoRecordsMessage(string recordType);
+    void GoalCancelledMessage(string action);
 }

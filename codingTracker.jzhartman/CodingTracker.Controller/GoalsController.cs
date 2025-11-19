@@ -3,6 +3,8 @@ using CodingTracker.Models.Entities;
 using CodingTracker.Models.Validation;
 using CodingTracker.Services.Interfaces;
 using CodingTracker.Views.Interfaces;
+using System;
+using static System.Collections.Specialized.BitVector32;
 
 namespace CodingTracker.Controller;
 public class GoalsController : IGoalsController
@@ -42,7 +44,8 @@ public class GoalsController : IGoalsController
             switch (selection)
             {
                 case "Add Goal":
-                    AddGoal();
+                    var goal = GetGoalDataFromUser();
+                    ConfirmAddGoal(goal);
                     break;
                 case "Delete Goal":
                 case "Extend Goal":
@@ -58,66 +61,103 @@ public class GoalsController : IGoalsController
         }
     }
 
-    private void AddGoal()
+    private GoalModel GetGoalDataFromUser()
     {
         var startTime = GetStartTimeFromUser();
         var endTime = GetEndTimeFromUser(startTime);
         var goalType = GetGoalTypeFromUser();
-        var goalValue = GetGoalValueFromUser(startTime, endTime, goalType);
+        var goalValue = GetGoalValue(startTime, endTime, goalType);
 
-
-        // Confirm, then add or cancel!
-
-        _goalService.AddGoal(
-            new GoalModel
-            {
-                StartTime = startTime,
-                EndTime = endTime,
-                Type = goalType,
-                Value = goalValue,
-                Status = GoalStatus.InProgress
-            }
-            );
-
+        return new GoalModel
+        {
+            StartTime = startTime,
+            EndTime = endTime,
+            Type = goalType,
+            Value = goalValue,
+            Status = GoalStatus.InProgress
+        };
     }
 
-    private int GetGoalValueFromUser(DateTime startTime, DateTime endTime, GoalType goalType)
+    private void ConfirmAddGoal(GoalModel goal)
     {
-        int goalValue = -1;
+        var goalConfirmed = _inputView.GetAddGoalConfirmationFromUser(goal);
+
+        if (goalConfirmed)
+        {
+            _goalService.AddGoal(goal);
+        }
+        else
+        {
+            _outputView.GoalCancelledMessage("addition");
+        }
+    }
+
+    private long GetGoalValue(DateTime startTime, DateTime endTime, GoalType goalType)
+    {
+        long output = -1;
         bool valueIsValid = false;
+
+        var maxValue = GetMaxGoalValueByType(goalType, startTime, endTime);
 
         while (valueIsValid == false)
         {
-            TimeSpan maxTime = new TimeSpan();
-            TimeSpan valueTime = new TimeSpan();
+            var input = GetGoalValueFromUser(startTime, endTime, goalType);
+            var result = _goalService.ValidateGoalValueInput(goalType, input, maxValue);
 
-            switch (goalType)
+            if (result.IsValid)
             {
-                case GoalType.AverageTime:
-                    maxTime = new TimeSpan(23, 59, 59);
-                    valueTime = _inputView.GetGoalValueTime(goalType, maxTime);
-                    goalValue = (int)valueTime.TotalSeconds;
-                    break;
-                case GoalType.TotalTime:
-                    maxTime = endTime - startTime;
-                    valueTime = _inputView.GetGoalValueTime(goalType, maxTime);
-                    goalValue = (int)valueTime.TotalSeconds;
-                    break;
-                case GoalType.DaysPerPeriod:
-                    maxTime = endTime - startTime;
-                    int maxDays = maxTime.Days;
-                    goalValue = _inputView.GetGoalValueForDaysPerPeriod(maxDays);
-                    break;
-                default:
-                    break;
+                valueIsValid = true;
+                output = result.Value;
+                _outputView.ConfirmationMessage(result.Value.ToString()); //ToDo: Fix printing -- This prints all values as seconds
             }
-
-
+            else
+            {
+                _outputView.ErrorMessage(result.Parameter, result.Message);
+            }
         }
 
-        return goalValue;
+        return output;
     }
 
+
+
+    private long GetGoalValueFromUser(DateTime startTime, DateTime endTime, GoalType goalType)
+    {
+        switch (goalType)
+        {
+            case GoalType.AverageTime:
+            case GoalType.TotalTime:
+                return _inputView.GetGoalValueTime(goalType);
+
+            case GoalType.DaysPerPeriod:
+                return _inputView.GetGoalValueForDaysPerPeriod();
+                
+            default:
+                return -1;
+        }
+    }
+    private long GetMaxGoalValueByType(GoalType goalType, DateTime startTime, DateTime endTime)
+    {
+        TimeSpan maxTime = new TimeSpan();
+        
+        switch (goalType)
+        {
+            case GoalType.AverageTime:
+                maxTime = new TimeSpan(23, 59, 59);
+                return (long)maxTime.TotalSeconds;
+
+            case GoalType.TotalTime:
+                maxTime = endTime - startTime;
+                return (long)maxTime.TotalSeconds;
+
+            case GoalType.DaysPerPeriod:
+                maxTime = endTime - startTime;
+                return (long)maxTime.TotalDays;
+
+            default:
+                return -1;
+        }
+    }
 
     private DateTime GetStartTimeFromUser()
     {
@@ -226,11 +266,11 @@ public class GoalsController : IGoalsController
         {
             GoalModel goal = new GoalModel
             {
-                StartTime = DateTime.Now,
-                EndTime = DateTime.Now.AddHours(2).AddMinutes(30),
+                StartTime = DateTime.Now.AddDays(-5),
+                EndTime = DateTime.Now.AddDays(5),
                 Status = GoalStatus.InProgress,
                 Type = GoalType.DaysPerPeriod,
-                Value = 5
+                Value = (long)TimeSpan.FromDays(5).TotalSeconds
             };
 
 

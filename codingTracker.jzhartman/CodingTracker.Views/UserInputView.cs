@@ -99,36 +99,26 @@ public class UserInputView : IUserInputView
         return id;
     }
 
-    public TimeSpan GetGoalValueTime(GoalType goalType, TimeSpan maxTime)
+    public long GetGoalValueTime(GoalType goalType)
     {
         string promptText = "Please enter the value for the ";
-        if (goalType == GoalType.TotalTime) promptText += "total time coded within this timeframe using the format [yellow]d.HH:mm:ss[/]:";
-        if (goalType == GoalType.AverageTime) promptText += "average daily time within this timeframe using the format [yellow]HH:mm:ss[/]:";
+        if (goalType == GoalType.TotalTime) promptText += "total time to code within this timeframe using the format [yellow]d.HH:mm:ss[/]:";
+        if (goalType == GoalType.AverageTime) promptText += "average daily time coding within this timeframe using the format [yellow]HH:mm:ss[/]:";
 
         var goalValue = AnsiConsole.Prompt(
-            new TextPrompt<TimeSpan>(promptText)
-            .Validate(input =>
-            {
-                if (input.TotalMilliseconds < 1) return Spectre.Console.ValidationResult.Error("Value must be greater than zero!");
-                else if (input > maxTime) return Spectre.Console.ValidationResult.Error($"Input cannot exceed {maxTime}!");
-                else return Spectre.Console.ValidationResult.Success();
-            }));
+            new TextPrompt<TimeSpan>(promptText));
 
-        return goalValue;
+        return (long)goalValue.TotalSeconds;
     }
-    public int GetGoalValueForDaysPerPeriod(int maxValue)
+
+    public long GetGoalValueForDaysPerPeriod()
     {
         var goalValue = AnsiConsole.Prompt(
-            new TextPrompt<int>($"Please enter the goal value for the days per period:")
-            .Validate(input =>
-            {
-                if (input < 1) return Spectre.Console.ValidationResult.Error("Value must be greater than zero!");
-                else if (input > maxValue) return Spectre.Console.ValidationResult.Error($"Value cannot be greater than {maxValue}");
-                else return Spectre.Console.ValidationResult.Success();
-            }));
+            new TextPrompt<long>($"Please enter the goal value for the days per period:"));
 
         return goalValue;
     }
+
     public bool GetAddSessionConfirmationFromUser(CodingSession session)
     {
         var duration = ConvertTimeFromSecondsToText(session.Duration);
@@ -171,8 +161,15 @@ public class UserInputView : IUserInputView
     }
     public bool GetAddGoalConfirmationFromUser(GoalModel goal)
     {
+        string valueText = string.Empty;
+
+        if (goal.Type == GoalType.TotalTime || goal.Type == GoalType.AverageTime)
+            valueText = TimeSpan.FromSeconds(goal.Value).ToString();
+        if (goal.Type == GoalType.DaysPerPeriod)
+            valueText = TimeSpan.FromSeconds(goal.Value).TotalDays.ToString();
+
         var confirmation = AnsiConsole.Prompt(
-            new TextPrompt<bool>($"Add goal starting at [yellow]{goal.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}[/] and ending at [yellow]{goal.EndTime.ToString("yyyy-MM-dd HH:mm:ss")}[/] with duration [yellow]{goal.Value}[/]?")
+            new TextPrompt<bool>($"Add [yellow]{goal.Type}[/] goal starting at [yellow]{goal.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}[/] and ending at [yellow]{goal.EndTime.ToString("yyyy-MM-dd HH:mm:ss")}[/] with value [yellow]{valueText}[/]?")
             .AddChoice(true)
             .AddChoice(false)
             .WithConverter(choice => choice ? "y" : "n"));

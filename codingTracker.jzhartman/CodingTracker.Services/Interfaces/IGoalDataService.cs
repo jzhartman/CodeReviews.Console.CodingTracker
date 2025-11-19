@@ -1,4 +1,5 @@
 ﻿using CodingTracker.Models.Entities;
+using CodingTracker.Models.Validation;
 
 namespace CodingTracker.Services.Interfaces;
 public interface IGoalDataService
@@ -8,4 +9,5 @@ public interface IGoalDataService
     List<GoalDTO> GetAllGoalsByStatus(GoalStatus status);
     int GetGoalCount();
     void UpdateGoal(GoalDTO goal);
+    ValidationResult<long> ValidateGoalValueInput(GoalType goalType, long input, long maxTime);
 }

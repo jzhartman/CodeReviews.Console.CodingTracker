@@ -10,7 +10,8 @@ public interface IUserInputView
     bool GetDeleteSessionConfirmationFromUser(CodingSessionDataRecord session);
     string StartStopwatch();
     string StopStopwatch();
-    int GetGoalValueForDaysPerPeriod(int maxDays);
-    TimeSpan GetGoalValueTime(GoalType goalType, TimeSpan maxTime);
+    long GetGoalValueTime(GoalType goalType);
+    long GetGoalValueForDaysPerPeriod();
+    bool GetAddGoalConfirmationFromUser(GoalModel goal);
     //DateTime GetUpdatedStartTimeFromUser(DateTime originalTime);
 }

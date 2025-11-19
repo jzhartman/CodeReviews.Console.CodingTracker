@@ -12,5 +12,5 @@ public class GoalDTO
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
     public GoalStatus Status { get; set; }
-    public int Value { get; set; }
+    public long Value { get; set; }
 }

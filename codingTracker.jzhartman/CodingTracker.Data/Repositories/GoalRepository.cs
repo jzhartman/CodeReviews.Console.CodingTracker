@@ -1,23 +1,11 @@
 ﻿using CodingTracker.Data.Interfaces;
 using CodingTracker.Data.Parameters;
-using CodingTracker.Data.TypeHandlers;
 using CodingTracker.Models.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodingTracker.Data.Repositories;
 public class GoalRepository : RepositoryGenerics, IGoalRepository
 {
     public GoalRepository(ISqliteConnectionFactory connectionFactory) : base(connectionFactory) { }
-
-    // TODO: Setup the Goals repository
-    // TODO: Create Goal object with relevant members
-    // TODO: Create Goal input
-    // TODO: Create Goal output to console
-    // TODO: Determine how goal status will be determined
 
     public List<GoalDTO> GetAllGoalsByStatus(GoalStatus status)
     {
@@ -34,7 +22,7 @@ public class GoalRepository : RepositoryGenerics, IGoalRepository
 
     public void AddGoal(GoalModel goal)
     {
-        string sql = "insert into Goals (StartTime, EndTime, Type, Status, Value) values (@StartTime, @EndTime, @Type, @Status, @Value)";
+        string sql = "insert into Goals (StartTime, EndTime, Type, Status, GoalValue, CurrentValue, Progress) values (@StartTime, @EndTime, @Type, @Status, @GoalValue, @CurrentValue, @Progress)";
         SaveData(sql, goal);
     }
 

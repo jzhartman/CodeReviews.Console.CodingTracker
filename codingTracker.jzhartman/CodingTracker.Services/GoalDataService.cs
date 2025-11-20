@@ -57,6 +57,89 @@ public class GoalDataService : IGoalDataService
     }
 
 
+
+    // Evaluations
+    public void EvaluateTotalTimeGoal(GoalDTO goal, List<CodingSessionDataRecord> codingSessions)
+    {
+        var timeRemaining = (goal.EndTime - DateTime.Now).TotalSeconds;
+
+        goal.CurrentValue = SumTotalTimeFromSessions(codingSessions);
+        goal.Progress = (goal.CurrentValue / goal.GoalValue) * 100;
+
+        if (goal.Progress >= 100 && timeRemaining < 0)
+            goal.Status = GoalStatus.Complete;
+
+        else if (timeRemaining > 0 && (timeRemaining + goal.CurrentValue) >= goal.GoalValue)
+            goal.Status = GoalStatus.InProgress;
+
+        else
+            goal.Status = GoalStatus.Failed;
+    }
+    public void EvaluateAverageTimeGoal(GoalDTO goal, List<CodingSessionDataRecord> codingSessions)
+    {
+        var timeRemaining = (goal.EndTime - DateTime.Now).TotalSeconds;
+        var daysRemaining = (goal.EndTime - DateTime.Now).TotalDays;
+
+        var totalTime = SumTotalTimeFromSessions(codingSessions);
+        goal.CurrentValue = (long)(totalTime / (goal.EndTime - goal.StartTime).TotalDays);
+        goal.Progress = (goal.CurrentValue / goal.GoalValue) * 100;
+
+        if (goal.Progress >= 100 && timeRemaining < 0)
+            goal.Status = GoalStatus.Complete;
+
+        else if (timeRemaining > 0 && (totalTime + timeRemaining)/daysRemaining >= goal.GoalValue)
+            goal.Status = GoalStatus.InProgress;
+
+        else
+            goal.Status = GoalStatus.Failed;
+    }
+
+    public void EvaluateDaysPerPeriodGoal(GoalDTO goal, List<CodingSessionDataRecord> codingSessions)
+    {
+        var daysRemaining = (goal.EndTime - DateTime.Now).TotalDays;
+
+        goal.CurrentValue = GetUniqueDaysPerPeriod(codingSessions) * 86400;
+        goal.Progress = (goal.CurrentValue / goal.GoalValue) * 100; //TODO: explicitly convert to double so percent is correct
+
+        if (goal.Progress >= 100 && daysRemaining < 0)
+            goal.Status = GoalStatus.Complete;
+
+        else if (daysRemaining > 0 && (goal.CurrentValue + daysRemaining) >= goal.GoalValue)
+            goal.Status = GoalStatus.InProgress;
+
+        else
+            goal.Status = GoalStatus.Failed;
+    }
+
+    // TODO: Address cases where codingSessions is empty
+    private int GetUniqueDaysPerPeriod(List<CodingSessionDataRecord> codingSessions)
+    {
+        int uniqueDays = 1;
+
+        for (int i = 1; i < codingSessions.Count; i++)
+        {
+            if (codingSessions[i].StartTime.Date != codingSessions[i - 1].StartTime.Date)
+                uniqueDays++;
+        }
+
+        return uniqueDays;
+    }
+    private long SumTotalTimeFromSessions(List<CodingSessionDataRecord> codingSessions)
+    {
+        long totalTime = 0;
+
+        foreach (var session in codingSessions)
+        {
+            totalTime += session.Duration;
+        }
+
+        return totalTime;
+    }
+
+
+
+
+
     //Validation
     public ValidationResult<long> ValidateGoalValueInput(GoalType goalType, long input, long maxTime)
     {
@@ -68,19 +151,4 @@ public class GoalDataService : IGoalDataService
             return ValidationResult<long>.Success(input);
 
     }
-
-    //public ValidationResult<TimeSpan> ValidateGoalValueInput(TimeSpan input, TimeSpan maxTime)
-    //{
-    //    if (input.TotalSeconds < 1)
-    //        return ValidationResult<TimeSpan>.Fail("Goal Value", "Goal value cannot be zero or lower.");
-    //    else if (input > maxTime)
-    //        return ValidationResult<TimeSpan>.Fail("Goal Value", $"Goal value exceeds maximum time {maxTime}");
-    //    else
-    //        return ValidationResult<TimeSpan>.Success(input);
-
-    //    //    if (input.TotalSeconds < 1) return Spectre.Console.ValidationResult.Error("Value must be greater than zero!");
-    //    //    else if (input > maxTime) return Spectre.Console.ValidationResult.Error($"Input cannot exceed {maxTime}!");
-    //    //    else return Spectre.Console.ValidationResult.Success();
-    //}
-
 }

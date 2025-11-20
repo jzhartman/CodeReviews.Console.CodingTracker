@@ -164,9 +164,9 @@ public class UserInputView : IUserInputView
         string valueText = string.Empty;
 
         if (goal.Type == GoalType.TotalTime || goal.Type == GoalType.AverageTime)
-            valueText = TimeSpan.FromSeconds(goal.Value).ToString();
+            valueText = TimeSpan.FromSeconds(goal.GoalValue).ToString();
         if (goal.Type == GoalType.DaysPerPeriod)
-            valueText = TimeSpan.FromSeconds(goal.Value).TotalDays.ToString();
+            valueText = TimeSpan.FromSeconds(goal.GoalValue).TotalDays.ToString();
 
         var confirmation = AnsiConsole.Prompt(
             new TextPrompt<bool>($"Add [yellow]{goal.Type}[/] goal starting at [yellow]{goal.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}[/] and ending at [yellow]{goal.EndTime.ToString("yyyy-MM-dd HH:mm:ss")}[/] with value [yellow]{valueText}[/]?")

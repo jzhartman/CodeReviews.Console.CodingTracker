@@ -49,7 +49,9 @@ public class DatabaseInitializer : IDatabaseInitializer
                             StartTime text not null,
                             EndTime text not null,
                             Status text not null,
-                            Value integer not null";
+                            GoalValue integer not null,
+                            CurrentValue integer not null,
+                            Progress real not null";
 
         using var connection = _connectionFactory.CreateConnection();
 

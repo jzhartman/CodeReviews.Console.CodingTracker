@@ -26,6 +26,14 @@ public class GoalDataService : IGoalDataService
     {
         _repository.UpdateGoal(goal);
     }
+    public void DeleteGoalById(int id)
+    {
+        _repository.DeleteById(id);
+    }
+    public void EvaluateGoal(GoalDTO goal)
+    {
+        _repository.EvaluateGoal(goal);
+    }
     public List<GoalDTO> GetAllGoalsByStatus(GoalStatus status)
     {
         return _repository.GetAllGoalsByStatus(status);
@@ -82,7 +90,7 @@ public class GoalDataService : IGoalDataService
 
         var totalTime = SumTotalTimeFromSessions(codingSessions);
         goal.CurrentValue = (long)(totalTime / (goal.EndTime - goal.StartTime).TotalDays);
-        goal.Progress = (goal.CurrentValue / goal.GoalValue) * 100;
+        goal.Progress = ((double)goal.CurrentValue / goal.GoalValue) * 100;
 
         if (goal.Progress >= 100 && timeRemaining < 0)
             goal.Status = GoalStatus.Complete;
@@ -99,7 +107,7 @@ public class GoalDataService : IGoalDataService
         var daysRemaining = (goal.EndTime - DateTime.Now).TotalDays;
 
         goal.CurrentValue = GetUniqueDaysPerPeriod(codingSessions) * 86400;
-        goal.Progress = (goal.CurrentValue / goal.GoalValue) * 100; //TODO: explicitly convert to double so percent is correct
+        goal.Progress = ((double)goal.CurrentValue / goal.GoalValue) * 100;
 
         if (goal.Progress >= 100 && daysRemaining < 0)
             goal.Status = GoalStatus.Complete;

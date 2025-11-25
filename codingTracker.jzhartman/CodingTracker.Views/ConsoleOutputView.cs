@@ -48,6 +48,8 @@ public class ConsoleOutputView : IConsoleOutputView
         AddNewLines(1);
         AnsiConsole.MarkupInterpolated($"Cancelled {action} of goal!");
     }
+
+
     public void PrintCodingSessionListAsTable(List<CodingSessionDataRecord> sessions)
     {
         int count = 1;
@@ -147,6 +149,36 @@ public class ConsoleOutputView : IConsoleOutputView
         AddNewLines(2);
     }
 
+    public void GoalEvaluationMessage(GoalDTO goal)
+    {
+        string goalValueText = string.Empty;
+        string currentValueText = string.Empty;
+        string preamble = string.Empty;
+
+
+        if (goal.Type == GoalType.TotalTime || goal.Type == GoalType.AverageTime)
+        {
+            goalValueText = TimeSpan.FromSeconds(goal.GoalValue).ToString();
+            currentValueText = TimeSpan.FromSeconds(goal.CurrentValue).ToString();
+        }
+        if (goal.Type == GoalType.DaysPerPeriod)
+        {
+            goalValueText = TimeSpan.FromSeconds(goal.GoalValue).TotalDays.ToString();
+            currentValueText = TimeSpan.FromSeconds(goal.CurrentValue).TotalDays.ToString();
+        }
+
+        if (goal.Status == GoalStatus.Complete)
+            preamble = "[bold green]CONGRATULATIONS![/] Successfully completed";
+        if (goal.Status == GoalStatus.Failed)
+            preamble = "[bold red]FAILED[/] Did not successfully complete";
+
+        string message = $"{preamble} the goal to reach [yellow]{goalValueText}[/] [blue]{goal.Type}[/]\n\r" +
+            $"Between the times [green]{goal.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}[/] and [red]{goal.EndTime.ToString("yyyy-MM-dd HH:mm:ss")}[/]\n\r" +
+            $"With a total completed value of [yellow]{currentValueText}[/] for a total of [yellow]{goal.Progress:f1}%[/]";
+
+        AnsiConsole.Markup(message);
+        AddNewLines(2);
+    }
 
 
 

@@ -34,10 +34,11 @@ public class GoalsController : IGoalsController
         while (!returnToMainMenu)
         {
             _outputView.WelcomeMessage();
-            PrintAllActiveGoals();
 
             var goalsInProgress = _goalService.GetAllGoalsByStatus(GoalStatus.InProgress);
             EvaluateGoals(goalsInProgress);
+
+
 
             var selection = _menuView.PrintGoalOptionsAndGetSelection();
 
@@ -49,6 +50,7 @@ public class GoalsController : IGoalsController
                     break;
                 case "Delete Goal":
                     // TODO: Create Handle Delete Goal Option
+                    ManageGoalDelete();
                     break;
                 case "Extend Goal":
                     // TODO: Handle Extend Goal Option (basic update of end time only)
@@ -228,34 +230,40 @@ public class GoalsController : IGoalsController
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-    private void PrintAllActiveGoals()
+    private void ManageGoalDelete()
     {
+        _outputView.WelcomeMessage();
         var goals = _goalService.GetAllGoalsByStatus(GoalStatus.InProgress);
 
+        PrintGoalsList(goals);
+
+        var recordId = _inputView.GetRecordIdFromUser("delete", goals.Count()) - 1;
+
+        // Confirm delete
+
+        if (true)
+            _goalService.DeleteGoalById(recordId);
+        else
+            //cancellation message
+    }
+
+
+
+    private void PrintGoalsList(List<GoalDTO> goals)
+    {
         if (goals.Count <= 0)
-            _outputView.NoRecordsMessage("Goals");
+            _outputView.NoRecordsMessage("goals");
         else
             _outputView.PrintGoalListAsTable(goals);
     }
 
 
+
+
     private void EvaluateGoals(List<GoalDTO> goals)
     {
-        UpdateGoalStatusAndProgress(goals);     //TODO: Remember to update the DB!!!!!
-        // Print Goals that have been completed!
-        // Print Goals that have failed -- Be nice
-        // Print all remaining goals with statuses
+        UpdateGoalStatusAndProgress(goals);
+        PrintGoalsList(goals);
 
     }
     private void UpdateGoalStatusAndProgress(List<GoalDTO> goals)
@@ -279,10 +287,13 @@ public class GoalsController : IGoalsController
                     _outputView.ErrorMessage("Goal Type", "Invalid Goal Type detected!");
                     break;
             }
+
+            _goalService.EvaluateGoal(goal);
+
+            if (goal.Status == GoalStatus.Complete ||  goal.Status == GoalStatus.Failed)
+                _outputView.GoalEvaluationMessage(goal);
         }
     }
-
-
 
 
 

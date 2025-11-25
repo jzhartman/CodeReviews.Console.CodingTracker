@@ -99,25 +99,7 @@ public class UserInputView : IUserInputView
         return id;
     }
 
-    public long GetGoalValueTime(GoalType goalType)
-    {
-        string promptText = "Please enter the value for the ";
-        if (goalType == GoalType.TotalTime) promptText += "total time to code within this timeframe using the format [yellow]d.HH:mm:ss[/]:";
-        if (goalType == GoalType.AverageTime) promptText += "average daily time coding within this timeframe using the format [yellow]HH:mm:ss[/]:";
 
-        var goalValue = AnsiConsole.Prompt(
-            new TextPrompt<TimeSpan>(promptText));
-
-        return (long)goalValue.TotalSeconds;
-    }
-
-    public long GetGoalValueForDaysPerPeriod()
-    {
-        var goalValue = AnsiConsole.Prompt(
-            new TextPrompt<long>($"Please enter the goal value for the days per period:"));
-
-        return goalValue;
-    }
 
     public bool GetAddSessionConfirmationFromUser(CodingSession session)
     {
@@ -158,6 +140,27 @@ public class UserInputView : IUserInputView
             .WithConverter(choice => choice ? "y" : "n"));
 
         return confirmation;
+    }
+
+
+
+    public long GetGoalValueTime(GoalType goalType)
+    {
+        string promptText = "Please enter the value for the ";
+        if (goalType == GoalType.TotalTime) promptText += "total time to code within this timeframe using the format [yellow]d.HH:mm:ss[/]:";
+        if (goalType == GoalType.AverageTime) promptText += "average daily time coding within this timeframe using the format [yellow]HH:mm:ss[/]:";
+
+        var goalValue = AnsiConsole.Prompt(
+            new TextPrompt<TimeSpan>(promptText));
+
+        return (long)goalValue.TotalSeconds;
+    }
+    public long GetGoalValueForDaysPerPeriod()
+    {
+        var goalValue = AnsiConsole.Prompt(
+            new TextPrompt<long>($"Please enter the goal value for the days per period:"));
+
+        return goalValue;
     }
     public bool GetAddGoalConfirmationFromUser(GoalModel goal)
     {

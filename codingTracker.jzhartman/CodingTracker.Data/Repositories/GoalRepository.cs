@@ -31,6 +31,17 @@ public class GoalRepository : RepositoryGenerics, IGoalRepository
         string sql = "update Goals set StartTime = @StartTime, EndTime = @EndTime, Type = @Type, Status = @Status where Id = @Id";
         SaveData(sql, goal);
     }
+    public void DeleteById(int id)
+    {
+        string sql = $"delete from Goals where Id = {id}";
+        SaveData(sql);
+    }
+
+    public void EvaluateGoal(GoalDTO goal)
+    {
+        string sql = "update Goals set Status = @Status, GoalValue = @GoalValue, CurrentValue = @CurrentValue, Progress = @Progress where Id = @Id";
+        SaveData(sql, goal);
+    }
 
     public int GetGoalCount()
     {

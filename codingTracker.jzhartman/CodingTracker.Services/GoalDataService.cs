@@ -110,7 +110,7 @@ public class GoalDataService : IGoalDataService
             daysRemaining = (goal.EndTime - goal.StartTime).TotalDays;
 
 
-        goal.CurrentValue = GetUniqueDaysPerPeriod(codingSessions) * 86400;
+        goal.CurrentValue = GetUniqueDaysPerPeriod(codingSessions);
         goal.Progress = ((double)goal.CurrentValue / goal.GoalValue) * 100;
 
         if (goal.Progress >= 100 && daysRemaining < 0)
@@ -123,9 +123,11 @@ public class GoalDataService : IGoalDataService
             goal.Status = GoalStatus.Failed;
     }
 
-    // TODO: Address cases where codingSessions is empty
-    private int GetUniqueDaysPerPeriod(List<CodingSessionDataRecord> codingSessions)
+   private int GetUniqueDaysPerPeriod(List<CodingSessionDataRecord> codingSessions)
     {
+        if (codingSessions.Count == 0)
+            return 0;
+
         int uniqueDays = 1;
 
         for (int i = 1; i < codingSessions.Count; i++)

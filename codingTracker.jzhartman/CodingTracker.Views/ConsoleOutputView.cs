@@ -129,19 +129,30 @@ public class ConsoleOutputView : IConsoleOutputView
         grid.AddColumn();
         grid.AddColumn();
         grid.AddColumn();
+        grid.AddColumn();
+        grid.AddColumn();
+        grid.AddColumn();
         grid.AddRow(new Text[] {new Text("Id").Centered(),
+                                new Text("Type").Centered(),
+                                new Text("Status").Centered(),
                                 new Text("Start Time").Centered(),
                                 new Text("End Time").Centered(),
-                                new Text("Status").Centered(),
-                                new Text("Type").Centered()});
+                                new Text("Goal Value").Centered(),
+                                new Text("Current Value").Centered(),
+                                new Text("Progress").Centered()});
+
 
         foreach (var goal in goals)
         {
+            
             grid.AddRow(new string[] { $"[blue]{count}[/]",
+                                        $"{goal.Type}",
+                                        $"{goal.Status}",
                                         $"{goal.StartTime.ToString("yyyy-MM-dd")} [yellow]{goal.StartTime.ToString("HH:mm:ss")}[/]",
                                         $"{goal.EndTime.ToString("yyyy-MM-dd")} [yellow]{goal.EndTime.ToString("HH:mm:ss")}[/]",
-                                        $"{goal.Status}",
-                                        $"{goal.Type}"});
+                                        $"{GenerateValueText(goal.Type, goal.GoalValue)}",
+                                        $"{GenerateValueText(goal.Type, goal.CurrentValue)}",
+                                        $"{goal.Progress:f1}%"});
             count++;
         }
 
@@ -150,37 +161,33 @@ public class ConsoleOutputView : IConsoleOutputView
     }
     public void GoalEvaluationMessage(GoalDTO goal)
     {
-        string goalValueText = string.Empty;
-        string currentValueText = string.Empty;
         string preamble = string.Empty;
-
-
-        if (goal.Type == GoalType.TotalTime || goal.Type == GoalType.AverageTime)
-        {
-            goalValueText = TimeSpan.FromSeconds(goal.GoalValue).ToString();
-            currentValueText = TimeSpan.FromSeconds(goal.CurrentValue).ToString();
-        }
-        if (goal.Type == GoalType.DaysPerPeriod)
-        {
-            goalValueText = TimeSpan.FromSeconds(goal.GoalValue).TotalDays.ToString();
-            currentValueText = TimeSpan.FromSeconds(goal.CurrentValue).TotalDays.ToString();
-        }
 
         if (goal.Status == GoalStatus.Complete)
             preamble = "[bold green]CONGRATULATIONS![/] Successfully completed";
         if (goal.Status == GoalStatus.Failed)
             preamble = "[bold red]FAILED[/] Did not successfully complete";
 
-        string message = $"{preamble} the goal to reach [yellow]{goalValueText}[/] [blue]{goal.Type}[/]\n\r" +
+        string message = $"{preamble} the goal to reach [yellow]{GenerateValueText(goal.Type, goal.GoalValue)}[/] [blue]{goal.Type}[/]\n\r" +
             $"Between the times [green]{goal.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}[/] and [red]{goal.EndTime.ToString("yyyy-MM-dd HH:mm:ss")}[/]\n\r" +
-            $"With a total completed value of [yellow]{currentValueText}[/] for a total of [yellow]{goal.Progress:f1}%[/]";
+            $"With a total completed value of [yellow]{GenerateValueText(goal.Type, goal.CurrentValue)}[/] for a total of [yellow]{goal.Progress:f1}%[/]";
 
         AnsiConsole.Markup(message);
         AddNewLines(2);
     }
 
 
+    private string GenerateValueText(GoalType goalType, long value)
+    {
+        var valueText = string.Empty;
 
+        if (goalType == GoalType.TotalTime || goalType == GoalType.AverageTime)
+            valueText = TimeSpan.FromSeconds(value).ToString();
+        if (goalType == GoalType.DaysPerPeriod)
+            valueText = TimeSpan.FromDays(value).ToString("%d");
+
+        return valueText;
+    }
     private void AddNewLines(int lines)
     {
         for (int i = 0; i < lines; i++)

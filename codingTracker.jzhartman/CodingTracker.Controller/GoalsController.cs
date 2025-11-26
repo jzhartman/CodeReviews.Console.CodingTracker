@@ -175,7 +175,7 @@ public class GoalsController : IGoalsController
             {
                 valueIsValid = true;
                 output = result.Value;
-                _outputView.ConfirmationMessage(result.Value.ToString()); //ToDo: Fix printing -- This prints all values as seconds
+                _outputView.ConfirmationMessage(result.Value.ToString());
             }
             else
             {
@@ -258,18 +258,15 @@ public class GoalsController : IGoalsController
         }
     }
 
-
-
     private void PrintGoalsList(List<GoalDTO> goals)
     {
+        _outputView.WelcomeMessage();
+
         if (goals.Count <= 0)
             _outputView.NoRecordsMessage("goals");
         else
             _outputView.PrintGoalListAsTable(goals);
     }
-
-
-
 
     private void EvaluateGoals(List<GoalDTO> goals)
     {
@@ -302,7 +299,11 @@ public class GoalsController : IGoalsController
             _goalService.EvaluateGoal(goal);
 
             if (goal.Status == GoalStatus.Complete ||  goal.Status == GoalStatus.Failed)
+            {
+                _outputView.WelcomeMessage();
                 _outputView.GoalEvaluationMessage(goal);
+                _inputView.PressAnyKeyToContinue();
+            }
         }
     }
 

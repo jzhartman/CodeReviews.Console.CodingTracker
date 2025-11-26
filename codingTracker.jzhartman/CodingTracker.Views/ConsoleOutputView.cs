@@ -148,7 +148,6 @@ public class ConsoleOutputView : IConsoleOutputView
         AnsiConsole.Write(grid);
         AddNewLines(2);
     }
-
     public void GoalEvaluationMessage(GoalDTO goal)
     {
         string goalValueText = string.Empty;
@@ -179,9 +178,6 @@ public class ConsoleOutputView : IConsoleOutputView
         AnsiConsole.Markup(message);
         AddNewLines(2);
     }
-
-
-
 
 
 

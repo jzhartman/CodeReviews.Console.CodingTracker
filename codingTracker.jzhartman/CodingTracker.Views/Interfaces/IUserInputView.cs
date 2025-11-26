@@ -13,5 +13,7 @@ public interface IUserInputView
     long GetGoalValueTime(GoalType goalType);
     long GetGoalValueForDaysPerPeriod();
     bool GetAddGoalConfirmationFromUser(GoalModel goal);
+    bool GetDeleteGoalConfirmationFromUser(GoalDTO goal);
+    void PressAnyKeyToContinue();
     //DateTime GetUpdatedStartTimeFromUser(DateTime originalTime);
 }

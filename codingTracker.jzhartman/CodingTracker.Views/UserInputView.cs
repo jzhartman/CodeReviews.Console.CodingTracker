@@ -164,15 +164,25 @@ public class UserInputView : IUserInputView
     }
     public bool GetAddGoalConfirmationFromUser(GoalModel goal)
     {
-        string valueText = string.Empty;
-
-        if (goal.Type == GoalType.TotalTime || goal.Type == GoalType.AverageTime)
-            valueText = TimeSpan.FromSeconds(goal.GoalValue).ToString();
-        if (goal.Type == GoalType.DaysPerPeriod)
-            valueText = TimeSpan.FromSeconds(goal.GoalValue).TotalDays.ToString();
+        string promptText = $"Add {GenerateGoalConfirmationPromptText( new GoalDTO {Id = 0, Type = goal.Type, StartTime = goal.StartTime,
+                                                                                    EndTime = goal.EndTime, Status = goal.Status,
+                                                                                    GoalValue = goal.GoalValue, CurrentValue = goal.CurrentValue,
+                                                                                    Progress = goal.Progress})}";
 
         var confirmation = AnsiConsole.Prompt(
-            new TextPrompt<bool>($"Add [yellow]{goal.Type}[/] goal starting at [yellow]{goal.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}[/] and ending at [yellow]{goal.EndTime.ToString("yyyy-MM-dd HH:mm:ss")}[/] with value [yellow]{valueText}[/]?")
+            new TextPrompt<bool>($"{promptText}?")
+            .AddChoice(true)
+            .AddChoice(false)
+            .WithConverter(choice => choice ? "y" : "n"));
+
+        return confirmation;
+    }
+    public bool GetDeleteGoalConfirmationFromUser(GoalDTO goal)
+    {
+        string promptText = $"Confirm deletion of {GenerateGoalConfirmationPromptText(goal)}";
+
+        var confirmation = AnsiConsole.Prompt(
+            new TextPrompt<bool>(promptText)
             .AddChoice(true)
             .AddChoice(false)
             .WithConverter(choice => choice ? "y" : "n"));
@@ -180,9 +190,30 @@ public class UserInputView : IUserInputView
         return confirmation;
     }
 
+    public void PressAnyKeyToContinue()
+    {
+        AnsiConsole.WriteLine();
+        AnsiConsole.Markup("[yellow]Press any key to continue...[/]");
+        Console.ReadKey(true);
+    }
 
 
 
+    private string GenerateGoalConfirmationPromptText(GoalDTO goal)
+    {
+        string valueText = string.Empty;
+
+        if (goal.Type == GoalType.TotalTime || goal.Type == GoalType.AverageTime)
+            valueText = TimeSpan.FromSeconds(goal.GoalValue).ToString();
+        if (goal.Type == GoalType.DaysPerPeriod)
+            valueText = TimeSpan.FromDays(goal.GoalValue).ToString("%d");
+
+        string promptText = "[yellow]" + goal.Type + "[/] goal " +
+                            "starting at [yellow]" + goal.StartTime.ToString("yyyy-MM-dd HH:mm:ss") + "[/] " +
+                            "and ending at [yellow]" + goal.EndTime.ToString("yyyy-MM-dd HH:mm:ss") + "[/] " +
+                            "with value [yellow]" + valueText + "[/]";
+        return promptText;
+    }
     private string ConvertTimeFromSecondsToText(double input)
     {
         int miliseconds = TimeSpan.FromSeconds(input).Milliseconds;

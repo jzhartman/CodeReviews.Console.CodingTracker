@@ -39,7 +39,6 @@ public class GoalsController : IGoalsController
             EvaluateGoals(goalsInProgress);
 
 
-
             var selection = _menuView.PrintGoalOptionsAndGetSelection();
 
             switch (selection)
@@ -49,14 +48,13 @@ public class GoalsController : IGoalsController
                     ConfirmAddGoal(goal);
                     break;
                 case "Delete Goal":
-                    // TODO: Create Handle Delete Goal Option
                     ManageGoalDelete();
                     break;
                 case "Extend Goal":
                     // TODO: Handle Extend Goal Option (basic update of end time only)
                     break;
                 case "View Completed Goals":
-                    // TODO: Handle View Completed Goals
+                    ViewCompletedGoals();
                     break;
                 case "Return to Previous Menu":
                     returnToMainMenu = true;
@@ -68,6 +66,15 @@ public class GoalsController : IGoalsController
 
 
         }
+    }
+
+    private void ViewCompletedGoals()
+    {
+        var goals = _goalService.GetAllGoalsByStatus(GoalStatus.Complete);
+
+        _outputView.WelcomeMessage();
+        PrintGoalsList(goals);
+        _inputView.PressAnyKeyToContinue();
     }
 
     private GoalModel GetGoalDataFromUser()
@@ -226,6 +233,7 @@ public class GoalsController : IGoalsController
         else
         {
             _outputView.GoalCancelledMessage("addition");
+            _inputView.PressAnyKeyToContinue();
         }
     }
 
@@ -233,18 +241,21 @@ public class GoalsController : IGoalsController
     private void ManageGoalDelete()
     {
         _outputView.WelcomeMessage();
-        var goals = _goalService.GetAllGoalsByStatus(GoalStatus.InProgress);
+        var goals = _goalService.GetAllGoals();
 
         PrintGoalsList(goals);
 
         var recordId = _inputView.GetRecordIdFromUser("delete", goals.Count()) - 1;
 
-        // Confirm delete
-
-        if (true)
+        if (_inputView.GetDeleteGoalConfirmationFromUser(goals[recordId]))
+        {
             _goalService.DeleteGoalById(recordId);
+        }
         else
-            //cancellation message
+        {
+            _outputView.GoalCancelledMessage("deletion");
+            _inputView.PressAnyKeyToContinue();
+        }
     }
 
 

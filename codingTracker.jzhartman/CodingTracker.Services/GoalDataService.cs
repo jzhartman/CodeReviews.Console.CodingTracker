@@ -106,6 +106,10 @@ public class GoalDataService : IGoalDataService
     {
         var daysRemaining = (goal.EndTime - DateTime.Now).TotalDays;
 
+        if (daysRemaining > (goal.EndTime - goal.StartTime).TotalDays)
+            daysRemaining = (goal.EndTime - goal.StartTime).TotalDays;
+
+
         goal.CurrentValue = GetUniqueDaysPerPeriod(codingSessions) * 86400;
         goal.Progress = ((double)goal.CurrentValue / goal.GoalValue) * 100;
 

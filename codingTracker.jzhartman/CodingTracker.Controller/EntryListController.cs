@@ -113,7 +113,7 @@ public class EntryListController : IEntryListController
 
         while (startTimeValid == false)
         {
-            var newStartTime = _inputView.GetTimeFromUser("new start time", true);
+            var newStartTime = _inputView.GetTimeFromUser("new [green]Start Time[/]", true);
             var result = _service.ValidateUpdatedStartTime(session, newStartTime);
 
             if (result.IsValid)
@@ -136,7 +136,7 @@ public class EntryListController : IEntryListController
 
         while (startTimeValid == false)
         {
-            var newEndTime = _inputView.GetTimeFromUser("new end time", true);
+            var newEndTime = _inputView.GetTimeFromUser("new [red]End Time[/]", true);
             var result = _service.ValidateUpdatedEndTime(session, newStartTime, newEndTime);
 
             if (result.IsValid)

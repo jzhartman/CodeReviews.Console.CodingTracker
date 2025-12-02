@@ -80,7 +80,6 @@ public class MenuView : IMenuView
             {
                     "Add Goal",
                     "Delete Goal",
-                    "Extend Goal",
                     "View Completed Goals",
                     "Return to Previous Menu"
             })

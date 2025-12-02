@@ -91,8 +91,8 @@ public class UserInputView : IUserInputView
             new TextPrompt<int>($"Please enter the [yellow]ID[/] of the record you wish to {action.ToLower()}:")
             .Validate(input => 
             {
-                if (input < 1) return Spectre.Console.ValidationResult.Error("Too low");
-                else if (input > max) return Spectre.Console.ValidationResult.Error("Too high");
+                if (input < 1) return Spectre.Console.ValidationResult.Error($"[red]ERROR:[/] A record for this value does not exist. Please enter a value between [yellow]1[/] and [yellow]{max}[/].\r\n");
+                else if (input > max) return Spectre.Console.ValidationResult.Error($"[red]ERROR:[/] A record for this value does not exist. Please enter a value between [yellow]1[/] and [yellow]{max}[/].\r\n");
                 else return Spectre.Console.ValidationResult.Success();
             }));
 
@@ -127,6 +127,7 @@ public class UserInputView : IUserInputView
     }
     public bool GetDeleteSessionConfirmationFromUser(CodingSessionDataRecord session)
     {
+        AnsiConsole.WriteLine();
         var duration = ConvertTimeFromSecondsToText(session.Duration);
 
         string promptText = $"Confirm deletion of coding session with start time [yellow]{session.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}[/]"

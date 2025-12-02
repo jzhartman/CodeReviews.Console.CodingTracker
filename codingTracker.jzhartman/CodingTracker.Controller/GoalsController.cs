@@ -1,10 +1,7 @@
 ﻿using CodingTracker.Controller.Interfaces;
 using CodingTracker.Models.Entities;
-using CodingTracker.Models.Validation;
 using CodingTracker.Services.Interfaces;
 using CodingTracker.Views.Interfaces;
-using System;
-using static System.Collections.Specialized.BitVector32;
 
 namespace CodingTracker.Controller;
 public class GoalsController : IGoalsController
@@ -27,8 +24,6 @@ public class GoalsController : IGoalsController
 
     public void Run()
     {
-        GenerateDummyGoal();
-
         bool returnToMainMenu = false;
 
         while (!returnToMainMenu)
@@ -37,7 +32,6 @@ public class GoalsController : IGoalsController
 
             var goalsInProgress = _goalService.GetAllGoalsByStatus(GoalStatus.InProgress);
             EvaluateGoals(goalsInProgress);
-
 
             var selection = _menuView.PrintGoalOptionsAndGetSelection();
 
@@ -50,21 +44,13 @@ public class GoalsController : IGoalsController
                 case "Delete Goal":
                     ManageGoalDelete();
                     break;
-                case "Extend Goal":
-                    // TODO: Handle Extend Goal Option (basic update of end time only)
-                    break;
                 case "View Completed Goals":
                     ViewCompletedGoals();
                     break;
                 case "Return to Previous Menu":
                     returnToMainMenu = true;
                     break;
-
             }
-
-
-
-
         }
     }
 
@@ -76,7 +62,6 @@ public class GoalsController : IGoalsController
         PrintGoalsList(goals);
         _inputView.PressAnyKeyToContinue();
     }
-
     private GoalModel GetGoalDataFromUser()
     {
         var startTime = GetStartTimeFromUser();
@@ -306,39 +291,4 @@ public class GoalsController : IGoalsController
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-    private void GenerateDummyGoal()
-    {
-        if (_goalService.GetGoalCount() <= 0)
-        {
-            GoalModel goal = new GoalModel
-            {
-                StartTime = DateTime.Now.AddDays(-5),
-                EndTime = DateTime.Now.AddDays(5),
-                Status = GoalStatus.InProgress,
-                Type = GoalType.DaysPerPeriod,
-                GoalValue = (long)TimeSpan.FromDays(5).TotalSeconds,
-                CurrentValue = 3,
-                Progress = 60
-            };
-
-
-            _goalService.AddGoal(goal);
-        }
-    }
-
-
-
-
-
 }

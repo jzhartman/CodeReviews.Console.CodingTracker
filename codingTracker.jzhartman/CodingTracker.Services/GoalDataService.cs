@@ -72,7 +72,7 @@ public class GoalDataService : IGoalDataService
         var timeRemaining = (goal.EndTime - DateTime.Now).TotalSeconds;
 
         goal.CurrentValue = SumTotalTimeFromSessions(codingSessions);
-        goal.Progress = (goal.CurrentValue / goal.GoalValue) * 100;
+        goal.Progress = ((double)goal.CurrentValue / goal.GoalValue) * 100;
 
         if (goal.Progress >= 100 && timeRemaining < 0)
             goal.Status = GoalStatus.Complete;

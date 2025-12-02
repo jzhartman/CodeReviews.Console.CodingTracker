@@ -88,6 +88,7 @@ public class ConsoleOutputView : IConsoleOutputView
                                         $"{session.EndTime.ToString("yyyy-MM-dd")} [yellow]{session.EndTime.ToString("HH:mm:ss")}[/]",
                                         $"{ConvertTimeFromSecondsToText(session.Duration)}" });
 
+        AddNewLines(1);
         AnsiConsole.Write("Updating Record: ");
         AnsiConsole.Write(grid);
 
@@ -100,8 +101,8 @@ public class ConsoleOutputView : IConsoleOutputView
         var grid = new Grid();
         grid.AddColumn();
         grid.AddColumn();
-        grid.AddRow(new string[] { "[bold blue]First Entry:[/]", $"{report.FirstEntry.StartTime.ToString("yyyy-MM-dd")} to {report.FirstEntry.EndTime.ToString("yyyy-MM-dd")}" });
-        grid.AddRow(new string[] { "[bold blue]Last Entry:[/]", $"{report.LastEntry.StartTime.ToString("yyyy-MM-dd")} to {report.LastEntry.EndTime.ToString("yyyy-MM-dd")}" });
+        grid.AddRow(new string[] { "[bold blue]First Entry:[/]", $"[green]{report.FirstEntry.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}[/] to [red]{report.FirstEntry.EndTime.ToString("yyyy-MM-dd HH:mm:ss")}[/]" });
+        grid.AddRow(new string[] { "[bold blue]Last Entry:[/]", $"[green]{report.LastEntry.StartTime.ToString("yyyy-MM-dd HH:mm:ss")}[/] to [red]{report.LastEntry.EndTime.ToString("yyyy-MM-dd HH:mm:ss")}[/]" });
         grid.AddRow(new string[] { "[bold blue]Total Sessions:[/]", $"{report.SessionCount}" });
         grid.AddRow(new string[] { "[bold blue]Total Time:[/]", $"{ConvertTimeFromSecondsToText(report.TotalTime)}" });
         grid.AddRow(new string[] { "[bold blue]Average Session:[/]", $"{ConvertTimeFromSecondsToText(report.AverageTime)}"});

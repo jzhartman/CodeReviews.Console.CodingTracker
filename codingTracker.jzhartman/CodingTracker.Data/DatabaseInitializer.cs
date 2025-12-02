@@ -1,4 +1,5 @@
 ﻿using CodingTracker.Data.Interfaces;
+using CodingTracker.Models.Entities;
 using Dapper;
 using Microsoft.Data.Sqlite;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -7,6 +8,8 @@ namespace CodingTracker.Data;
 public class DatabaseInitializer : IDatabaseInitializer
 {
     private readonly ISqliteConnectionFactory _connectionFactory;
+    private readonly int _seedRecordCount = 100;
+
 
     public DatabaseInitializer(ISqliteConnectionFactory connectionfactory)
     {
@@ -70,23 +73,26 @@ public class DatabaseInitializer : IDatabaseInitializer
         if (tableName == "CodingSessions")
             sql = CreateCodingSessionsSqlString();
 
+        if (tableName == "Goals")
+            sql = CreateGoalsSqlString();
+
         command.CommandText = sql;
         command.ExecuteNonQuery();
     }
+
     private string CreateCodingSessionsSqlString()
     {
         string sql = "insert into CodingSessions(StartTime, EndTime, Duration)\nValues\n";
         Random rand = new Random();
-        int seedRecordCount = 100;
 
-        DateOnly date = DateOnly.FromDateTime(DateTime.Now.AddDays(-5 * (seedRecordCount+1)));
+        DateOnly date = DateOnly.FromDateTime(DateTime.Now.AddDays(-5 * (_seedRecordCount+1)));
         TimeOnly time = new TimeOnly(21,0,0);
         DateTime startDate = date.ToDateTime(time);
 
         DateTime endDate = startDate.AddHours(2);
         TimeSpan duration = endDate - startDate;
 
-        for (int i = 0; i < seedRecordCount; i++)
+        for (int i = 0; i < _seedRecordCount; i++)
         {
             if (i != 0) sql += ",\n";
 
@@ -95,6 +101,23 @@ public class DatabaseInitializer : IDatabaseInitializer
             endDate = startDate.AddHours(rand.Next(1, 3)).AddMinutes(rand.Next(0, 60)).AddSeconds(rand.Next(0, 60));
             duration = endDate - startDate;
         }
+        sql += ";";
+
+        return sql;
+    }
+    private string CreateGoalsSqlString()
+    {
+
+        var startTime = DateTime.Now.AddDays(-4 * (_seedRecordCount + 1));
+        var endTime = startTime.AddDays(30);
+
+        string sql = "insert into Goals(Type, StartTime, EndTime, Status, GoalValue, CurrentValue, Progress) ";
+
+        sql += "Values ";
+        sql += $"(2, '{startTime.ToString("yyyy-MM-dd HH:mm:ss")}', '{endTime.ToString("yyyy-MM-dd HH:mm:ss")}', 0, 15, 0, 0),";
+        sql += $"(0, '{startTime.ToString("yyyy-MM-dd HH:mm:ss")}', '{endTime.ToString("yyyy-MM-dd HH:mm:ss")}', 0, 108000, 0, 0),";
+        sql += $"(1, '{startTime.ToString("yyyy-MM-dd HH:mm:ss")}', '{endTime.ToString("yyyy-MM-dd HH:mm:ss")}', 0, 1800, 0, 0)";
+
         sql += ";";
 
         return sql;

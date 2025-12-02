@@ -108,8 +108,4 @@ public class CodingSessionRepository : RepositoryGenerics, ICodingSessionReposit
         string sql = $"delete from CodingSessions where Id = {id}";
         SaveData(sql);
     }
-
-
-
-
 }

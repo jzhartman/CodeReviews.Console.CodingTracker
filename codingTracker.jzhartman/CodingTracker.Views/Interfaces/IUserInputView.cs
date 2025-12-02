@@ -15,5 +15,4 @@ public interface IUserInputView
     bool GetAddGoalConfirmationFromUser(GoalModel goal);
     bool GetDeleteGoalConfirmationFromUser(GoalDTO goal);
     void PressAnyKeyToContinue();
-    //DateTime GetUpdatedStartTimeFromUser(DateTime originalTime);
 }

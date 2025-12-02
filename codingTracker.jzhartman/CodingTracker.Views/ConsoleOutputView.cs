@@ -1,7 +1,6 @@
 ﻿using CodingTracker.Models.Entities;
 using CodingTracker.Views.Interfaces;
 using Spectre.Console;
-using System.Reflection.Metadata;
 
 namespace CodingTracker.Views;
 public class ConsoleOutputView : IConsoleOutputView

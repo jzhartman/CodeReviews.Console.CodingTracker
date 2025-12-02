@@ -1,7 +1,6 @@
 ﻿using CodingTracker.Controller.Interfaces;
 using CodingTracker.Models.Entities;
 using CodingTracker.Services.Interfaces;
-using CodingTracker.Views;
 using CodingTracker.Views.Interfaces;
 
 namespace CodingTracker.Controller;

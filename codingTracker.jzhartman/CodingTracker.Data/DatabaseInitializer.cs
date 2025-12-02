@@ -1,8 +1,6 @@
 ﻿using CodingTracker.Data.Interfaces;
-using CodingTracker.Models.Entities;
 using Dapper;
 using Microsoft.Data.Sqlite;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CodingTracker.Data;
 public class DatabaseInitializer : IDatabaseInitializer

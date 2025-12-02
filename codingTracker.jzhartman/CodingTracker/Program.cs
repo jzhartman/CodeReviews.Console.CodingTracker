@@ -6,7 +6,6 @@ using SQLitePCL;
 namespace CodingTracker.ConsoleApp;
 internal class Program
 {
-    // TODO: Configure and run Code Cleanup
     static void Main(string[] args)
     {
         Batteries.Init();

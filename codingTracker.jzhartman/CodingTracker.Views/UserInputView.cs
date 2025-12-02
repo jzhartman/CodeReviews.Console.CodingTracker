@@ -1,6 +1,5 @@
 ﻿using CodingTracker.Models.Entities;
 using CodingTracker.Views.Interfaces;
-using Microsoft.VisualBasic;
 using Spectre.Console;
 using System.Globalization;
 

@@ -1,6 +1,5 @@
 ﻿using CodingTracker.Controller.Interfaces;
 using CodingTracker.Services.Interfaces;
-using CodingTracker.Views;
 using CodingTracker.Views.Interfaces;
 
 namespace CodingTracker.Controller;
@@ -38,19 +37,19 @@ public class MainMenuController : IMainMenuController
 
             switch (selection)
             {
-                case "Track Session":    // Submenu: Enter times/Stopwatch/Return
+                case "Track Session":
                     _trackController.Run();
                     break;
-                case "View/Manage Entries":  // Submenu: View Entries (range or all)/Update/Delete
+                case "View/Manage Entries":
                     _entryListController.Run();
                     break;
-                case "View Reports":    // Enter Range-Period??? --> Print all records for period --> Print report data
+                case "View Reports":
                     _reportsController.Run();
                     break;
-                case "Manage Goal":     // Print current goal+progress/Give option to change goal
+                case "Manage Goal":
                     _goalsController.Run();
                     break;
-                case "Exit":            // Generic goodbye message
+                case "Exit":
                     exitApp = true;
                     break;
                 default:

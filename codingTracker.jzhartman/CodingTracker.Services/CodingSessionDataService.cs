@@ -164,9 +164,9 @@ public class CodingSessionDataService : ICodingSessionDataService
 
     public ValidationResult<DateTime> ValidateGoalStartTime(DateTime input)
     {
-        //if (input > DateTime.Now)
-        //    return ValidationResult<DateTime>.Fail("Start Time", "Cannot enter a future time");
-        //else
+        if (input < DateTime.MinValue)
+            return ValidationResult<DateTime>.Fail("Start Time", "Invalid time!");
+        else
             return ValidationResult<DateTime>.Success(input);
     }
     public ValidationResult<DateTime> ValidateGoalEndTime(DateTime input, DateTime startTime)

@@ -153,7 +153,7 @@ public class GoalsController : IGoalsController
 
         while (valueIsValid == false)
         {
-            var input = GetGoalValueFromUser(startTime, endTime, goalType);
+            var input = GetGoalValueFromUser(goalType);
             var result = _goalService.ValidateGoalValueInput(goalType, input, maxValue);
 
             if (result.IsValid)
@@ -170,7 +170,7 @@ public class GoalsController : IGoalsController
 
         return output;
     }
-    private long GetGoalValueFromUser(DateTime startTime, DateTime endTime, GoalType goalType)
+    private long GetGoalValueFromUser(GoalType goalType)
     {
         switch (goalType)
         {

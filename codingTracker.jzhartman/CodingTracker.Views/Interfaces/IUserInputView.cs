@@ -8,8 +8,8 @@ public interface IUserInputView
     DateTime GetTimeFromUser(string parameterName, bool allowNull = false);
     bool GetUpdateSessionConfirmationFromUser(CodingSessionDataRecord session, CodingSession updatedSession);
     bool GetDeleteSessionConfirmationFromUser(CodingSessionDataRecord session);
-    string StartStopwatch();
-    string StopStopwatch();
+    void StartStopwatch();
+    void StopStopwatch();
     long GetGoalValueTime(GoalType goalType);
     long GetGoalValueForDaysPerPeriod();
     bool GetAddGoalConfirmationFromUser(GoalModel goal);

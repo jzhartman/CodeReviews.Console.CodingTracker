@@ -134,13 +134,13 @@ public class TrackSessionController : ITrackSessionController
 
     private DateTime GetStartTimeWithStopwatch()
     {
-        var selection = _inputView.StartStopwatch();
+        _inputView.StartStopwatch();
         return DateTime.Now;
     }
 
     private DateTime GetStopTimeWithStopwatch()
     {
-        var selection = _inputView.StopStopwatch();
+        _inputView.StopStopwatch();
         return DateTime.Now;
     }
 }

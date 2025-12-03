@@ -39,7 +39,7 @@ public class CodingSessionRepository : RepositoryGenerics, ICodingSessionReposit
                             limit 1";
 
         return LoadData<DateTime, DateValue>(sql, parameter).FirstOrDefault();
-;    }
+    }
     public DateTime GetStartTimeOfNextRecordExcludingCurrentSession(DateTime time, long id)
     {
         var parameter = new TimeUpdate { Time = time, Id = (int)id };
@@ -52,7 +52,6 @@ public class CodingSessionRepository : RepositoryGenerics, ICodingSessionReposit
                             limit 1";
 
         return LoadData<DateTime, TimeUpdate>(sql, parameter).FirstOrDefault();
-        ;
     }
     public DateTime GetStartTimeOfLastRecord()
     {

@@ -56,10 +56,10 @@ public class UserInputView : IUserInputView
 
         return DateTime.ParseExact(timeInput, _dateFormat, CultureInfo.InvariantCulture);
     }
-    public string StartStopwatch()
+    public void StartStopwatch()
     {
         AnsiConsole.WriteLine();
-        var selection = AnsiConsole.Prompt(
+        AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("Press the ENTER key when you are ready to begin your coding session.")
                 .AddChoices(new[]
@@ -67,13 +67,11 @@ public class UserInputView : IUserInputView
                     "Start Stopwatch",
                 })
             );
-
-        return selection;
     }
-    public string StopStopwatch()
+    public void StopStopwatch()
     {
         AnsiConsole.WriteLine();
-        var selection = AnsiConsole.Prompt(
+        AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("Press the ENTER key when you are ready to end your coding session.")
                 .AddChoices(new[]
@@ -81,8 +79,6 @@ public class UserInputView : IUserInputView
                     "Stop Stopwatch",
                 })
             );
-
-        return selection;
     }
     public int GetRecordIdFromUser(string action, int max)
     {
@@ -167,7 +163,9 @@ public class UserInputView : IUserInputView
         string promptText = $"Add {GenerateGoalConfirmationPromptText( new GoalDTO {Id = 0, Type = goal.Type, StartTime = goal.StartTime,
                                                                                     EndTime = goal.EndTime, Status = goal.Status,
                                                                                     GoalValue = goal.GoalValue, CurrentValue = goal.CurrentValue,
-                                                                                    Progress = goal.Progress})}";
+                                                                                    Progress = goal.Progress
+                                                                                    })
+                                                                                    }";
 
         var confirmation = AnsiConsole.Prompt(
             new TextPrompt<bool>($"{promptText}?")
